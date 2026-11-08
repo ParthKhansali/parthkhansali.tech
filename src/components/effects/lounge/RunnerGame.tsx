@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { RotateCcw, Sparkles } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import { sounds } from "@/lib/soundFx";
 import { VisitorProfile } from "./types";
 
@@ -53,10 +53,20 @@ const MILESTONES = [
   { loc: 2000, title: "Himalayan Sunrise", sub: "Clear skies and stable builds" },
 ];
 
+const randomUnit = () => Math.random();
+
 export default function RunnerGame({ profile, onFinishGame, isActive }: RunnerGameProps) {
   const [gameState, setGameState] = useState<"idle" | "playing" | "gameover">("idle");
   const [score, setScore] = useState(0);
-  const [highScore, setHighScore] = useState(0);
+  const [highScore, setHighScore] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    try {
+      const saved = window.localStorage.getItem("pk_runner_highscore");
+      return saved ? parseInt(saved, 10) : 0;
+    } catch {
+      return 0;
+    }
+  });
   const [focusBoost, setFocusBoost] = useState(0);
   const [activeMilestone, setActiveMilestone] = useState<string | null>(null);
 
@@ -94,13 +104,6 @@ export default function RunnerGame({ profile, onFinishGame, isActive }: RunnerGa
     gameStateRef.current = gameState;
   }, [gameState]);
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("pk_runner_highscore");
-      if (saved) setHighScore(parseInt(saved, 10));
-    } catch {}
-  }, []);
-
   const executeJump = () => {
     if (gameStateRef.current === "idle" || gameStateRef.current === "gameover") {
       startNewGame();
@@ -118,10 +121,10 @@ export default function RunnerGame({ profile, onFinishGame, isActive }: RunnerGa
         particlesRef.current.push({
           x: p.x + p.w / 2,
           y: p.y + p.h,
-          vx: (Math.random() - 0.5) * 3,
-          vy: Math.random() * -1.5,
+          vx: (randomUnit() - 0.5) * 3,
+          vy: randomUnit() * -1.5,
           color: p.jumpCount === 2 ? "#d4a843" : "#f0ece4",
-          size: Math.random() * 2 + 1,
+          size: randomUnit() * 2 + 1,
           alpha: 0.7,
           decay: 0.04,
         });
@@ -159,10 +162,10 @@ export default function RunnerGame({ profile, onFinishGame, isActive }: RunnerGa
             particlesRef.current.push({
               x: obs.x + obs.w / 2,
               y: obs.y + obs.h / 2,
-              vx: (Math.random() - 0.2) * 6,
-              vy: (Math.random() - 0.5) * 5,
+              vx: (randomUnit() - 0.2) * 6,
+              vy: (randomUnit() - 0.5) * 5,
               color: "#d4a843",
-              size: Math.random() * 2.5 + 1,
+              size: randomUnit() * 2.5 + 1,
               alpha: 0.9,
               decay: 0.04,
             });

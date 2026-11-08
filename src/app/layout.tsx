@@ -14,6 +14,7 @@ import RetroArcadeModal from "@/components/effects/RetroArcadeModal";
 import AnimeScrollHUD from "@/components/effects/AnimeScrollHUD";
 import ScrollDots from "@/components/effects/ScrollDots";
 import { asset } from "@/lib/basepath";
+import { absoluteUrl, siteConfig } from "@/data/site";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,7 +29,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#0f0f0d",
+  themeColor: "#14120f",
   colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
@@ -36,16 +37,18 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://parthkhansali.com"),
+  metadataBase: new URL(siteConfig.url),
   title: {
-    default: "Parth Khansali | Developer · Builder · Problem Solver",
+    default: "Parth Khansali | AI & Software Engineer in Dehradun",
     template: "%s | Parth Khansali",
   },
   description:
-    "Portfolio of Parth Khansali, Computer Science student, systems builder, and developer. Building AI systems, mobile applications, distributed workflows, and university platforms.",
+    "Parth Khansali is an AI and software engineering student in Dehradun building adaptive AI systems, mobile products, distributed workflows, and thoughtful developer tools.",
   keywords: [
     "Parth Khansali",
-    "software engineer",
+    "AI engineer",
+    "software engineer in Dehradun",
+    "software developer in India",
     "full stack developer",
     "Next.js",
     "React Native",
@@ -56,9 +59,9 @@ export const metadata: Metadata = {
     "Graphic Era MUN",
     "GEHU Connect",
     "OmniMentor",
-    "portfolio",
+    "developer portfolio",
   ],
-  authors: [{ name: "Parth Khansali", url: "https://parthkhansali.com" }],
+  authors: [{ name: "Parth Khansali", url: siteConfig.url }],
   creator: "Parth Khansali",
   alternates: {
     canonical: "/",
@@ -66,26 +69,26 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://parthkhansali.com",
+    url: siteConfig.url,
     siteName: "Parth Khansali",
-    title: "Parth Khansali | Developer · Builder · Problem Solver",
+    title: "Parth Khansali | AI & Software Engineer in Dehradun",
     description:
-      "I build things I wish already existed. Computer Science student, builder, and developer.",
+      "I build things I wish already existed: adaptive AI systems, mobile products, and useful software with a human edge.",
     images: [
       {
-        url: "/profile.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Parth Khansali: Developer & Builder",
+        url: "/developer-night-banner.jpg",
+        width: 1376,
+        height: 768,
+        alt: "A pixel-art developer workspace overlooking the Doon Valley at night",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Parth Khansali | Developer · Builder · Problem Solver",
+    title: "Parth Khansali | AI & Software Engineer in Dehradun",
     description:
-      "I build things I wish already existed. Computer Science student, builder, and developer.",
-    images: ["/profile.jpg"],
+      "I build things I wish already existed: adaptive AI systems, mobile products, and useful software with a human edge.",
+    images: ["/developer-night-banner.jpg"],
   },
   robots: {
     index: true,
@@ -109,28 +112,58 @@ const jsonLd = {
   "@graph": [
     {
       "@type": "Person",
-      "@id": "https://parthkhansali.com/#person",
+       "@id": `${siteConfig.url}/#person`,
       name: "Parth Khansali",
-      url: "https://parthkhansali.com",
-      jobTitle: "Software Developer & Computer Science Student",
+      alternateName: "ParthKhansali",
+       url: siteConfig.url,
+      image: [
+         absoluteUrl("/profile.jpg"),
+         absoluteUrl("/developer-night-banner.jpg"),
+      ],
+      jobTitle: "AI & Software Engineer",
+      description:
+        "Computer Science student and independent builder focused on AI systems, full-stack products, distributed workflows, and research-minded engineering.",
+      homeLocation: {
+        "@type": "Place",
+        name: "Dehradun, Uttarakhand, India",
+      },
       alumniOf: {
         "@type": "CollegeOrUniversity",
         name: "Graphic Era Hill University",
       },
-      sameAs: [
-        "https://github.com/ParthKhansali",
-        "https://linkedin.com/in/parth-khansali",
-        "https://instagram.com/parth_khansali",
+       sameAs: [siteConfig.links.github, siteConfig.links.linkedin, siteConfig.links.instagram],
+      mainEntityOfPage: {
+         "@id": `${siteConfig.url}/#profile`,
+      },
+      knowsAbout: [
+        "Artificial intelligence",
+        "Software engineering",
+        "Adaptive learning systems",
+        "Distributed systems",
+        "React Native",
+        "Spring Boot",
+        "Next.js",
+        "Python",
       ],
     },
     {
+      "@type": "ProfilePage",
+       "@id": `${siteConfig.url}/#profile`,
+       url: siteConfig.url,
+      name: "Parth Khansali — AI & Software Engineer",
+      dateModified: "2026-10-24",
+      mainEntity: {
+        "@id": `${siteConfig.url}/#person`,
+      },
+    },
+    {
       "@type": "WebSite",
-      "@id": "https://parthkhansali.com/#website",
-      url: "https://parthkhansali.com",
+       "@id": `${siteConfig.url}/#website`,
+       url: siteConfig.url,
       name: "Parth Khansali Portfolio",
       description: "Portfolio of Parth Khansali: Developer, Builder, Problem Solver",
       publisher: {
-        "@id": "https://parthkhansali.com/#person",
+         "@id": `${siteConfig.url}/#person`,
       },
     },
     {
@@ -140,7 +173,7 @@ const jsonLd = {
       applicationCategory: "SocialNetworkingApplication",
       operatingSystem: "iOS, Android, React Native",
       author: {
-        "@id": "https://parthkhansali.com/#person",
+         "@id": `${siteConfig.url}/#person`,
       },
       description:
         "Student community and networking platform built with React Native and Spring Boot for Graphic Era Hill University students.",

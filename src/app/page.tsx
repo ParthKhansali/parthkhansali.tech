@@ -1,5 +1,6 @@
 import Hero from "@/components/sections/Hero";
 import PortalMarquee from "@/components/sections/PortalMarquee";
+import CraftNote from "@/components/sections/CraftNote";
 import FeaturedProjects from "@/components/sections/FeaturedProjects";
 import DevDashboard from "@/components/dashboard/DevDashboard";
 import About from "@/components/sections/About";
@@ -10,32 +11,35 @@ import SiteFooter from "@/components/footer/SiteFooter";
 
 export default function Home() {
   return (
-    <main className="relative bg-[#0f0f0d] text-[#f0ece4]">
+    <main className="relative bg-[#14120f] text-[#f4eee4]">
       {/* 1. Clean Typographic Engineering Hero */}
       <Hero />
 
       {/* 2. 3D Nether Portal Dual Crisscross Skills Marquee */}
       <PortalMarquee />
 
-      {/* 3. Featured Projects with Enchanted Book & Breathing Cards */}
+      {/* 3. The maker's note: process, taste, and working principles */}
+      <CraftNote />
+
+      {/* 4. Featured Projects with Enchanted Book & Breathing Cards */}
       <FeaturedProjects />
 
-      {/* 4. Developer Systems Deck (Terminal, WakaTime, Spotify) */}
+      {/* 5. Developer Systems Deck (Terminal, WakaTime, Spotify) */}
       <DevDashboard />
 
-      {/* 5. About & Multidisciplinary Capabilities */}
+      {/* 6. About & Multidisciplinary Capabilities */}
       <About />
 
-      {/* 6. Career & Leadership Journey with Gavel Easter Egg */}
+      {/* 7. Career & Leadership Journey with Gavel Easter Egg */}
       <Experience />
 
-      {/* 7. Live Community Guestbook & Real-Time Reviews */}
+      {/* 8. Live Community Guestbook & Real-Time Reviews */}
       <GuestbookSection />
 
-      {/* 8. Closing CTA Section with Parallax Voxel Night Sky & Perched Mascot */}
+      {/* 9. Closing CTA Section with Parallax Voxel Night Sky & Perched Mascot */}
       <ClosingCTA />
 
-      {/* 9. Site Footer with Live Views */}
+      {/* 10. Site Footer with Live Views */}
       <SiteFooter />
     </main>
   );

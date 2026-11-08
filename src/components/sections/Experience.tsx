@@ -85,7 +85,7 @@ export default function Experience() {
   return (
     <section
       id="experience"
-      className="section-padding relative overflow-hidden bg-[#0f0f0d] border-t border-[#f0ece4]/[0.06]"
+      className="section-padding relative overflow-hidden bg-[#17130f] border-t border-[#f4eee4]/[0.08]"
       ref={ref}
       aria-label="Experience and Leadership"
     >
@@ -97,14 +97,14 @@ export default function Experience() {
           transition={{ duration: 0.5 }}
           className="mb-12"
         >
-          <p className="text-xs font-semibold tracking-wider text-[#d4a843] uppercase mb-2">
+            <p className="section-kicker mb-2">
             Experience &amp; Leadership
           </p>
-          <h2 className="font-display text-[clamp(2.2rem,4.5vw,3.5rem)] font-bold tracking-tight text-[#f0ece4]">
+          <h2 className="font-display text-[clamp(2.2rem,4.5vw,3.5rem)] font-bold tracking-tight text-[#f4eee4]">
             Beyond the code
           </h2>
-          <p className="mt-2 text-sm text-[#8a8a7a] max-w-lg leading-relaxed">
-            Software isn't the only thing I spend time building.
+          <p className="mt-2 text-sm text-[#a69d8e] max-w-lg leading-relaxed">
+            Software isn&apos;t the only thing I spend time building.
           </p>
         </motion.div>
 
@@ -125,7 +125,7 @@ export default function Experience() {
               />
 
               {/* Card Container */}
-              <div className="rounded-xl border border-[#333328] bg-[#171714] p-5 sm:p-6 transition-all duration-300 hover:border-[#555548]">
+              <div className="paper-card rounded-xl border border-[#4a4033] bg-[#1c1915] p-5 sm:p-6 transition-all duration-300 hover:border-[#7c674c]">
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                   <span
                     className="border px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded"

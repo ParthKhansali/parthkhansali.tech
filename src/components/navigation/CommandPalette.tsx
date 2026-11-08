@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, FolderGit2, Code2, Briefcase, Download, Mail } from "lucide-react";
 import { InstagramIcon } from "@/components/icons/SocialIcons";
 import { asset } from "@/lib/basepath";
+import { siteConfig } from "@/data/site";
 
 interface SearchItem {
   id: string;
@@ -109,11 +110,11 @@ const items: SearchItem[] = [
   },
   {
     id: "email-action",
-    title: "Send Email (parthkhansali@gmail.com)",
+     title: `Send Email (${siteConfig.email})`,
     category: "Actions",
     description: "Open your mail client to start a conversation",
     icon: Mail,
-    target: "mailto:parthkhansali@gmail.com",
+     target: `mailto:${siteConfig.email}`,
     type: "url",
   },
   {
@@ -122,7 +123,7 @@ const items: SearchItem[] = [
     category: "Actions",
     description: "Follow and connect with Parth on Instagram",
     icon: InstagramIcon,
-    target: "https://instagram.com/parth_khansali",
+     target: siteConfig.links.instagram,
     type: "url",
   },
 ];

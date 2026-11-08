@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { X, Sparkles, MapPin, Radio } from "lucide-react";
+import { X, MapPin, Radio } from "lucide-react";
 import { ActiveViewer, broadcastLiveWave } from "@/lib/presence";
 
 interface LivePresenceRadarProps {

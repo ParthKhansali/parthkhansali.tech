@@ -13,10 +13,11 @@ import { getLivePageViews } from "@/lib/guestbook";
 import { getVisitorLocation, VisitorLocation } from "@/lib/geo";
 import { sounds } from "@/lib/soundFx";
 import LivePresenceRadar from "@/components/effects/LivePresenceRadar";
+import { siteConfig } from "@/data/site";
 
 const footerLinks = [
   { label: "Projects", href: "#projects" },
-  { label: "How I Work", href: "#systems" },
+  { label: "How I Work", href: "#how-i-work" },
   { label: "About", href: "#about" },
   { label: "Experience", href: "#experience" },
 ];
@@ -27,11 +28,15 @@ export default function SiteFooter() {
   const [views, setViews] = useState<number | null>(null);
   const [location, setLocation] = useState<VisitorLocation | null>(null);
   const [isRadarOpen, setIsRadarOpen] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(() => sounds.getMuted());
 
   useEffect(() => {
-    setIsMuted(sounds.getMuted());
     let isMounted = true;
+    const syncMuteState = (event: Event) => {
+      const muted = (event as CustomEvent<{ muted?: boolean }>).detail?.muted;
+      if (typeof muted === "boolean") setIsMuted(muted);
+    };
+    window.addEventListener("sound-mute-change", syncMuteState);
 
     // 1. Initialize real-time presence heartbeat
     const cleanupPresence = initPresence();
@@ -58,6 +63,7 @@ export default function SiteFooter() {
       isMounted = false;
       cleanupPresence();
       unsubscribeViewers();
+      window.removeEventListener("sound-mute-change", syncMuteState);
     };
   }, []);
 
@@ -177,7 +183,7 @@ export default function SiteFooter() {
         {/* Minimal Animated Socials Icons Dock */}
         <div className="flex items-center justify-center gap-2 pt-1">
           <a
-            href="https://github.com/ParthKhansali"
+             href={siteConfig.links.github}
             target="_blank"
             rel="noopener noreferrer"
             title="GitHub Profile"
@@ -186,7 +192,7 @@ export default function SiteFooter() {
             <GithubIcon className="h-4 w-4" />
           </a>
           <a
-            href="https://linkedin.com/in/parth-khansali"
+             href={siteConfig.links.linkedin}
             target="_blank"
             rel="noopener noreferrer"
             title="LinkedIn Profile"
@@ -195,7 +201,7 @@ export default function SiteFooter() {
             <LinkedinIcon className="h-4 w-4" />
           </a>
           <a
-            href="https://instagram.com/parth_khansali"
+             href={siteConfig.links.instagram}
             target="_blank"
             rel="noopener noreferrer"
             title="Instagram"
@@ -204,7 +210,7 @@ export default function SiteFooter() {
             <InstagramIcon className="h-4 w-4" />
           </a>
           <a
-            href="mailto:parthkhansali@gmail.com"
+             href={`mailto:${siteConfig.email}`}
             title="Send Email"
             className="flex h-8 w-8 items-center justify-center rounded-lg border border-[#333328] bg-[#141412] text-[#8a8a7a] hover:text-[#f0ece4] hover:border-[#555548] hover:scale-105 active:scale-95 transition-all"
           >

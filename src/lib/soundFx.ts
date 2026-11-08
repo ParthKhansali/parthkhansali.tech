@@ -7,6 +7,28 @@
 class SoundEngine {
   private ctx: AudioContext | null = null;
   private isMuted: boolean = false;
+  private ambientSources: AudioBufferSourceNode[] = [];
+  private ambientNodes: AudioNode[] = [];
+  private ambientTimer: ReturnType<typeof setInterval> | null = null;
+  private ambientMode: "quiet" | "rain" | "campfire" = "quiet";
+
+  private emitAmbientMode() {
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(
+      new CustomEvent("ambient-mode-change", {
+        detail: { mode: this.ambientMode },
+      })
+    );
+  }
+
+  private emitMuteState() {
+    if (typeof window === "undefined") return;
+    window.dispatchEvent(
+      new CustomEvent("sound-mute-change", {
+        detail: { muted: this.isMuted },
+      })
+    );
+  }
 
   constructor() {
     if (typeof window !== "undefined") {
@@ -40,6 +62,10 @@ class SoundEngine {
     try {
       localStorage.setItem("pk_sound_muted", String(this.isMuted));
     } catch {}
+    this.emitMuteState();
+    if (this.isMuted) {
+      this.stopAmbient();
+    }
     if (!this.isMuted) {
       this.playChirp();
     }
@@ -458,6 +484,102 @@ class SoundEngine {
 
       osc.start(now);
       osc.stop(now + 0.4);
+    } catch {}
+  }
+
+  /**
+   * Original procedural ambience for the study room. It intentionally uses
+   * generated noise and short synth crackles rather than copying game audio.
+   */
+  public startAmbient(mode: "rain" | "campfire") {
+    if (this.isMuted) return;
+    const ctx = this.initCtx();
+    if (!ctx) return;
+
+    if (this.ambientMode === mode && this.ambientSources.length > 0) return;
+    this.stopAmbient();
+    this.ambientMode = mode;
+    this.emitAmbientMode();
+
+    const master = ctx.createGain();
+    master.gain.setValueAtTime(0.0001, ctx.currentTime);
+    master.gain.exponentialRampToValueAtTime(mode === "campfire" ? 0.11 : 0.08, ctx.currentTime + 1.2);
+    master.connect(ctx.destination);
+    this.ambientNodes.push(master);
+
+    const makeNoise = (filterType: BiquadFilterType, frequency: number, gainAmount: number) => {
+      const buffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+      const channel = buffer.getChannelData(0);
+      for (let i = 0; i < channel.length; i += 1) {
+        channel[i] = Math.random() * 2 - 1;
+      }
+
+      const source = ctx.createBufferSource();
+      const filter = ctx.createBiquadFilter();
+      const gain = ctx.createGain();
+      source.buffer = buffer;
+      source.loop = true;
+      filter.type = filterType;
+      filter.frequency.value = frequency;
+      gain.gain.value = gainAmount;
+      source.connect(filter);
+      filter.connect(gain);
+      gain.connect(master);
+      source.start();
+      this.ambientSources.push(source);
+      this.ambientNodes.push(filter, gain);
+    };
+
+    makeNoise("highpass", mode === "campfire" ? 1700 : 2200, mode === "campfire" ? 0.16 : 0.26);
+    if (mode === "campfire") {
+      makeNoise("lowpass", 420, 0.12);
+      this.ambientTimer = setInterval(() => this.playAmbientCrackle(master), 420 + Math.random() * 900);
+    }
+  }
+
+  public stopAmbient() {
+    if (this.ambientTimer) {
+      clearInterval(this.ambientTimer);
+      this.ambientTimer = null;
+    }
+
+    for (const source of this.ambientSources) {
+      try {
+        source.stop();
+      } catch {}
+      source.disconnect();
+    }
+    for (const node of this.ambientNodes) {
+      try {
+        node.disconnect();
+      } catch {}
+    }
+    this.ambientSources = [];
+    this.ambientNodes = [];
+    this.ambientMode = "quiet";
+    this.emitAmbientMode();
+  }
+
+  public getAmbientMode() {
+    return this.ambientMode;
+  }
+
+  private playAmbientCrackle(destination: AudioNode) {
+    if (this.isMuted || !this.ctx) return;
+    try {
+      const now = this.ctx.currentTime;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(90 + Math.random() * 180, now);
+      osc.frequency.exponentialRampToValueAtTime(40, now + 0.07);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(0.035 + Math.random() * 0.025, now + 0.008);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
+      osc.connect(gain);
+      gain.connect(destination);
+      osc.start(now);
+      osc.stop(now + 0.1);
     } catch {}
   }
 }

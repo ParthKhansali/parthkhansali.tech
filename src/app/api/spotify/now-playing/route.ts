@@ -115,7 +115,46 @@ async function getSpotifyTrack(accessToken: string): Promise<TrackResponse | nul
   return null;
 }
 
-// 3. Fetch YouTube Music via Last.fm Scrobbler API
+// 3. Fetch YouTube Music from an optional private bridge.
+// The bridge lets a desktop/mobile helper expose the current YT Music track
+// without pretending that the public YouTube Data API is a playback API.
+async function getYouTubeMusicBridgeTrack(): Promise<TrackResponse | null> {
+  const bridgeUrl = process.env.YTMUSIC_BRIDGE_URL;
+  if (!bridgeUrl) return null;
+
+  try {
+    const headers: HeadersInit = { Accept: "application/json" };
+    if (process.env.YTMUSIC_BRIDGE_TOKEN) {
+      headers.Authorization = `Bearer ${process.env.YTMUSIC_BRIDGE_TOKEN}`;
+    }
+
+    const res = await fetch(bridgeUrl, { headers, cache: "no-store" });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const track = data?.track || data;
+    if (!track?.trackName || !track?.artistName) return null;
+
+    return {
+      success: true,
+      configured: true,
+      service: "ytmusic",
+      isPlaying: Boolean(track.isPlaying),
+      label: track.isPlaying ? "NOW PLAYING · YOUTUBE MUSIC" : "LAST PLAYED · YOUTUBE MUSIC",
+      trackName: String(track.trackName),
+      artistName: String(track.artistName),
+      albumName: String(track.albumName || ""),
+      albumImage: String(track.albumImage || ""),
+      url: String(track.url || "https://music.youtube.com"),
+      playedAt: track.playedAt ? String(track.playedAt) : undefined,
+      durationMs: typeof track.durationMs === "number" ? track.durationMs : undefined,
+    };
+  } catch (err) {
+    console.warn("YouTube Music bridge fetch failed:", err);
+    return null;
+  }
+}
+
+// 4. Fetch YouTube Music via Last.fm Scrobbler API
 async function getLastFmTrack(): Promise<TrackResponse | null> {
   const username = process.env.LASTFM_USERNAME;
   const apiKey = process.env.LASTFM_API_KEY;
@@ -146,7 +185,7 @@ async function getLastFmTrack(): Promise<TrackResponse | null> {
           configured: true,
           service: "ytmusic",
           isPlaying: isNowPlaying,
-          label: isNowPlaying ? "NOW PLAYING" : "LAST PLAYED",
+           label: isNowPlaying ? "NOW PLAYING · YOUTUBE MUSIC" : "LAST PLAYED · YOUTUBE MUSIC",
           trackName: track.name,
           artistName: typeof track.artist === "object" ? track.artist["#text"] : track.artist,
           albumName: typeof track.album === "object" ? track.album["#text"] : track.album,
@@ -163,7 +202,18 @@ async function getLastFmTrack(): Promise<TrackResponse | null> {
 }
 
 export async function GET() {
-  // Option 1: Try Spotify first if configured
+  // Option 1: Prefer YouTube Music because it is Parth's primary player.
+  const bridgeData = await getYouTubeMusicBridgeTrack();
+  if (bridgeData) {
+    return NextResponse.json(bridgeData);
+  }
+
+  const lastFmData = await getLastFmTrack();
+  if (lastFmData) {
+    return NextResponse.json(lastFmData);
+  }
+
+  // Option 2: Spotify remains a useful fallback.
   const spotifyToken = await getSpotifyAccessToken();
   if (spotifyToken) {
     const spotifyData = await getSpotifyTrack(spotifyToken);
@@ -172,25 +222,17 @@ export async function GET() {
     }
   }
 
-  // Option 2: Try YouTube Music / Last.fm if configured
-  const lastFmData = await getLastFmTrack();
-  if (lastFmData) {
-    return NextResponse.json(lastFmData);
-  }
-
-  // Option 3: Fallback demo track (authentic engineering flow track)
+  // Option 3: Honest setup state; never show a fake track as if it were live.
   return NextResponse.json({
     success: true,
     configured: false,
     service: "demo",
     isPlaying: false,
-    label: "LAST PLAYED",
-    trackName: "Starboy",
-    artistName: "The Weeknd, Daft Punk",
-    albumName: "Starboy",
-    albumImage: "https://i.scdn.co/image/ab67616d0000b2734718e2b124f79258be7bc452",
-    url: "https://open.spotify.com/track/7MXVkk9YM0zgGCKKL5Bz9v",
-    playedAt: new Date(Date.now() - 1000 * 60 * 18).toISOString(),
-    durationMs: 230000,
+    label: "SETUP REQUIRED",
+    trackName: "Connect YouTube Music",
+    artistName: "Last.fm scrobbling or a private bridge",
+    albumName: "Live music desk",
+    albumImage: "/icon.png",
+    url: "https://music.youtube.com",
   });
 }

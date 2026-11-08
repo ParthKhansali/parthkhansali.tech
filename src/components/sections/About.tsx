@@ -54,14 +54,15 @@ export default function About() {
   return (
     <section
       id="about"
-      className="section-padding relative overflow-hidden bg-[#0f0f0d] border-t border-[#f0ece4]/[0.06]"
+      className="section-padding relative overflow-hidden bg-[#14120f] border-t border-[#f4eee4]/[0.08]"
       ref={ref}
       aria-label="About Parth Khansali"
     >
       <div className="mx-auto max-w-6xl relative z-10">
         {/* Section Title */}
         <div className="mb-12">
-          <h2 className="font-display text-[clamp(2.2rem,4.4vw,3.5rem)] font-bold tracking-tight text-[#f0ece4]">
+          <p className="section-kicker mb-3">The person behind the projects</p>
+          <h2 className="font-display text-[clamp(2.2rem,4.4vw,3.5rem)] font-bold tracking-tight text-[#f4eee4]">
             A bit about me
           </h2>
         </div>
@@ -75,9 +76,9 @@ export default function About() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="md:col-span-5 lg:col-span-4"
           >
-            <div className="rounded-xl border border-[#333328] bg-[#171714] p-3 sm:p-4">
+            <div className="paper-card rounded-xl border border-[#4a4033] bg-[#1c1915] p-3 sm:p-4">
               {/* Header bar */}
-              <div className="mb-3 flex items-center justify-between text-xs text-[#8a8a7a]">
+              <div className="mb-3 flex items-center justify-between text-xs text-[#a69d8e]">
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-[#8fb573]" />
                   <span>Dehradun, India</span>
@@ -86,7 +87,7 @@ export default function About() {
                   type="button"
                   onClick={toggleMedia}
                   title="Toggle between alter-ego video and profile photo"
-                  className="border border-[#333328] px-2.5 py-0.5 text-[10px] text-[#b5b0a1] hover:border-[#555548] hover:text-[#f0ece4] transition-colors cursor-pointer rounded"
+                  className="border border-[#4a4033] px-2.5 py-0.5 text-[10px] text-[#c2b9aa] hover:border-[#7c674c] hover:text-[#f4eee4] transition-colors cursor-pointer rounded"
                 >
                   {showVideo ? "Photo" : "Alter-ego"}
                 </button>
@@ -135,15 +136,15 @@ export default function About() {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="md:col-span-7 lg:col-span-8 flex flex-col justify-between"
           >
-            <div className="space-y-4 text-sm leading-relaxed text-[#8a8a7a]">
+            <div className="space-y-4 text-sm leading-relaxed text-[#a69d8e]">
               <p>
-                I'm a CS undergrad at Graphic Era Hill University, Dehradun. I like the whole arc of building something: the messy first sketch, the ugly prototype, the &ldquo;why is this breaking at 2am&rdquo; debugging session, and eventually the moment it clicks and real people start depending on the thing.
+                I&apos;m a CS undergrad at Graphic Era Hill University, Dehradun. I like the whole arc of building something: the messy first sketch, the ugly prototype, the &ldquo;why is this breaking at 2am&rdquo; debugging session, and eventually the moment it clicks and real people start depending on the thing.
               </p>
               <p>
-                Started with curiosity about how software actually works and followed it across mobile apps, web systems, AI, and database internals. I don't pretend to have it all figured out. Getting deeper into systems and understanding what happens under the hood is what keeps me going.
+                Started with curiosity about how software actually works and followed it across mobile apps, web systems, AI, and database internals. I don&apos;t pretend to have it all figured out. Getting deeper into systems and understanding what happens under the hood is what keeps me going.
               </p>
               <p>
-                Outside of code, I run the university MUN club as Director General. Organizing a conference and shipping software have more in common than you'd think: tight deadlines, moving parts, and something always breaks five minutes before the important thing.
+                Outside of code, I run the university MUN club as Director General. Organizing a conference and shipping software have more in common than you&apos;d think: tight deadlines, moving parts, and something always breaks five minutes before the important thing.
               </p>
             </div>
 
@@ -155,7 +156,7 @@ export default function About() {
                   initial={{ opacity: 0, y: 15 }}
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.4, delay: 0.4 + idx * 0.1 }}
-                  className="about-anime-card rounded-xl border border-[#333328] bg-[#171714] p-4 flex flex-col justify-between"
+                  className="about-anime-card paper-card rounded-xl border border-[#4a4033] bg-[#1c1915] p-4 flex flex-col justify-between"
                 >
                   <div>
                     <span className="block text-xs font-semibold text-[#f0ece4]">
@@ -175,7 +176,7 @@ export default function About() {
         <div className="mt-14 border-t border-[#333328] pt-8">
           <div className="mb-4">
             <h3 className="font-display text-lg font-bold text-[#f0ece4]">
-              Rabbit holes I'm in right now
+              Rabbit holes I&apos;m in right now
             </h3>
           </div>
 

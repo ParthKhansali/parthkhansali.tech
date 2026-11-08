@@ -15,17 +15,19 @@
   --font-display: var(--font-space-grotesk);
 }
 
-/* ========== Design Tokens — Warm Dark ========== */
+/* ========== Design Tokens — Workshop Ink ========== */
 :root {
-  --background: #0f0f0d;
-  --foreground: #f0ece4;
-  --muted: #8a8a7a;
-  --muted-foreground: #6a6a5e;
-  --accent: #d4a843;
-  --accent-warm: #c87941;
-  --surface: #171714;
-  --surface-elevated: #1e1e1a;
-  --border-subtle: rgba(240, 236, 228, 0.06);
+  --background: #14120f;
+  --foreground: #f4eee4;
+  --muted: #a69d8e;
+  --muted-foreground: #70685e;
+  --accent: #e2b66d;
+  --accent-warm: #d37458;
+  --accent-sage: #9fb7a2;
+  --accent-blue: #8fa8d2;
+  --surface: #1c1915;
+  --surface-elevated: #252019;
+  --border-subtle: rgba(244, 238, 228, 0.1);
   --font-inter: "Inter", system-ui, sans-serif;
   --font-space-grotesk: "Space Grotesk", system-ui, sans-serif;
 }
@@ -41,15 +43,39 @@ html {
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  scrollbar-width: none;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(226, 182, 109, 0.35) transparent;
 }
 
 body {
-  background: var(--background);
+  position: relative;
+  background:
+    radial-gradient(circle at 14% 8%, rgba(211, 116, 88, 0.08), transparent 28rem),
+    radial-gradient(circle at 82% 26%, rgba(143, 168, 210, 0.06), transparent 30rem),
+    var(--background);
   color: var(--foreground);
   font-family: var(--font-inter);
   overflow-x: hidden;
   min-height: 100vh;
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  content: "";
+  opacity: 0.15;
+  background-image: radial-gradient(rgba(244, 238, 228, 0.14) 0.55px, transparent 0.7px);
+  background-size: 5px 5px;
+  mix-blend-mode: screen;
+}
+
+main,
+header,
+footer {
+  position: relative;
+  z-index: 2;
 }
 
 /* ========== Smooth Scroll (Lenis) ========== */
@@ -72,8 +98,7 @@ html.lenis body {
 
 /* ========== Scrollbar ========== */
 ::-webkit-scrollbar {
-  width: 0px;
-  display: none;
+  width: 7px;
 }
 
 ::-webkit-scrollbar-track {
@@ -81,11 +106,13 @@ html.lenis body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: transparent;
+  background: rgba(226, 182, 109, 0.28);
+  border: 2px solid var(--background);
+  border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: transparent;
+  background: rgba(226, 182, 109, 0.5);
 }
 
 /* ========== Command Palette Scrollbar ========== */
@@ -339,6 +366,446 @@ html.lenis body {
 
 .btn-tactile:hover .btn-icon {
   transform: translateX(4px);
+}
+
+/* ========== Handmade Surface Language ========== */
+.workshop-grid {
+  background-image:
+    linear-gradient(rgba(244, 238, 228, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(244, 238, 228, 0.035) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.paper-card {
+  position: relative;
+  isolation: isolate;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.22), 0 1px 0 rgba(244, 238, 228, 0.04) inset;
+}
+
+.paper-card::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  content: "";
+  opacity: 0.08;
+  background-image: radial-gradient(rgba(244, 238, 228, 0.25) 0.55px, transparent 0.7px);
+  background-size: 4px 4px;
+  mix-blend-mode: screen;
+}
+
+.hand-underline {
+  position: relative;
+  display: inline-block;
+}
+
+.hand-underline::after {
+  position: absolute;
+  right: -0.05em;
+  bottom: -0.15em;
+  left: 0.05em;
+  height: 0.24em;
+  content: "";
+  opacity: 0.75;
+  background: var(--accent-warm);
+  clip-path: polygon(0 46%, 12% 30%, 29% 55%, 48% 25%, 68% 50%, 84% 22%, 100% 39%, 98% 70%, 80% 51%, 63% 74%, 46% 48%, 28% 76%, 12% 52%, 1% 68%);
+  transform: rotate(-1.5deg);
+}
+
+.sketch-corner {
+  position: relative;
+}
+
+.sketch-corner::before,
+.sketch-corner::after {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  content: "";
+  border-color: rgba(226, 182, 109, 0.7);
+  pointer-events: none;
+}
+
+.sketch-corner::before {
+  top: 10px;
+  left: 10px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+
+.sketch-corner::after {
+  right: 10px;
+  bottom: 10px;
+  border-right: 1px solid;
+  border-bottom: 1px solid;
+}
+
+.section-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--accent);
+  font-family: var(--font-inter);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.section-kicker::before {
+  width: 1.4rem;
+  height: 1px;
+  content: "";
+  background: currentColor;
+}
+
+/* ========== Late Night Study Room ========== */
+.study-room-stage {
+  background-image:
+    linear-gradient(rgba(244, 238, 228, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(244, 238, 228, 0.025) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.study-room-scene {
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 74% 25%, rgba(226, 182, 109, 0.14), transparent 8rem),
+    linear-gradient(180deg, #17232b 0%, #1d1c22 55%, #2b1d19 100%);
+}
+
+.study-room-sky {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.22;
+  background-image: radial-gradient(rgba(244, 238, 228, 0.65) 0.7px, transparent 0.9px);
+  background-size: 21px 21px;
+}
+
+.study-room-window {
+  position: absolute;
+  top: 3.5rem;
+  right: 12%;
+  width: min(56%, 20rem);
+  height: 11rem;
+  overflow: hidden;
+  border: 8px solid #5c3e2d;
+  border-radius: 0.45rem;
+  background: linear-gradient(180deg, #0d1c2e 0%, #18374a 64%, #233b3f 100%);
+  box-shadow: 0 0 0 2px rgba(226, 182, 109, 0.15), 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+.study-room-window::before,
+.study-room-window::after {
+  position: absolute;
+  content: "";
+  background: #5c3e2d;
+}
+
+.study-room-window::before {
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 4px;
+  transform: translateX(-50%);
+}
+
+.study-room-window::after {
+  top: 50%;
+  right: 0;
+  left: 0;
+  height: 4px;
+  transform: translateY(-50%);
+}
+
+.study-room-moon {
+  position: absolute;
+  top: 1.4rem;
+  right: 18%;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: #e4d7b7;
+  box-shadow: 0 0 24px rgba(228, 215, 183, 0.34);
+}
+
+.study-room-moon::after {
+  position: absolute;
+  top: -0.15rem;
+  left: 0.45rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  content: "";
+  background: #102133;
+}
+
+.study-room-mountain {
+  position: absolute;
+  right: -10%;
+  bottom: -2rem;
+  left: -10%;
+  height: 6rem;
+  clip-path: polygon(0 70%, 17% 30%, 31% 58%, 52% 12%, 71% 53%, 84% 25%, 100% 65%, 100% 100%, 0 100%);
+}
+
+.study-room-mountain-back {
+  background: #1d3344;
+}
+
+.study-room-mountain-front {
+  bottom: -3rem;
+  height: 5rem;
+  background: #15252d;
+  transform: scaleX(1.1);
+}
+
+.study-room-rain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-image: repeating-linear-gradient(105deg, transparent 0 15px, rgba(191, 220, 232, 0.6) 16px 17px, transparent 18px 30px);
+  animation: studyRain 1.6s linear infinite;
+}
+
+.study-room-desk::before {
+  position: absolute;
+  right: 8%;
+  bottom: -2.4rem;
+  left: 8%;
+  height: 2.6rem;
+  content: "";
+  border-right: 6px solid #2e211c;
+  border-left: 6px solid #2e211c;
+  background: linear-gradient(90deg, transparent 10%, rgba(29, 20, 18, 0.35) 10% 12%, transparent 12% 88%, rgba(29, 20, 18, 0.35) 88% 90%, transparent 90%);
+}
+
+.study-room-monitor {
+  min-width: 0;
+}
+
+.study-room-lamp {
+  position: relative;
+  width: 3.2rem;
+  height: 4.5rem;
+}
+
+.study-room-lamp-glow {
+  position: absolute;
+  top: 0.4rem;
+  left: 0.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  background: rgba(226, 182, 109, 0.2);
+  filter: blur(10px);
+}
+
+.study-room-lamp-shade {
+  position: absolute;
+  top: 0;
+  left: 0.3rem;
+  width: 2.2rem;
+  height: 1.2rem;
+  border-radius: 50% 50% 35% 35%;
+  background: #d39a55;
+  box-shadow: 0 0.6rem 0 rgba(113, 67, 37, 0.35);
+}
+
+.study-room-lamp-stem {
+  position: absolute;
+  top: 1.1rem;
+  left: 1.3rem;
+  width: 0.3rem;
+  height: 3rem;
+  background: #704631;
+  transform: rotate(10deg);
+  transform-origin: top;
+}
+
+.study-room-campfire {
+  filter: drop-shadow(0 0 12px rgba(224, 130, 58, 0.25));
+}
+
+.study-room-flame {
+  position: absolute;
+  right: 0.9rem;
+  bottom: 1.1rem;
+  width: 2.1rem;
+  height: 3rem;
+  border-radius: 55% 45% 55% 45%;
+  opacity: 0.28;
+  background: linear-gradient(180deg, #ffe6a1 0%, #ec8a44 48%, #b94732 100%);
+  box-shadow: 0 0 22px rgba(240, 137, 63, 0.5);
+  transform: rotate(8deg) scale(0.8);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.study-room-flame.is-lit {
+  opacity: 1;
+  animation: studyFire 0.8s ease-in-out infinite alternate;
+}
+
+.study-room-log {
+  position: absolute;
+  right: 0.4rem;
+  bottom: 0.8rem;
+  width: 3rem;
+  height: 0.65rem;
+  border-radius: 999px;
+  background: #68412d;
+  transform: rotate(16deg);
+}
+
+.study-room-log-two {
+  right: 0.35rem;
+  transform: rotate(-18deg);
+}
+
+@keyframes studyFire {
+  from { transform: rotate(7deg) scale(0.88); }
+  to { transform: rotate(-7deg) scale(1.02); }
+}
+
+@keyframes studyRain {
+  from { transform: translate3d(0, -12px, 0); }
+  to { transform: translate3d(-18px, 18px, 0); }
+}
+
+/* ========== Small Campfire Ritual ========== */
+.campfire-note {
+  position: relative;
+  margin-top: 2.25rem;
+  overflow: hidden;
+  border-top: 1px solid rgba(226, 182, 109, 0.22);
+  border-bottom: 1px solid rgba(226, 182, 109, 0.12);
+  padding: 0.9rem 0;
+}
+
+.campfire-note::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  opacity: 0;
+  background: radial-gradient(circle at 4rem 50%, rgba(239, 155, 82, 0.16), transparent 9rem);
+  transition: opacity 0.5s ease;
+}
+
+.campfire-note.is-lit::before {
+  opacity: 1;
+}
+
+.campfire-ambient-wash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.campfire-ambient-wash span {
+  position: absolute;
+  bottom: 0.7rem;
+  left: calc(1.2rem + (var(--ember-index) * 0.48rem));
+  width: 0.18rem;
+  height: 0.18rem;
+  border-radius: 999px;
+  background: #f4b269;
+  opacity: 0;
+  animation: emberRise 2.4s ease-in infinite;
+  animation-delay: calc(var(--ember-index) * -0.35s);
+}
+
+.campfire-button {
+  position: relative;
+  display: grid;
+  width: 4rem;
+  height: 3.6rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 999px;
+  transition: transform 0.25s ease;
+}
+
+.campfire-button:hover,
+.campfire-button:focus-visible {
+  transform: translateY(-2px) scale(1.05);
+}
+
+.campfire-button:focus-visible {
+  outline: 2px solid #e2b66d;
+  outline-offset: 4px;
+}
+
+.campfire-visual {
+  position: relative;
+  display: block;
+  width: 3.6rem;
+  height: 3.2rem;
+  filter: drop-shadow(0 0 9px rgba(224, 130, 58, 0.26));
+}
+
+.campfire-flame {
+  position: absolute;
+  bottom: 0.72rem;
+  left: 1rem;
+  width: 1.7rem;
+  height: 2.4rem;
+  border-radius: 55% 45% 55% 45%;
+  opacity: 0.16;
+  background: linear-gradient(180deg, #ffe6a1 0%, #ec8a44 48%, #b94732 100%);
+  box-shadow: 0 0 20px rgba(240, 137, 63, 0.44);
+  transform: rotate(8deg) scale(0.7);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.campfire-flame.is-lit {
+  opacity: 1;
+  animation: campfireFlicker 0.8s ease-in-out infinite alternate;
+}
+
+.campfire-log {
+  position: absolute;
+  bottom: 0.58rem;
+  left: 0.46rem;
+  width: 2.8rem;
+  height: 0.56rem;
+  border-radius: 999px;
+  background: #68412d;
+  box-shadow: inset 0 1px 0 rgba(255, 218, 160, 0.12);
+  transform: rotate(15deg);
+}
+
+.campfire-log-two {
+  transform: rotate(-17deg);
+}
+
+.campfire-mute {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid #4a4033;
+  border-radius: 0.55rem;
+  color: #9a8d7d;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.campfire-mute:hover,
+.campfire-mute:focus-visible {
+  border-color: rgba(226, 182, 109, 0.6);
+  color: #f4eee4;
+}
+
+@keyframes campfireFlicker {
+  from { transform: rotate(7deg) scale(0.86); }
+  to { transform: rotate(-7deg) scale(1.02); }
+}
+
+@keyframes emberRise {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(0.7); }
+  30% { opacity: 0.8; }
+  100% { opacity: 0; transform: translate3d(0.8rem, -2.3rem, 0) scale(0.2); }
 }
 
 /* ========== Audio Equalizer Bars ========== */
@@ -615,5 +1082,3 @@ html.lenis body {
   transform: translateZ(0);
   will-change: transform, opacity;
 }
-
-

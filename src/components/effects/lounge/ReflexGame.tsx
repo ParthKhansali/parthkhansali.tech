@@ -13,20 +13,21 @@ interface ReflexGameProps {
 
 type ReflexState = "idle" | "waiting" | "ready" | "result" | "early";
 
-export default function ReflexGame({ profile, onFinishGame, isActive }: ReflexGameProps) {
+export default function ReflexGame({ onFinishGame, isActive }: ReflexGameProps) {
   const [state, setState] = useState<ReflexState>("idle");
   const [reactionTime, setReactionTime] = useState<number | null>(null);
-  const [bestTime, setBestTime] = useState<number | null>(null);
+  const [bestTime, setBestTime] = useState<number | null>(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      const saved = window.localStorage.getItem("pk_reflex_best");
+      return saved ? parseInt(saved, 10) : null;
+    } catch {
+      return null;
+    }
+  });
 
   const startTimeRef = useRef<number>(0);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("pk_reflex_best");
-      if (saved) setBestTime(parseInt(saved, 10));
-    } catch {}
-  }, []);
 
   const handleStart = () => {
     setState("waiting");

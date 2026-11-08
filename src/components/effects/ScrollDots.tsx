@@ -11,6 +11,7 @@ interface SectionDot {
 const SECTIONS: SectionDot[] = [
   { id: "hero", label: "Home" },
   { id: "portal-marquee", label: "Stack" },
+  { id: "how-i-work", label: "Method" },
   { id: "projects", label: "Work" },
   { id: "systems", label: "Build Log" },
   { id: "about", label: "About" },

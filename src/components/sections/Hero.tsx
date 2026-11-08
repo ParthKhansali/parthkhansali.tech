@@ -6,6 +6,7 @@ import { ArrowRight, BookOpen, Mail, Gamepad2, RotateCw, Sparkles, FileText } fr
 import { GithubIcon, LinkedinIcon, InstagramIcon } from "@/components/icons/SocialIcons";
 import { asset } from "@/lib/basepath";
 import { sounds } from "@/lib/soundFx";
+import { siteConfig } from "@/data/site";
 
 const roles = [
   "Builder",
@@ -65,23 +66,21 @@ export default function Hero() {
       <div className="pointer-events-none absolute left-1/4 top-1/4 h-[550px] w-[550px] rounded-full bg-[#d4a843]/[0.02] blur-[150px]" />
       <div className="pointer-events-none absolute right-1/4 bottom-1/4 h-[500px] w-[500px] rounded-full bg-[#22c55e]/[0.015] blur-[160px]" />
 
-      <div className="relative z-10 max-w-6xl w-full mx-auto flex flex-col lg:flex-row lg:items-center lg:justify-between gap-12 lg:gap-14">
+      <div className="relative z-10 max-w-6xl w-full mx-auto flex flex-col lg:flex-row lg:items-center lg:justify-between gap-12 lg:gap-16">
         {/* Left Column: Name, Role, Bio, Actions */}
         <div className="max-w-xl">
           {/* Location & availability line */}
-          <div className="mb-6 flex items-center gap-2.5 text-sm text-[#8a8a7a]">
+          <div className="section-kicker mb-6">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#22c55e] opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-[#22c55e]" />
             </span>
-            <span>Dehradun, India · Currently taking on interesting problems</span>
+            <span>Dehradun, India · Open to interesting problems</span>
           </div>
 
           {/* Name — large, left-aligned, confident */}
-          <h1 className="font-display text-[clamp(3.2rem,7.5vw,5.5rem)] font-bold leading-[0.92] tracking-tight text-[#f0ece4]">
-            Parth
-            <br />
-            Khansali
+          <h1 className="font-display text-[clamp(3.2rem,7.5vw,5.5rem)] font-bold leading-[0.92] tracking-tight text-[#f4eee4]">
+            Parth <span className="hand-underline">Khansali</span>
           </h1>
 
           {/* Rotating role — inline, subtle */}
@@ -104,10 +103,11 @@ export default function Hero() {
           </div>
 
           {/* Bio — direct, honest */}
-          <p className="mt-8 text-[15px] leading-[1.7] text-[#8a8a7a]">
-            CS undergrad in Dehradun who codes past midnight more often than
-            I'd like to admit. I take half-formed ideas, figure out what
-            actually matters, and ship software people end up relying on.
+          <p className="mt-8 max-w-xl text-[15px] leading-[1.8] text-[#a69d8e]">
+            I&apos;m a CS undergrad in Dehradun building AI systems, mobile products,
+            and developer tools from the first sketch to the “why is this breaking
+            at 2am?” fix. The work is serious. The process can still have a little
+            personality.
           </p>
 
           {/* Actions */}
@@ -115,16 +115,17 @@ export default function Hero() {
             <a
               href="#projects"
               onClick={() => sounds.playMinecraftPop()}
-              className="group inline-flex items-center gap-2.5 rounded-lg bg-[#f0ece4] px-7 py-3.5 text-sm font-semibold text-[#121210] transition-all duration-200 hover:bg-white active:scale-[0.97]"
+              className="btn-tactile group inline-flex items-center gap-2.5 rounded-lg border border-[#e2b66d] px-7 py-3.5 text-sm font-semibold text-[#f4eee4] transition-all duration-200 hover:border-[#e2b66d] active:scale-[0.97]"
             >
-              <span>See my work</span>
-              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+              <span className="btn-fill" />
+              <span className="btn-content">See my work</span>
+              <ArrowRight className="btn-icon relative z-[1] h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
             </a>
 
             <a
               href="#about"
               onClick={() => sounds.playMinecraftPop()}
-              className="inline-flex items-center gap-2 rounded-lg border border-[#333328] px-6 py-3.5 text-sm font-medium text-[#b5b0a1] transition-all duration-200 hover:border-[#555548] hover:text-[#f0ece4]"
+              className="inline-flex items-center gap-2 rounded-lg border border-[#4a4033] bg-[#1c1915]/70 px-6 py-3.5 text-sm font-medium text-[#c2b9aa] transition-all duration-200 hover:border-[#7c674c] hover:text-[#f4eee4]"
             >
               <BookOpen className="h-4 w-4" />
               <span>About me</span>
@@ -133,17 +134,15 @@ export default function Hero() {
 
           {/* Social links */}
           <div className="mt-10 flex items-center gap-1">
-            <SocialLink href="https://github.com/ParthKhansali" label="GitHub" icon={GithubIcon} />
-            <SocialLink href="https://linkedin.com/in/parth-khansali" label="LinkedIn" icon={LinkedinIcon} />
-            <SocialLink href="mailto:parthkhansali@gmail.com" label="Email" icon={Mail} />
-            <SocialLink href="https://instagram.com/parth_khansali" label="Instagram" icon={InstagramIcon} />
+            <SocialLink href={siteConfig.links.github} label="GitHub" icon={GithubIcon} />
+            <SocialLink href={siteConfig.links.linkedin} label="LinkedIn" icon={LinkedinIcon} />
+            <SocialLink href={`mailto:${siteConfig.email}`} label="Email" icon={Mail} />
+            <SocialLink href={siteConfig.links.instagram} label="Instagram" icon={InstagramIcon} />
           </div>
         </div>
 
         {/* Right Column: Cosmic Visual Showcase & Telemetry Deck */}
-        <div
-          className="w-full lg:max-w-[420px] flex flex-col rounded-2xl border border-[#2b2b24] bg-[#141412]/90 backdrop-blur-md shadow-2xl overflow-hidden select-none"
-        >
+        <div className="paper-card sketch-corner w-full overflow-hidden rounded-[1.1rem] border border-[#4a4033] bg-[#1c1915]/90 shadow-2xl backdrop-blur-md select-none lg:max-w-[440px]">
           {/* Header Bar */}
           <div className="flex items-center justify-between px-4 py-2.5 bg-[#171714] border-b border-[#2b2b24] text-xs">
             <div className="flex items-center gap-2">
@@ -203,13 +202,13 @@ export default function Hero() {
               <div className="p-2.5 rounded-xl border border-[#2b2b24] bg-[#171714]">
                 <span className="text-[10px] font-mono uppercase text-[#7a7a6b] block">Flagship</span>
                 <span className="font-semibold text-[#f0ece4] block mt-0.5 truncate">GEHU Connect</span>
-                <span className="text-[10px] text-[#22c55e] font-mono">1,800+ Users</span>
+                <span className="text-[10px] text-[#22c55e] font-mono">Active alpha</span>
               </div>
 
               <div className="p-2.5 rounded-xl border border-[#2b2b24] bg-[#171714]">
                 <span className="text-[10px] font-mono uppercase text-[#7a7a6b] block">Throughput</span>
-                <span className="font-semibold text-[#f0ece4] block mt-0.5 truncate">Kafka Stream</span>
-                <span className="text-[10px] text-[#d4a843] font-mono">10k msgs/sec</span>
+                <span className="font-semibold text-[#f0ece4] block mt-0.5 truncate">Event workflows</span>
+                <span className="text-[10px] text-[#d4a843] font-mono">Distributed systems</span>
               </div>
             </div>
 
@@ -250,7 +249,7 @@ export default function Hero() {
                 <span>View CV</span>
               </button>
             </div>
-          </div>
+           </div>
         </div>
       </div>
 

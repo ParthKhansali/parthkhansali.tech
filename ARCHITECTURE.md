@@ -46,8 +46,9 @@ This document outlines the architecture, directory structure, data flow, and eng
 │   │   │   ├── DevMetrics.tsx
 │   │   │   ├── GitTerminal.tsx
 │   │   │   └── MusicWidget.tsx
-│   │   ├── effects/            # Visual canvas & lighting effects
+│   │   ├── effects/            # Visual canvas, lighting, and atmosphere effects
 │   │   │   ├── CursorSpotlight.tsx
+│   │   │   ├── CampfireToggle.tsx
 │   │   │   ├── EnchantingParticles.tsx
 │   │   │   ├── ScrollProgress.tsx
 │   │   │   └── StarfieldCanvas.tsx
@@ -69,7 +70,8 @@ This document outlines the architecture, directory structure, data flow, and eng
 │   │       ├── GuestbookSection.tsx
 │   │       └── ClosingCTA.tsx
 │   ├── data/
-│   │   └── projects.ts         # Centralized project catalog, tech stacks, and links
+│   │   ├── projects.ts         # Centralized project catalog, tech stacks, and links
+│   │   └── site.ts              # Verified deployment URL and public profile links
 │   └── lib/
 │       ├── firebase.ts         # Firebase App, Auth, and Firestore initialization
 │       ├── geo.ts              # Multi-tier IP geolocation resolver (Cloudflare/ipinfo)

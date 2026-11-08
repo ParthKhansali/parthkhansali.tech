@@ -8,7 +8,7 @@ export default function DevDashboard() {
   return (
     <section
       id="systems"
-      className="section-padding relative overflow-hidden bg-[#131311] border-t border-[#f0ece4]/[0.04]"
+      className="section-padding workshop-grid relative overflow-hidden bg-[#17130f] border-t border-[#f4eee4]/[0.08]"
       aria-label="Developer Workspace"
       style={{
         backgroundImage: "radial-gradient(circle, rgba(240,236,228,0.03) 1px, transparent 1px)",
@@ -19,11 +19,12 @@ export default function DevDashboard() {
       <div className="mx-auto max-w-6xl">
         {/* Section header — clean, no eyebrow */}
         <div className="mb-10">
-          <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-bold tracking-tight text-[#f0ece4]">
+          <p className="section-kicker mb-3">The honest dashboard</p>
+          <h2 className="font-display text-[clamp(2rem,4vw,3rem)] font-bold tracking-tight text-[#f4eee4]">
             The build log
           </h2>
           <p className="mt-2 max-w-lg text-sm text-[#8a8a7a] leading-relaxed">
-            Real terminal output. Real GitHub history. Whatever I'm listening to right now. Nothing here is made up.
+            Real terminal output. Real GitHub history. Whatever I&apos;m listening to right now. Nothing here is made up.
           </p>
         </div>
 

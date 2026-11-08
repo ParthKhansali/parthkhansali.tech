@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
@@ -9,7 +9,6 @@ import {
   Trophy,
   Palette,
   Gamepad2,
-  Users,
   Send,
   Edit2,
   Check,
@@ -18,6 +17,7 @@ import {
   RefreshCw,
   Radio,
   Sparkles,
+  BookOpen,
 } from "lucide-react";
 import { sounds } from "@/lib/soundFx";
 import { VisitorProfile } from "./lounge/types";
@@ -26,6 +26,7 @@ import SnakeGame from "./lounge/SnakeGame";
 import PongGame from "./lounge/PongGame";
 import ReflexGame from "./lounge/ReflexGame";
 import LeaderboardView from "./lounge/LeaderboardView";
+import StudyRoomStage from "./lounge/StudyRoomStage";
 
 const AVATARS = ["🐱", "🦊", "🚀", "🎮", "⚡", "🌙", "🦉", "👾", "🎨", "💻"];
 
@@ -68,13 +69,35 @@ interface Stroke {
   size: number;
 }
 
+type ArcadeGame = "runner" | "snake" | "pong" | "reflex";
+
+function renderStrokes(canvas: HTMLCanvasElement, strokes: Stroke[]) {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  ctx.fillStyle = "#121210";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  strokes.forEach((st) => {
+    ctx.strokeStyle = st.color;
+    ctx.lineWidth = st.size;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.beginPath();
+    ctx.moveTo(st.x0, st.y0);
+    ctx.lineTo(st.x1, st.y1);
+    ctx.stroke();
+  });
+}
+
 export default function RetroArcadeModal() {
   const [isOpen, setIsOpen] = useState(false);
-  const [mainView, setMainView] = useState<"skribbl" | "arcade" | "rankings">("skribbl");
-  const [arcadeGame, setArcadeGame] = useState<"runner" | "snake" | "pong" | "reflex">("runner");
+  const [mainView, setMainView] = useState<"study" | "skribbl" | "arcade" | "rankings">("study");
+  const [arcadeGame, setArcadeGame] = useState<ArcadeGame>("runner");
   const [sidebarTab, setSidebarTab] = useState<"chat" | "strangers">("chat");
   const [mobilePane, setMobilePane] = useState<"stage" | "chat">("stage");
   const [isMuted, setIsMuted] = useState(false);
+  const [ambientMode, setAmbientMode] = useState<"quiet" | "rain" | "campfire">("quiet");
 
   // Visitor profile
   const [profile, setProfile] = useState<VisitorProfile>({
@@ -84,7 +107,7 @@ export default function RetroArcadeModal() {
     color: "#d4a843",
   });
   const [isEditingProfile, setIsEditingProfile] = useState(false);
-  const [tempName, setTempName] = useState("");
+  const [tempName, setTempName] = useState("Doon Explorer");
 
   // Room data
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -106,29 +129,35 @@ export default function RetroArcadeModal() {
   const chatScrollRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const isOpenRef = useRef(false);
+  const optimisticSequence = useRef(0);
 
-  // Initialize profile from local storage
+  // Hydrate the visitor handle after the first paint so SSR and client markup stay identical.
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem("pk_lounge_profile");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        setProfile(parsed);
-        setTempName(parsed.name);
-      } else {
+    const hydrateProfile = () => {
+      try {
+        const saved = window.localStorage.getItem("pk_lounge_profile");
+        if (saved) {
+          const parsed = JSON.parse(saved) as VisitorProfile;
+          setProfile(parsed);
+          setTempName(parsed.name);
+          return;
+        }
+
         const num = Math.floor(Math.random() * 89) + 10;
-        const avatar = AVATARS[Math.floor(Math.random() * AVATARS.length)];
         const initProfile: VisitorProfile = {
           id: `visitor-${Date.now()}-${num}`,
           name: `Explorer #${num}`,
-          avatar,
+          avatar: AVATARS[Math.floor(Math.random() * AVATARS.length)],
           color: "#d4a843",
         };
         setProfile(initProfile);
         setTempName(initProfile.name);
-        localStorage.setItem("pk_lounge_profile", JSON.stringify(initProfile));
-      }
-    } catch {}
+        window.localStorage.setItem("pk_lounge_profile", JSON.stringify(initProfile));
+      } catch {}
+    };
+
+    const hydrationTask = window.setTimeout(hydrateProfile, 0);
+    return () => window.clearTimeout(hydrationTask);
   }, []);
 
   // Listen for open events
@@ -138,6 +167,10 @@ export default function RetroArcadeModal() {
       setTimeout(() => modalRef.current?.focus(), 50);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    return () => sounds.stopAmbient();
+  }, []);
 
   useEffect(() => {
     const handleOpen = () => {
@@ -165,6 +198,8 @@ export default function RetroArcadeModal() {
       if (e.key === "Escape") {
         setIsOpen(false);
         isOpenRef.current = false;
+        sounds.stopAmbient();
+        setAmbientMode("quiet");
       }
       // Prevent arrow keys and space from scrolling the background while playing games
       if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].includes(e.key)) {
@@ -184,7 +219,7 @@ export default function RetroArcadeModal() {
   }, [isOpen]);
 
   // Poll room data
-  const fetchRoomData = async () => {
+  const fetchRoomData = useCallback(async () => {
     try {
       const res = await fetch("/api/lounge");
       if (res.ok) {
@@ -194,19 +229,26 @@ export default function RetroArcadeModal() {
         if (data.skribbl) {
           setSkribblHint(data.skribbl.hint);
           if (data.skribbl.strokes && canvasRef.current && mainView === "skribbl") {
-            renderExternalStrokes(data.skribbl.strokes);
+            renderStrokes(canvasRef.current, data.skribbl.strokes);
           }
         }
       }
     } catch {}
-  };
+  }, [mainView]);
 
   useEffect(() => {
     if (!isOpen) return;
-    fetchRoomData();
-    const interval = setInterval(fetchRoomData, 2500);
-    return () => clearInterval(interval);
-  }, [isOpen, mainView]);
+    const initialFetch = window.setTimeout(() => {
+      void fetchRoomData();
+    }, 0);
+    const interval = window.setInterval(() => {
+      void fetchRoomData();
+    }, 2500);
+    return () => {
+      window.clearTimeout(initialFetch);
+      window.clearInterval(interval);
+    };
+  }, [isOpen, fetchRoomData]);
 
   // Heartbeat to keep visitor presence live
   useEffect(() => {
@@ -222,7 +264,12 @@ export default function RetroArcadeModal() {
               id: profile.id,
               name: profile.name,
               avatar: profile.avatar,
-              activity: mainView === "skribbl" ? "Sketching in Scribble" : `Playing ${arcadeGame}`,
+              activity:
+                mainView === "skribbl"
+                  ? "Sketching in Scribble"
+                  : mainView === "study"
+                  ? "Studying in the room"
+                  : `Playing ${arcadeGame}`,
             },
           }),
         });
@@ -239,28 +286,6 @@ export default function RetroArcadeModal() {
       chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
     }
   }, [messages]);
-
-  // Render strokes on canvas
-  const renderExternalStrokes = (strokes: Stroke[]) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    ctx.fillStyle = "#121210";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    strokes.forEach((st) => {
-      ctx.strokeStyle = st.color;
-      ctx.lineWidth = st.size;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      ctx.beginPath();
-      ctx.moveTo(st.x0, st.y0);
-      ctx.lineTo(st.x1, st.y1);
-      ctx.stroke();
-    });
-  };
 
   // Canvas interaction
   const getCanvasPos = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
@@ -406,12 +431,13 @@ export default function RetroArcadeModal() {
     } catch {}
 
     // Normal message / reaction shout
+    optimisticSequence.current += 1;
     const optimistic: ChatMessage = {
-      id: `local-${Date.now()}`,
+      id: `local-${optimisticSequence.current}`,
       sender: { id: profile.id, name: profile.name, avatar: profile.avatar },
       text: clean,
       type,
-      timestamp: Date.now(),
+      timestamp: optimisticSequence.current,
     };
     setMessages((prev) => [...prev, optimistic]);
     sounds.playMinecraftPop();
@@ -477,6 +503,8 @@ export default function RetroArcadeModal() {
         onClick={() => {
           setIsOpen(false);
           isOpenRef.current = false;
+          sounds.stopAmbient();
+          setAmbientMode("quiet");
         }}
       >
         <motion.div
@@ -511,15 +539,28 @@ export default function RetroArcadeModal() {
             <div className="flex items-center gap-0.5 sm:gap-1 rounded-xl border border-[#2b2b24] bg-[#121210] p-0.5 sm:p-1">
               <button
                 type="button"
-                onClick={() => { setMainView("skribbl"); setMobilePane("stage"); sounds.playMinecraftPop(); }}
+                onClick={() => { setMainView("study"); setMobilePane("stage"); sounds.playMinecraftPop(); }}
                 className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 rounded-lg text-xs font-medium transition-all ${
+                  mainView === "study"
+                    ? "bg-[#d4a843] text-[#0f0f0d] font-semibold shadow-sm"
+                    : "text-[#8a8a7a] hover:text-[#f0ece4]"
+                }`}
+              >
+                <BookOpen className="h-3.5 w-3.5" />
+                <span>Study Room</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => { setMainView("skribbl"); setMobilePane("stage"); sounds.playMinecraftPop(); }}
+                className={`hidden sm:flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 rounded-lg text-xs font-medium transition-all ${
                   mainView === "skribbl"
                     ? "bg-[#d4a843] text-[#0f0f0d] font-semibold shadow-sm"
                     : "text-[#8a8a7a] hover:text-[#f0ece4]"
                 }`}
               >
                 <Palette className="h-3.5 w-3.5" />
-                <span>Scribble</span>
+                <span>Whiteboard</span>
               </button>
 
               <button
@@ -562,7 +603,7 @@ export default function RetroArcadeModal() {
 
               <button
                 type="button"
-                onClick={() => { setIsOpen(false); isOpenRef.current = false; }}
+                onClick={() => { setIsOpen(false); isOpenRef.current = false; sounds.stopAmbient(); setAmbientMode("quiet"); }}
                 title="Close lounge (Esc)"
                 className="flex h-7 w-7 items-center justify-center rounded-lg border border-[#2b2b24] bg-[#121210] text-[#8a8a7a] hover:text-[#f0ece4] transition-colors"
               >
@@ -645,7 +686,36 @@ export default function RetroArcadeModal() {
           <div className="flex-1 grid grid-cols-1 md:grid-cols-12 min-h-0 overflow-hidden">
             {/* LEFT COLUMN: THE ACTIVE STAGE (~65%) */}
             <div className={`md:col-span-7 lg:col-span-8 flex flex-col border-b md:border-b-0 md:border-r border-[#2b2b24] min-h-0 bg-[#0f0f0d] ${mobilePane === "stage" ? "flex" : "hidden md:flex"}`}>
-              {/* STAGE A: SCRIBBLE ROOM */}
+              {/* STAGE A: STUDY ROOM */}
+              {mainView === "study" && (
+                <StudyRoomStage
+                  profile={profile}
+                  visitors={visitors}
+                  ambientMode={ambientMode}
+                  onAmbientChange={(mode) => {
+                    setAmbientMode(mode);
+                    if (mode === "quiet") {
+                      sounds.stopAmbient();
+                    } else {
+                      sounds.startAmbient(mode);
+                    }
+                  }}
+                  onOpenScribble={() => {
+                    setMainView("skribbl");
+                    sounds.playMinecraftPop();
+                  }}
+                  onOpenArcade={() => {
+                    setMainView("arcade");
+                    sounds.playMinecraftPop();
+                  }}
+                  onOpenRankings={() => {
+                    setMainView("rankings");
+                    sounds.playMinecraftPop();
+                  }}
+                />
+              )}
+
+              {/* STAGE B: SCRIBBLE ROOM */}
               {mainView === "skribbl" && (
                 <div className="flex flex-col h-full">
                   {/* Scribble Prompt Bar */}
@@ -774,7 +844,7 @@ export default function RetroArcadeModal() {
                 </div>
               )}
 
-              {/* STAGE B: ARCADE SHELF */}
+              {/* STAGE C: ARCADE SHELF */}
               {mainView === "arcade" && (
                 <div className="flex flex-col h-full">
                   {/* Game Sub-selector */}
@@ -790,7 +860,7 @@ export default function RetroArcadeModal() {
                         <button
                           key={g.id}
                           type="button"
-                          onClick={() => { setArcadeGame(g.id as any); sounds.playMinecraftPop(); }}
+                           onClick={() => { setArcadeGame(g.id as ArcadeGame); sounds.playMinecraftPop(); }}
                           className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium transition-all ${
                             arcadeGame === g.id
                               ? "bg-[#d4a843] text-[#0f0f0d] font-semibold"
@@ -838,7 +908,7 @@ export default function RetroArcadeModal() {
                 </div>
               )}
 
-              {/* STAGE C: LEADERBOARDS */}
+              {/* STAGE D: LEADERBOARDS */}
               {mainView === "rankings" && (
                 <div className="flex-1 overflow-y-auto bg-[#0f0f0d]">
                   <LeaderboardView />

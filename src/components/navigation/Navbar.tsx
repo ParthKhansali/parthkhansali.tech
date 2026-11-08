@@ -11,9 +11,9 @@ import { sounds } from "@/lib/soundFx";
 
 const navLinks = [
   { label: "Projects", id: "projects" },
-  { label: "Skills", id: "portal-marquee" },
-  { label: "Build Log", id: "dev-dashboard" },
-  { label: "Experience", id: "experience" },
+  { label: "How I Work", id: "how-i-work" },
+  { label: "Stack", id: "portal-marquee" },
+  { label: "About", id: "about" },
   { label: "Contact", id: "contact" },
 ];
 

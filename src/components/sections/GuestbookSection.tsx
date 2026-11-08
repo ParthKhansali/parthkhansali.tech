@@ -26,14 +26,15 @@ export default function GuestbookSection() {
   const [, startTransition] = useTransition();
 
   // Google User Auth
-  const [googleUser, setGoogleUser] = useState<GoogleUser | null>(null);
-
-  useEffect(() => {
+  const [googleUser, setGoogleUser] = useState<GoogleUser | null>(() => {
+    if (typeof window === "undefined") return null;
     try {
-      const saved = localStorage.getItem("pk_google_user");
-      if (saved) setGoogleUser(JSON.parse(saved));
-    } catch {}
-  }, []);
+      const saved = window.localStorage.getItem("pk_google_user");
+      return saved ? (JSON.parse(saved) as GoogleUser) : null;
+    } catch {
+      return null;
+    }
+  });
 
   const [isSignInOpen, setIsSignInOpen] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);

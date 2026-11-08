@@ -1,3 +1,5 @@
+import { siteConfig } from "@/data/site";
+
 export interface Project {
   id: string;
   title: string;
@@ -37,8 +39,7 @@ export const projects: Project[] = [
     glowColor: "6, 214, 160",
     buttonText: "Open GEHU Connect →",
     links: {
-      demo: "https://gehuconnect.in",
-      github: "https://github.com/ParthKhansali",
+      demo: siteConfig.projects.gehuConnect.demo,
     },
   },
   {
@@ -60,7 +61,7 @@ export const projects: Project[] = [
     glowColor: "114, 9, 183",
     buttonText: "See OmniMentor →",
     links: {
-      github: "https://github.com/ParthKhansali",
+      github: siteConfig.projects.omniMentor.github,
     },
   },
   {
@@ -80,9 +81,7 @@ export const projects: Project[] = [
     visualizer: "pipeline",
     glowColor: "67, 97, 238",
     buttonText: "Explore ForgeFlow →",
-    links: {
-      github: "https://github.com/ParthKhansali",
-    },
+    links: {},
   },
   {
     id: "aranya",
@@ -103,7 +102,8 @@ export const projects: Project[] = [
     glowColor: "255, 107, 107",
     buttonText: "Explore ARANYA →",
     links: {
-      github: "https://github.com/ParthKhansali",
+      demo: siteConfig.projects.aranya.demo,
+      github: siteConfig.projects.aranya.github,
     },
   },
   {
@@ -124,9 +124,7 @@ export const projects: Project[] = [
     visualizer: "optical",
     glowColor: "114, 9, 183",
     buttonText: "View Research Notes →",
-    links: {
-      github: "https://github.com/ParthKhansali",
-    },
+    links: {},
   },
   {
     id: "resume-screener",
@@ -145,9 +143,7 @@ export const projects: Project[] = [
     visualizer: "search",
     glowColor: "67, 97, 238",
     buttonText: "View Code →",
-    links: {
-      github: "https://github.com/ParthKhansali",
-    },
+    links: {},
   },
   {
     id: "autohire",
@@ -166,8 +162,6 @@ export const projects: Project[] = [
     visualizer: "stream",
     glowColor: "255, 107, 107",
     buttonText: "View Pipeline →",
-    links: {
-      github: "https://github.com/ParthKhansali",
-    },
+    links: {},
   },
 ];

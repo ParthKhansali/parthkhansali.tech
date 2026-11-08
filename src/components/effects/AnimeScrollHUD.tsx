@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { animate, onScroll } from "animejs";
-import { ArrowUp, Compass } from "lucide-react";
+import { useEffect, useState } from "react";
+import { onScroll } from "animejs";
+import { ArrowUp } from "lucide-react";
 import { sounds } from "@/lib/soundFx";
 
 interface SectionInfo {
@@ -14,12 +14,13 @@ interface SectionInfo {
 const SECTIONS: SectionInfo[] = [
   { id: "hero", num: "01", label: "HERO" },
   { id: "portal-marquee", num: "02", label: "TOOLBOX" },
-  { id: "projects", num: "03", label: "PROJECTS" },
-  { id: "dev-dashboard", num: "04", label: "SYSTEMS" },
-  { id: "about", num: "05", label: "ABOUT" },
-  { id: "experience", num: "06", label: "CAREER" },
-  { id: "guestbook", num: "07", label: "COMMUNITY" },
-  { id: "contact", num: "08", label: "CONTACT" },
+  { id: "how-i-work", num: "03", label: "METHOD" },
+  { id: "projects", num: "04", label: "PROJECTS" },
+  { id: "dev-dashboard", num: "05", label: "SYSTEMS" },
+  { id: "about", num: "06", label: "ABOUT" },
+  { id: "experience", num: "07", label: "CAREER" },
+  { id: "guestbook", num: "08", label: "COMMUNITY" },
+  { id: "contact", num: "09", label: "CONTACT" },
 ];
 
 export default function AnimeScrollHUD() {

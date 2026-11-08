@@ -38,19 +38,19 @@ export default function PortalMarquee() {
   return (
     <section
       id="portal-marquee"
-      className="relative overflow-hidden bg-[#0f0f0d] py-16 border-y border-[#f0ece4]/[0.06]"
+      className="workshop-grid relative overflow-hidden bg-[#17130f] py-16 border-y border-[#f4eee4]/[0.1]"
       aria-label="Technologies and Tooling"
     >
       {/* Header */}
       <div className="relative z-10 mb-10 max-w-6xl mx-auto px-6 md:px-12 lg:px-20">
-        <p className="text-xs font-semibold tracking-wider text-[#d4a843] uppercase mb-2">
+        <p className="section-kicker mb-2">
           The Toolbox
         </p>
-        <h2 className="font-display text-[clamp(1.85rem,4vw,2.75rem)] font-bold tracking-tight text-[#f0ece4]">
+        <h2 className="font-display text-[clamp(1.85rem,4vw,2.75rem)] font-bold tracking-tight text-[#f4eee4]">
           What I actually use
         </h2>
-        <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#8a8a7a]">
-          I don't collect tools for the resume. These are the ones that show up in my git log.
+        <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#a69d8e]">
+          I don&apos;t collect tools for the resume. These are the ones that show up in my git log.
         </p>
       </div>
 
@@ -64,10 +64,10 @@ export default function PortalMarquee() {
                 key={`r1-${idx}`}
                 className="group flex items-center gap-4 text-xs font-medium text-[#8a8a7a]"
               >
-                <span className="flex items-center gap-2 rounded border border-[#333328] bg-[#171714] px-3.5 py-1.5 transition-colors group-hover:border-[#555548] group-hover:text-[#f0ece4]">
+                  <span className="flex items-center gap-2 rounded border border-[#4a4033] bg-[#211c17] px-3.5 py-1.5 transition-colors group-hover:border-[#7c674c] group-hover:text-[#f4eee4]">
                   {item}
                 </span>
-                <span className="text-[#333328] text-xs">·</span>
+                <span className="text-[#5a4b3a] text-xs">·</span>
               </div>
             ))}
           </div>
@@ -81,10 +81,10 @@ export default function PortalMarquee() {
                 key={`r2-${idx}`}
                 className="group flex items-center gap-4 text-xs font-medium text-[#8a8a7a]"
               >
-                <span className="flex items-center gap-2 rounded border border-[#333328] bg-[#171714] px-3.5 py-1.5 transition-colors group-hover:border-[#555548] group-hover:text-[#f0ece4]">
+                  <span className="flex items-center gap-2 rounded border border-[#4a4033] bg-[#211c17] px-3.5 py-1.5 transition-colors group-hover:border-[#7c674c] group-hover:text-[#f4eee4]">
                   {item}
                 </span>
-                <span className="text-[#333328] text-xs">·</span>
+                <span className="text-[#5a4b3a] text-xs">·</span>
               </div>
             ))}
           </div>
@@ -94,7 +94,7 @@ export default function PortalMarquee() {
       {/* Subtext thought */}
       <div className="relative z-10 mt-8 text-center px-4">
         <p className="text-xs text-[#6a6a5e]">
-          The list changes. The habit of reading the source code before the tutorial doesn't.
+          The list changes. The habit of reading the source code before the tutorial doesn&apos;t.
         </p>
       </div>
     </section>

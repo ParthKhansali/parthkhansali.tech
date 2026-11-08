@@ -9,13 +9,16 @@ Designed and engineered by Parth Khansali.
 ## Highlights
 
 - **Floating Pill Navigation**: Centered floating pill on desktop with physics-based magnetic profile avatar and online status beacon, plus a fullscreen slide-over drawer on mobile devices.
-- **Projects Showcase**: Interactive engineering project cards featuring OmniMentor, GEHU Connect, TaskFlow, ForgeFlow, and ARANYA, complete with live visualizers and direct links.
+- **Projects Showcase**: Interactive engineering project cards featuring OmniMentor, GEHU Connect, ForgeFlow, ARANYA, and research builds, with live visualizers and only confirmed public links.
 - **Interactive About Section**: Alter-ego glitch video active by default on initial visit and reload, with a one-click toggle to the portrait photo.
-- **Late Night Lounge**: Real-time interactive space with a shared Skribbl drawing canvas, retro arcade games (Runner, Snake, Pong, Reflex), and live visitor chat.
+- **Late Night Lounge**: Interactive prototype with a shared Skribbl drawing canvas, retro arcade games (Runner, Snake, Pong, Reflex), visitor chat, and a study-room atmosphere.
 - **Quick Command Center (`Cmd+K`)**: Keyboard-driven command palette for navigating projects, skills, leadership records, and actions.
 - **Verified Community Guestbook**: Verified visitor entries backed by Firebase Google Authentication and Cloud Firestore.
-- **Developer Telemetry**: Live GitHub repository metrics, WakaTime coding telemetry, and an interactive Spotify music player.
+- **Developer Telemetry**: Live GitHub repository metrics, optional WakaTime coding telemetry, and a YouTube Music-aware music desk with honest setup states.
 - **CV / Resume Viewer**: In-browser PDF resume preview with direct one-click download.
+- **Workbench Storytelling**: A handmade-feeling visual system and “A note from the workbench” section that explains how Parth thinks and builds.
+- **Campfire Ritual**: A small opt-in animated campfire inside the workbench story; clicking it toggles the procedural rain-and-fire ambience, with an independent mute control.
+- **SEO Foundation**: Entity-focused metadata, Person/ProfilePage JSON-LD, deterministic sitemap dates, a web manifest, and a practical 90-day SEO plan in `SEO_PLAN.md`.
 
 ---
 
@@ -76,6 +79,7 @@ The exported HTML and static assets are placed in the `./out` directory, ready f
 - `src/components/effects/`: Retro Lounge modal, games (Runner, Snake, Pong, Reflex), and canvas visualizers.
 - `src/lib/`: Firebase client config, sound effects generator, base path resolver, and telemetry helpers.
 - `scripts/build_pages.mjs`: Production static export workflow for GitHub Pages.
+- `SEO_PLAN.md`: Search positioning, technical SEO checklist, content roadmap, measurement plan, and launch sequence.
 
 ---
 

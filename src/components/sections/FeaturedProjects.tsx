@@ -4,7 +4,8 @@ import React, { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ChevronDown, ChevronUp, ExternalLink, ThumbsUp, MessageSquare, CloudUpload, Users, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { GithubIcon } from "@/components/icons/SocialIcons";
-import { projects, Project } from "@/data/projects";
+import { projects } from "@/data/projects";
+import { siteConfig } from "@/data/site";
 import { sounds } from "@/lib/soundFx";
 
 /* ═══════════════════════════════════════════════════════════
@@ -51,7 +52,7 @@ function EqualizerViz() {
           { label: "OmniPredict", sub: "Concept Gap", delay: "0.6s" },
           { label: "OmniLoop", sub: "Adaptive Pace", delay: "1.2s" },
           { label: "OmniFlow", sub: "Context Synthesis", delay: "1.8s" },
-        ].map((node, i) => (
+        ].map((node) => (
           <div key={node.label} className="relative flex flex-col items-center">
             <div
               className="relative h-11 w-11 rounded-xl border border-[#d4a843]/40 bg-[#1a1813] flex items-center justify-center shadow-[0_0_15px_rgba(212,168,67,0.12)]"
@@ -83,7 +84,7 @@ function EqualizerViz() {
         </span>
       </div>
       <div className="absolute top-2.5 right-4 flex items-center gap-1.5">
-        <span className="text-[9px] font-mono text-[#8fb573]">RETENTION 98.4%</span>
+        <span className="text-[9px] font-mono text-[#8fb573]">STATE: PROTOTYPE</span>
       </div>
 
       {/* Bottom live insight pill */}
@@ -92,7 +93,7 @@ function EqualizerViz() {
           <span>⚡</span>
           <span>Anticipatory explanation queued</span>
         </span>
-        <span className="text-[#6a6a5e]">latency: 18ms</span>
+        <span className="text-[#6a6a5e]">signal: illustrative</span>
       </div>
     </div>
   );
@@ -126,7 +127,7 @@ function PipelineViz() {
           { code: "ast.parse", name: "Synthesize", icon: "λ", status: "ok" },
           { code: "dag.flow", name: "Pipeline", icon: "⫽", status: "active" },
           { code: "dist.exec", name: "Worker", icon: ">>", status: "ok" },
-        ].map((stage, idx) => (
+        ].map((stage) => (
           <div key={stage.code} className="relative flex flex-col items-center">
             <div
               className={`h-11 w-11 rounded-lg border flex flex-col items-center justify-center font-mono transition-all ${
@@ -158,7 +159,7 @@ function PipelineViz() {
         </span>
       </div>
       <div className="absolute top-2.5 right-4 text-[9px] font-mono text-[#7b8aec]">
-        QUEUE: 0 · 0ms DELAY
+        QUEUE: DEMO · LOCAL RUN
       </div>
     </div>
   );
@@ -333,8 +334,8 @@ function SearchViz() {
 
       {/* Stats footer */}
       <div className="flex items-center justify-between text-[8px] font-mono text-[#6a6a5e] pt-1 border-t border-[#22221c]">
-        <span>1,420 resumes indexed · BM25</span>
-        <span className="text-[#8fb573]">Query Latency: 0.38ms</span>
+        <span>Local index · BM25</span>
+        <span className="text-[#8fb573]">Benchmark in build notes</span>
       </div>
     </div>
   );
@@ -349,10 +350,10 @@ function StreamViz() {
         <div className="flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-[#8fb573] animate-pulse" />
           <span className="text-[#8a8a7a] uppercase tracking-wider">
-            Kafka Stream Broker · 3 Partitions
+            Kafka Stream Broker · Demo Partitions
           </span>
         </div>
-        <span className="text-[#8fb573]">LAG: 0 MSGS</span>
+          <span className="text-[#8fb573]">LAG: DEMO</span>
       </div>
 
       {/* Event Stream Partitions */}
@@ -393,8 +394,8 @@ function StreamViz() {
 
       {/* Consumer Group Footer */}
       <div className="flex items-center justify-between text-[8px] font-mono text-[#6a6a5e] pt-1 border-t border-[#22221c]">
-        <span>Consumers: 4 Active Workers</span>
-        <span className="text-[#8fb573]">Cluster: Synced</span>
+        <span>Consumers: simulated workers</span>
+        <span className="text-[#8fb573]">Cluster: demo state</span>
       </div>
     </div>
   );
@@ -554,7 +555,7 @@ function GehuConnectShowcase() {
                       <span className="text-xs font-semibold text-[#f0ece4]">Aditya Nautiyal</span>
                       <CheckCircle2 className="h-3 w-3 text-[#8fb573]" />
                     </div>
-                    <span className="text-[10px] text-[#8a8a7a] font-mono">B.Tech CSE '25 · Dehradun</span>
+                    <span className="text-[10px] text-[#8a8a7a] font-mono">B.Tech CSE &apos;25 · Dehradun</span>
                   </div>
                 </div>
                 <span className="text-[10px] text-[#6a6a5e] font-mono">12m ago</span>
@@ -751,7 +752,7 @@ export default function FeaturedProjects() {
     <section
       id="projects"
       ref={sectionRef}
-      className="section-padding relative overflow-hidden bg-[#0f0f0d] scroll-mt-24 border-t border-[#f0ece4]/[0.06]"
+      className="section-padding relative overflow-hidden bg-[#14120f] scroll-mt-24 border-t border-[#f4eee4]/[0.08]"
       aria-labelledby="projects-heading"
       itemScope
       itemType="https://schema.org/CollectionPage"
@@ -759,13 +760,14 @@ export default function FeaturedProjects() {
       <div className="mx-auto max-w-6xl relative z-10">
         {/* Header */}
         <header className="mb-14">
+          <p className="section-kicker mb-3">Selected builds</p>
           <h2
             id="projects-heading"
-            className="font-display text-[clamp(2.2rem,4.5vw,3.5rem)] font-bold tracking-tight text-[#f0ece4]"
+            className="font-display text-[clamp(2.2rem,4.5vw,3.5rem)] font-bold tracking-tight text-[#f4eee4]"
           >
             Ideas that made it out of the notes app
           </h2>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#8a8a7a]">
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#a69d8e]">
             Some started as university projects, some started as &ldquo;wait, why does this not exist yet?&rdquo; I build them far enough to run into the real engineering problems.
           </p>
         </header>
@@ -775,7 +777,7 @@ export default function FeaturedProjects() {
           id={`project-${flagship.id}`}
           itemScope
           itemType="https://schema.org/SoftwareApplication"
-          className={`group relative mb-14 scroll-mt-28 rounded-2xl border border-[#f0ece4]/[0.08] bg-[#171714] overflow-hidden transition-all duration-500 ${
+          className={`paper-card group relative mb-14 scroll-mt-28 rounded-2xl border border-[#4a4033] bg-[#1c1915] overflow-hidden transition-all duration-500 ${
             highlightedId === flagship.id
               ? "ring-2 ring-[#d4a843] shadow-[0_0_40px_rgba(212,168,67,0.2)]"
               : "hover:border-[#f0ece4]/15 hover:shadow-[0_8px_40px_rgba(0,0,0,0.3)]"
@@ -786,7 +788,7 @@ export default function FeaturedProjects() {
           <meta itemProp="operatingSystem" content="iOS, Android, React Native" />
           <meta itemProp="applicationCategory" content="SocialNetworkingApplication" />
           <meta itemProp="author" content="Parth Khansali" />
-          <meta itemProp="url" content="https://gehuconnect.in" />
+           <meta itemProp="url" content={siteConfig.projects.gehuConnect.demo} />
           <meta
             itemProp="description"
             content="Student community and networking platform built with React Native and Spring Boot for Graphic Era Hill University students."
@@ -833,7 +835,7 @@ export default function FeaturedProjects() {
 
               <div className="mt-7 flex flex-wrap items-center gap-3 border-t border-[#333328] pt-5">
                 <a
-                  href={flagship.links.demo || "https://gehuconnect.in"}
+                   href={flagship.links.demo || siteConfig.projects.gehuConnect.demo}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => sounds.playMinecraftPop()}
@@ -870,6 +872,8 @@ export default function FeaturedProjects() {
           {displayedProjects.map((project, idx) => {
             const VizComponent = project.visualizer ? VISUALIZER_MAP[project.visualizer] : null;
             const accent = project.visualizer ? VIZ_ACCENTS[project.visualizer] || "#d4a843" : "#d4a843";
+            const projectHref = project.links.demo || project.links.github;
+            const projectActionLabel = projectHref ? project.buttonText || "View project" : "Source not published";
 
             return (
               <motion.article
@@ -880,7 +884,7 @@ export default function FeaturedProjects() {
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: idx * 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className={`group featured-project-card scroll-mt-28 rounded-xl border border-[#f0ece4]/[0.06] bg-[#171714] overflow-hidden transition-all duration-300 hover:border-[#f0ece4]/12 hover:shadow-[0_8px_40px_rgba(0,0,0,0.3)] flex flex-col ${
+                className={`paper-card group featured-project-card scroll-mt-28 rounded-xl border border-[#4a4033] bg-[#1c1915] overflow-hidden transition-all duration-300 hover:border-[#7c674c] hover:shadow-[0_8px_40px_rgba(0,0,0,0.3)] flex flex-col ${
                   highlightedId === project.id
                     ? "ring-2 ring-[#d4a843] shadow-[0_0_35px_rgba(212,168,67,0.2)]"
                     : ""
@@ -949,16 +953,25 @@ export default function FeaturedProjects() {
                   </div>
 
                   <div className="mt-5 flex items-center justify-between border-t border-[#2a2a24] pt-4">
-                    <a
-                      href={project.links.demo || project.links.github || "#"}
-                      target={project.links.demo ? "_blank" : undefined}
-                      rel={project.links.demo ? "noopener noreferrer" : undefined}
-                      className="min-h-[44px] inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold text-[#f0ece4] transition-all hover:bg-[#f0ece4]/[0.06]"
-                      aria-label={`${project.buttonText || "View project"} for ${project.title}`}
-                    >
-                      <span>{project.buttonText || "View project"}</span>
-                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                    </a>
+                    {projectHref ? (
+                      <a
+                        href={projectHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="min-h-[44px] inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold text-[#f0ece4] transition-all hover:bg-[#f0ece4]/[0.06]"
+                        aria-label={`${projectActionLabel} for ${project.title}`}
+                      >
+                        <span>{projectActionLabel}</span>
+                        <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                      </a>
+                    ) : (
+                      <span
+                        className="min-h-[44px] inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-xs font-semibold text-[#6a6a5e]"
+                        aria-label={`Source link not published for ${project.title}`}
+                      >
+                        <span>{projectActionLabel}</span>
+                      </span>
+                    )}
                     {project.links.github && (
                       <a
                         href={project.links.github}
@@ -1006,4 +1019,3 @@ export default function FeaturedProjects() {
     </section>
   );
 }
-

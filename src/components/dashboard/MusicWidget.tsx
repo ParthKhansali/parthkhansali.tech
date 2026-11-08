@@ -22,6 +22,7 @@ interface TrackData {
 export default function MusicWidget() {
   const [track, setTrack] = useState<TrackData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [now, setNow] = useState<number | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -40,7 +41,10 @@ export default function MusicWidget() {
       } catch (err) {
         console.debug("Failed to fetch current music track:", err);
       } finally {
-        if (isMounted) setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+          setNow(Date.now());
+        }
       }
     }
 
@@ -55,7 +59,7 @@ export default function MusicWidget() {
 
   const formatRelativeTime = (isoString?: string) => {
     if (!isoString) return "";
-    const diff = Math.floor((Date.now() - new Date(isoString).getTime()) / 60000);
+    const diff = now === null ? 0 : Math.floor((now - new Date(isoString).getTime()) / 60000);
     if (diff < 1) return "just now";
     if (diff < 60) return `${diff}m ago`;
     const hrs = Math.floor(diff / 60);
@@ -63,7 +67,13 @@ export default function MusicWidget() {
     return `${Math.floor(hrs / 24)}d ago`;
   };
 
-  const isYt = track?.service === "ytmusic";
+  const playerLabel =
+    track?.service === "spotify"
+      ? "Spotify"
+      : track?.configured
+        ? "YouTube Music"
+        : "Setup guide";
+  const trackUrl = track?.url && track.url !== "#" ? track.url : null;
 
   // Don't render if nothing to show
   if (isLoading) {
@@ -117,23 +127,27 @@ export default function MusicWidget() {
                     <span className="text-[#8fb573]">listening now</span>
                   </span>
                 ) : (
-                  <span>
-                    last played {track?.playedAt ? formatRelativeTime(track.playedAt) : ""}
-                  </span>
+                  <span>{track?.playedAt ? `last played ${formatRelativeTime(track.playedAt)}` : track?.label || "music desk"}</span>
                 )}
               </span>
             </div>
 
             {/* Track Name */}
-            <a
-              href={track?.url || "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center gap-1 text-sm font-semibold text-[#f0ece4] hover:text-[#d4a843] transition-colors truncate max-w-full"
-            >
-              <span className="truncate">{track?.trackName || "Nothing playing"}</span>
-              <ExternalLink className="h-3 w-3 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
-            </a>
+            {trackUrl ? (
+              <a
+                href={trackUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex max-w-full items-center gap-1 truncate text-sm font-semibold text-[#f0ece4] transition-colors hover:text-[#d4a843]"
+              >
+                <span className="truncate">{track?.trackName || "Nothing playing"}</span>
+                <ExternalLink className="h-3 w-3 flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-100" />
+              </a>
+            ) : (
+              <span className="inline-flex max-w-full truncate text-sm font-semibold text-[#f0ece4]">
+                {track?.trackName || "Nothing playing"}
+              </span>
+            )}
 
             {/* Artist */}
             <p className="text-xs text-[#6a6a5e] truncate">
@@ -144,15 +158,15 @@ export default function MusicWidget() {
         </div>
 
         {/* Right: Listen button */}
-        {track?.url && (
+        {trackUrl && (
           <a
-            href={track.url}
+            href={trackUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 border border-[#333328] px-4 py-2 text-xs font-medium text-[#b5b0a1] transition-all hover:border-[#555548] hover:text-[#f0ece4] self-end sm:self-center"
           >
             <Play className="h-3.5 w-3.5 fill-current" />
-            <span>{isYt ? "YouTube Music" : "Spotify"}</span>
+            <span>{playerLabel}</span>
           </a>
         )}
       </div>

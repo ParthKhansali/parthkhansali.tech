@@ -27,7 +27,16 @@ const FOOD_TYPES = [
 export default function SnakeGame({ profile, onFinishGame, isActive }: SnakeGameProps) {
   const [gameState, setGameState] = useState<"idle" | "playing" | "gameover">("idle");
   const [score, setScore] = useState(0);
-  const [highScore, setHighScore] = useState(0);
+  const [highScore, setHighScore] = useState(() => {
+    if (typeof window === "undefined") return 0;
+    try {
+      const saved = window.localStorage.getItem("pk_snake_highscore");
+      return saved ? parseInt(saved, 10) : 0;
+    } catch {
+      return 0;
+    }
+  });
+  const [foodLabel, setFoodLabel] = useState("ts");
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const snakeRef = useRef<Point[]>([
@@ -44,13 +53,6 @@ export default function SnakeGame({ profile, onFinishGame, isActive }: SnakeGame
     color: "#7d9eb5",
   });
   const loopTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("pk_snake_highscore");
-      if (saved) setHighScore(parseInt(saved, 10));
-    } catch {}
-  }, []);
 
   const spawnFood = () => {
     const snake = snakeRef.current;
@@ -71,6 +73,7 @@ export default function SnakeGame({ profile, onFinishGame, isActive }: SnakeGame
       label: randomFood.label,
       color: randomFood.color,
     };
+    setFoodLabel(randomFood.label);
   };
 
   const startNewGame = () => {
@@ -140,6 +143,56 @@ export default function SnakeGame({ profile, onFinishGame, isActive }: SnakeGame
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isActive, gameState]);
 
+  const renderCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const cellW = canvas.width / COLS;
+    const cellH = canvas.height / ROWS;
+
+    // Background
+    ctx.fillStyle = "#121210";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Subtle grid dots
+    ctx.fillStyle = "rgba(240, 236, 228, 0.05)";
+    for (let x = 0; x < COLS; x++) {
+      for (let y = 0; y < ROWS; y++) {
+        ctx.fillRect(x * cellW + cellW / 2 - 0.5, y * cellH + cellH / 2 - 0.5, 1, 1);
+      }
+    }
+
+    // Food
+    const food = foodRef.current;
+    ctx.fillStyle = food.color;
+    ctx.beginPath();
+    ctx.roundRect(food.x * cellW + 2, food.y * cellH + 2, cellW - 4, cellH - 4, 3);
+    ctx.fill();
+
+    ctx.fillStyle = "#0f0f0d";
+    ctx.font = "9px monospace";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(food.label, food.x * cellW + cellW / 2, food.y * cellH + cellH / 2);
+
+    // Snake
+    const snake = snakeRef.current;
+    snake.forEach((seg, i) => {
+      const isHead = i === 0;
+      ctx.fillStyle = isHead ? "#8fb573" : "#6a8c54";
+      ctx.beginPath();
+      ctx.roundRect(seg.x * cellW + 1.5, seg.y * cellH + 1.5, cellW - 3, cellH - 3, isHead ? 4 : 2);
+      ctx.fill();
+
+      if (isHead) {
+        ctx.fillStyle = "#0f0f0d";
+        ctx.fillRect(seg.x * cellW + 4, seg.y * cellH + 4, 2, 2);
+      }
+    });
+  };
+
   // Tick loop
   useEffect(() => {
     if (!isActive || gameState !== "playing") {
@@ -192,57 +245,6 @@ export default function SnakeGame({ profile, onFinishGame, isActive }: SnakeGame
     };
   }, [isActive, gameState]);
 
-  const renderCanvas = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const cellW = canvas.width / COLS;
-    const cellH = canvas.height / ROWS;
-
-    // Background
-    ctx.fillStyle = "#121210";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Subtle grid dots
-    ctx.fillStyle = "rgba(240, 236, 228, 0.05)";
-    for (let x = 0; x < COLS; x++) {
-      for (let y = 0; y < ROWS; y++) {
-        ctx.fillRect(x * cellW + cellW / 2 - 0.5, y * cellH + cellH / 2 - 0.5, 1, 1);
-      }
-    }
-
-    // Food
-    const food = foodRef.current;
-    ctx.fillStyle = food.color;
-    ctx.beginPath();
-    ctx.roundRect(food.x * cellW + 2, food.y * cellH + 2, cellW - 4, cellH - 4, 3);
-    ctx.fill();
-
-    ctx.fillStyle = "#0f0f0d";
-    ctx.font = "9px monospace";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(food.label, food.x * cellW + cellW / 2, food.y * cellH + cellH / 2);
-
-    // Snake
-    const snake = snakeRef.current;
-    snake.forEach((seg, i) => {
-      const isHead = i === 0;
-      ctx.fillStyle = isHead ? "#8fb573" : "#6a8c54";
-      ctx.beginPath();
-      ctx.roundRect(seg.x * cellW + 1.5, seg.y * cellH + 1.5, cellW - 3, cellH - 3, isHead ? 4 : 2);
-      ctx.fill();
-
-      if (isHead) {
-        // Eyes
-        ctx.fillStyle = "#0f0f0d";
-        ctx.fillRect(seg.x * cellW + 4, seg.y * cellH + 4, 2, 2);
-      }
-    });
-  };
-
   useEffect(() => {
     renderCanvas();
   }, [isActive]);
@@ -260,7 +262,7 @@ export default function SnakeGame({ profile, onFinishGame, isActive }: SnakeGame
           </span>
         </div>
         <span className="text-[#8a8a7a] text-[11px]">
-          Target: {foodRef.current.label.toUpperCase()}
+          Target: {foodLabel.toUpperCase()}
         </span>
       </div>
 

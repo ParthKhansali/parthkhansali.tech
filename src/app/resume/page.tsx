@@ -12,8 +12,8 @@ import {
   ExternalLink,
   FileText,
 } from "lucide-react";
-import RevealText from "@/components/RevealText";
 import { asset } from "@/lib/basepath";
+import { siteConfig } from "@/data/site";
 
 const education = [
   {
@@ -155,7 +155,7 @@ export default function ResumePage() {
   const [viewMode, setViewMode] = useState<"interactive" | "pdf">("interactive");
 
   return (
-    <main className="section-padding min-h-screen pt-28" ref={ref}>
+    <main className="section-padding workshop-grid min-h-screen bg-[#14120f] pt-28" ref={ref}>
       <div className="mx-auto max-w-4xl px-6 md:px-10">
         {/* Header */}
         <div className="mb-12 flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between border-b border-white/[0.06] pb-10">
@@ -164,21 +164,23 @@ export default function ResumePage() {
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
               transition={{ duration: 0.6 }}
-              className="mb-3 block text-xs uppercase tracking-[0.3em] text-[#4361ee] font-semibold"
+               className="section-kicker mb-3"
             >
               Curriculum Vitae
             </motion.span>
-            <RevealText
-              mode="word"
-              className="font-display text-[clamp(2.5rem,5vw,3.5rem)] font-bold leading-[1.1] tracking-tight text-white"
+            <motion.h1
+              initial={{ opacity: 0, y: 16 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="font-display text-[clamp(2.5rem,5vw,3.5rem)] font-bold leading-[1.1] tracking-tight text-[#f4eee4]"
             >
               Parth Khansali
-            </RevealText>
+            </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.3 }}
-              className="mt-2 text-base font-medium text-[#4361ee]"
+               className="mt-2 text-base font-medium text-[#e2b66d]"
             >
               Computer Science & Engineering Student · Builder
             </motion.p>
@@ -193,17 +195,17 @@ export default function ResumePage() {
               <span>+91 7302908889</span>
               <span className="opacity-30">•</span>
               <a
-                href="mailto:parthkhansali@gmail.com"
+                 href={`mailto:${siteConfig.email}`}
                 className="transition-colors hover:text-white"
               >
-                parthkhansali@gmail.com
+                 {siteConfig.email}
               </a>
               <span className="opacity-30">•</span>
               <a
-                href="https://linkedin.com/in/parth-khansali"
+                 href={siteConfig.links.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-colors hover:text-[#4361ee]"
+                className="transition-colors hover:text-[#e2b66d]"
               >
                 LinkedIn
               </a>
@@ -224,7 +226,7 @@ export default function ResumePage() {
                 onClick={() => setViewMode("interactive")}
                 className={`rounded-full px-3.5 py-1.5 font-medium transition-colors cursor-pointer ${
                   viewMode === "interactive"
-                    ? "bg-[#4361ee] text-white"
+                         ? "bg-[#e2b66d] text-[#14120f]"
                     : "text-neutral-400 hover:text-white"
                 }`}
               >
@@ -235,7 +237,7 @@ export default function ResumePage() {
                 onClick={() => setViewMode("pdf")}
                 className={`rounded-full px-3.5 py-1.5 font-medium transition-colors cursor-pointer ${
                   viewMode === "pdf"
-                    ? "bg-[#4361ee] text-white"
+                         ? "bg-[#e2b66d] text-[#14120f]"
                     : "text-neutral-400 hover:text-white"
                 }`}
               >
@@ -247,7 +249,7 @@ export default function ResumePage() {
             <a
               href={asset("/parth_resume.pdf")}
               download="Parth_Khansali_Resume.pdf"
-              className="inline-flex items-center gap-2 rounded-full bg-[#4361ee] px-6 py-2.5 text-xs sm:text-sm font-semibold text-white shadow-[0_0_25px_rgba(67,97,238,0.4)] transition-all duration-300 hover:bg-[#3451d1] hover:scale-105 active:scale-95"
+              className="inline-flex items-center gap-2 rounded-full bg-[#e2b66d] px-6 py-2.5 text-xs sm:text-sm font-semibold text-[#14120f] shadow-[0_0_25px_rgba(226,182,109,0.22)] transition-all duration-300 hover:bg-[#f0c987] hover:scale-105 active:scale-95"
             >
               <Download className="h-4 w-4" />
               Download PDF
@@ -260,14 +262,14 @@ export default function ResumePage() {
           <div className="mb-16 animate-in fade-in duration-300">
             <div className="flex items-center justify-between mb-3 text-xs text-neutral-400">
               <span className="flex items-center gap-1.5">
-                <FileText className="h-3.5 w-3.5 text-[#4361ee]" />
+                 <FileText className="h-3.5 w-3.5 text-[#e2b66d]" />
                 Viewing official 2-page PDF
               </span>
               <a
                 href={asset("/parth_resume.pdf")}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-[#4361ee] hover:underline"
+                 className="inline-flex items-center gap-1 text-[#e2b66d] hover:underline"
               >
                 <span>Open in separate tab</span>
                 <ExternalLink className="h-3 w-3" />
@@ -302,7 +304,7 @@ export default function ResumePage() {
                       </h4>
                       <span className="text-xs font-mono text-[#555]">{edu.period}</span>
                     </div>
-                    <p className="mt-1 text-sm text-[#4361ee]">{edu.degree}</p>
+                    <p className="mt-1 text-sm text-[#e2b66d]">{edu.degree}</p>
                     <p className="mt-1 text-xs text-[#777]">
                       {edu.details} · {edu.location}
                     </p>
@@ -327,11 +329,11 @@ export default function ResumePage() {
                       </h4>
                       <span className="text-xs font-mono text-[#555]">{project.period}</span>
                     </div>
-                    <p className="mt-1 text-xs text-[#4361ee] font-medium">{project.tech}</p>
+                    <p className="mt-1 text-xs text-[#e2b66d] font-medium">{project.tech}</p>
                     <ul className="mt-3 flex flex-col gap-2">
                       {project.bullets.map((bullet, j) => (
                         <li key={j} className="flex items-start gap-3 text-sm text-[#888] leading-relaxed">
-                          <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#4361ee]/60" />
+                          <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#e2b66d]/60" />
                           {bullet}
                         </li>
                       ))}
@@ -392,11 +394,11 @@ export default function ResumePage() {
                       </h4>
                       <span className="text-xs font-mono text-[#555]">{exp.period}</span>
                     </div>
-                    <p className="mt-0.5 text-xs text-[#4361ee] font-medium">{exp.org}</p>
+                    <p className="mt-0.5 text-xs text-[#e2b66d] font-medium">{exp.org}</p>
                     <ul className="mt-2.5 flex flex-col gap-1.5">
                       {exp.bullets.map((b, j) => (
                         <li key={j} className="flex items-start gap-3 text-sm text-[#888] leading-relaxed">
-                          <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#4361ee]/60" />
+                          <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#e2b66d]/60" />
                           <span>{b}</span>
                         </li>
                       ))}
@@ -437,7 +439,7 @@ function ResumeSection({
       className="mb-10"
     >
       <div className="mb-5 flex items-center gap-3">
-        <Icon className="h-4 w-4 text-[#4361ee]" />
+         <Icon className="h-4 w-4 text-[#e2b66d]" />
         <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#777]">
           {title}
         </h3>
@@ -457,7 +459,7 @@ function SkillGroup({ label, items }: { label: string; items: string[] }) {
         {items.map((item) => (
           <span
             key={item}
-            className="inline-block rounded-full border border-white/[0.06] bg-white/[0.02] px-3.5 py-1 text-xs text-[#aaa] transition-colors hover:border-[#4361ee]/40 hover:text-white"
+             className="inline-block rounded-full border border-[#4a4033] bg-[#211c17] px-3.5 py-1 text-xs text-[#c2b9aa] transition-colors hover:border-[#e2b66d]/40 hover:text-[#f4eee4]"
           >
             {item}
           </span>

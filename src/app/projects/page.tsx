@@ -5,7 +5,6 @@ import { motion, useInView, AnimatePresence } from "framer-motion";
 import { ExternalLink, Code2 } from "lucide-react";
 import { projects } from "@/data/projects";
 import GlowCard from "@/components/GlowCard";
-import RevealText from "@/components/RevealText";
 
 const categories = [
   { label: "All", value: "all" },
@@ -15,10 +14,10 @@ const categories = [
 ];
 
 const categoryColors: Record<string, string> = {
-  ml: "#7209b7",
-  web: "#4361ee",
-  tools: "#06d6a0",
-  mobile: "#ff6b6b",
+  ml: "#d37458",
+  web: "#8fa8d2",
+  tools: "#9fb7a2",
+  mobile: "#e2b66d",
 };
 
 export default function ProjectsPage() {
@@ -32,29 +31,31 @@ export default function ProjectsPage() {
       : projects.filter((p) => p.category === filter);
 
   return (
-    <main className="section-padding min-h-screen" ref={ref}>
+    <main className="section-padding workshop-grid min-h-screen bg-[#14120f]" ref={ref}>
       <div className="mx-auto max-w-7xl px-6 md:px-10">
         <motion.span
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.6 }}
-          className="mb-4 block text-xs uppercase tracking-[0.25em] font-semibold text-[#4361ee]"
+          className="section-kicker mb-4"
         >
           THINGS I&apos;VE BUILT
         </motion.span>
 
-        <RevealText
-          mode="word"
-          className="mb-4 max-w-3xl font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[1.1] tracking-tight text-white"
+        <motion.h1
+          initial={{ opacity: 0, y: 16 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mb-4 max-w-3xl font-display text-[clamp(2rem,5vw,3.5rem)] font-bold leading-[1.1] tracking-tight text-[#f4eee4]"
         >
           A few ideas that escaped the notes app
-        </RevealText>
+        </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="mb-12 max-w-2xl text-xs sm:text-sm leading-relaxed text-[#888] md:text-base"
+          className="mb-12 max-w-2xl text-xs sm:text-sm leading-relaxed text-[#a69d8e] md:text-base"
         >
           Some started as college projects. Some started as &ldquo;wait, why doesn&apos;t this exist?&rdquo; Either way, I like building them far enough to find the interesting problems.
         </motion.p>
@@ -72,8 +73,8 @@ export default function ProjectsPage() {
               onClick={() => setFilter(cat.value)}
               className={`rounded-full border px-6 py-2.5 text-sm font-medium transition-all duration-300 ${
                 filter === cat.value
-                  ? "border-[#4361ee]/40 bg-[#4361ee]/10 text-white"
-                  : "border-white/[0.06] bg-transparent text-[#666] hover:border-white/10 hover:text-[#999]"
+                  ? "border-[#e2b66d]/50 bg-[#e2b66d]/10 text-[#f4eee4]"
+                  : "border-[#4a4033] bg-transparent text-[#70685e] hover:border-[#7c674c] hover:text-[#c2b9aa]"
               }`}
               data-cursor="pointer"
             >

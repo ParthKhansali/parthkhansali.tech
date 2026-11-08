@@ -333,7 +333,6 @@ export async function broadcastLiveWave(
 export function subscribeLiveWaves(callback: (wave: WaveEvent) => void): () => void {
   if (typeof window === "undefined") return () => {};
 
-  const mySessionId = getSessionId();
   const startTime = Date.now() - 5000;
 
   // Listen to broadcast channel

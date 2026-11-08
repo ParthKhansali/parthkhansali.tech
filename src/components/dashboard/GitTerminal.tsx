@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect, KeyboardEvent } from "react";
-import { Terminal, CornerDownLeft, Sparkles, Check, Copy, Gamepad2 } from "lucide-react";
+import { CornerDownLeft, Check, Copy } from "lucide-react";
 import { sounds } from "@/lib/soundFx";
+import { siteConfig } from "@/data/site";
 import { asset } from "@/lib/basepath";
 
 interface TerminalHistory {
@@ -31,7 +32,7 @@ export default function GitTerminal() {
       command: "",
       output: (
         <span className="text-[#666]">
-          // the honest terminal: no fake commit logs, no invented metrics.
+          {"// the honest terminal: no fake commit logs, no invented metrics."}
         </span>
       ),
     },
@@ -240,13 +241,13 @@ export default function GitTerminal() {
     } else if (lower.startsWith("open ")) {
       const site = lower.replace("open ", "").trim();
       if (site.includes("git")) {
-        window.open("https://github.com/ParthKhansali", "_blank");
+         window.open(siteConfig.links.github, "_blank");
         result = "Opening GitHub in a new tab...";
       } else if (site.includes("linkedin")) {
-        window.open("https://www.linkedin.com/in/parth-khansali/", "_blank");
+         window.open(siteConfig.links.linkedin, "_blank");
         result = "Opening LinkedIn in a new tab...";
       } else if (site.includes("mail") || site.includes("email")) {
-        window.location.href = "mailto:parthkhansali@gmail.com";
+         window.location.href = `mailto:${siteConfig.email}`;
         result = "Opening default email client...";
       } else {
         result = `Unknown target: ${site}. Options: 'open github', 'open linkedin', 'open mail'.`;

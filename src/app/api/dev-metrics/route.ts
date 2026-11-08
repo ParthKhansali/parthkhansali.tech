@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 export const revalidate = 180; // Cache for 3 minutes to avoid GitHub rate limits
 
 export async function GET() {
-  const username = "ParthKhansali";
+  const username = process.env.GITHUB_USERNAME || "ParthKhansali";
 
   try {
     const headers: HeadersInit = {
@@ -108,6 +108,22 @@ export async function GET() {
           }))
       : [];
 
+    const languageCounts: Record<string, number> = {};
+    if (Array.isArray(reposData)) {
+      reposData.forEach((repo: { language?: string | null }) => {
+        if (repo.language) languageCounts[repo.language] = (languageCounts[repo.language] || 0) + 1;
+      });
+    }
+    const languageTotal = Object.values(languageCounts).reduce((sum, count) => sum + count, 0) || 1;
+    const languageDistribution = Object.entries(languageCounts)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 5)
+      .map(([name, count]) => ({
+        name,
+        percent: Math.round((count / languageTotal) * 100),
+        color: getLanguageColor(name),
+      }));
+
     // Latest push event
     const pushEvent = Array.isArray(eventsData)
       ? eventsData.find((e: { type: string }) => e.type === "PushEvent")
@@ -147,35 +163,22 @@ export async function GET() {
       }
     }
 
-    // Default real GitHub-derived coding velocity metrics
-    if (!wakaTimeData) {
-      wakaTimeData = {
-        todayHours: "4h 30m",
-        weekHours: "36h 40m",
-        dailyAvg: "5h 15m",
-        source: "github_sync",
-        languages: [
-          { name: "TypeScript / Next.js", percent: 38, color: "#4361ee" },
-          { name: "C++ / Systems", percent: 26, color: "#06d6a0" },
-          { name: "Python / AI Architectures", percent: 20, color: "#7209b7" },
-          { name: "Java / Spring Boot", percent: 16, color: "#ff9f1c" },
-        ],
-      };
-    }
-
     return NextResponse.json({
       success: true,
       github: {
         username: profile?.login || username,
+        available: Boolean(profile),
         name: profile?.name || "Parth Khansali",
         profileUrl: profile?.html_url || `https://github.com/${username}`,
-        avatarUrl: profile?.avatar_url || "https://avatars.githubusercontent.com/u/187216583?v=4",
-        publicRepos: profile?.public_repos ?? 10,
-        totalContributions: contribData?.total?.lastYear ?? 31,
-        currentStreak: Math.max(currentStreak, 2),
-        longestStreak: Math.max(maxStreak, 3),
+        avatarUrl: profile?.avatar_url || "",
+        publicRepos: profile?.public_repos ?? 0,
+        followers: profile?.followers ?? 0,
+        totalContributions: contribData?.total?.lastYear ?? 0,
+        currentStreak,
+        longestStreak: maxStreak,
         days: recentDays,
         recentRepos,
+        languageDistribution,
         latestEvent: pushEvent
           ? {
               type: pushEvent.type,

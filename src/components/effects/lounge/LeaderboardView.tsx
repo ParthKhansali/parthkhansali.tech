@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Trophy, RotateCw } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { RotateCw } from "lucide-react";
 import { LeaderboardEntry } from "./types";
 
 export default function LeaderboardView() {
@@ -9,7 +9,7 @@ export default function LeaderboardView() {
   const [leaderboards, setLeaderboards] = useState<Record<string, LeaderboardEntry[]>>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchLeaderboards = async () => {
+  const fetchLeaderboards = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await fetch("/api/lounge");
@@ -20,11 +20,14 @@ export default function LeaderboardView() {
     } catch {} finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    fetchLeaderboards();
-  }, []);
+    const initialFetch = window.setTimeout(() => {
+      void fetchLeaderboards();
+    }, 0);
+    return () => window.clearTimeout(initialFetch);
+  }, [fetchLeaderboards]);
 
   const gameTabs = [
     { id: "skribbl", label: "Skribbl.io", icon: "🎨" },
