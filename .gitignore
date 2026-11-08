@@ -42,3 +42,9 @@ next-env.d.ts
 
 # scratch assets
 /portfolio/
+
+# local audit and design tooling, kept out of the repo
+/.agents/
+/.tools/
+/.hallmark/
+/skills-lock.json

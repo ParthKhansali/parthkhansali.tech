@@ -1,94 +1,85 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Host_Grotesk, Atkinson_Hyperlegible_Mono } from "next/font/google";
 import "./globals.css";
-import CustomCursor from "@/components/CustomCursor";
-import SmoothScroll from "@/components/SmoothScroll";
-import Navbar from "@/components/navigation/Navbar";
-import StarfieldCanvas from "@/components/effects/StarfieldCanvas";
-import CursorSpotlight from "@/components/effects/CursorSpotlight";
-import CursorAssistant from "@/components/assistant/CursorAssistant";
-import CommandPalette from "@/components/navigation/CommandPalette";
-import ResumeModal from "@/components/resume/ResumeModal";
-import LiveReviewCelebration from "@/components/effects/LiveReviewCelebration";
-import RetroArcadeModal from "@/components/effects/RetroArcadeModal";
-import AnimeScrollHUD from "@/components/effects/AnimeScrollHUD";
-import ScrollDots from "@/components/effects/ScrollDots";
-import { asset } from "@/lib/basepath";
-import { absoluteUrl, siteConfig } from "@/data/site";
+import SiteHeader from "@/components/layout/SiteHeader";
+import SiteFooter from "@/components/layout/SiteFooter";
+import JsonLd from "@/components/seo/JsonLd";
+import { identityGraph } from "@/lib/seo";
+import { siteConfig } from "@/data/site";
 
-const inter = Inter({
-  variable: "--font-inter",
+/*
+ * Both faces are self-hosted by next/font, so there is no render-blocking
+ * request to fonts.googleapis.com and no layout shift from a late font swap.
+ */
+const hostGrotesk = Host_Grotesk({
   subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-host-grotesk",
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const atkinsonMono = Atkinson_Hyperlegible_Mono({
   subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-atkinson",
   display: "swap",
 });
 
 export const viewport: Viewport = {
-  themeColor: "#14120f",
-  colorScheme: "dark",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
+  themeColor: "#0e1116",
+  colorScheme: "dark",
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: "Parth Khansali | AI & Software Engineer in Dehradun",
-    template: "%s | Parth Khansali",
+    default: "Parth Khansali — computer science student and software developer",
+    template: "%s — Parth Khansali",
   },
   description:
-    "Parth Khansali is an AI and software engineering student in Dehradun building adaptive AI systems, mobile products, distributed workflows, and thoughtful developer tools.",
+    "Parth Khansali is a computer science student in Dehradun, India, and the developer of GEHU Connect, a campus app used by roughly a thousand students.",
+  applicationName: siteConfig.name,
+  authors: [{ name: siteConfig.name, url: siteConfig.url }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
+  category: "technology",
+  alternates: { canonical: "/" },
   keywords: [
     "Parth Khansali",
-    "AI engineer",
-    "software engineer in Dehradun",
-    "software developer in India",
-    "full stack developer",
-    "Next.js",
-    "React Native",
-    "Spring Boot",
-    "Python",
-    "AI systems",
-    "Graphic Era Hill University",
-    "Graphic Era MUN",
+    "ParthKhansali",
+    "Parth Khansali developer",
+    "Parth Khansali portfolio",
     "GEHU Connect",
-    "OmniMentor",
-    "developer portfolio",
+    "Netwich",
+    "software developer Dehradun",
+    "Graphic Era Hill University",
   ],
-  authors: [{ name: "Parth Khansali", url: siteConfig.url }],
-  creator: "Parth Khansali",
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
-    type: "website",
-    locale: "en_US",
+    type: "profile",
+    locale: "en_IN",
     url: siteConfig.url,
-    siteName: "Parth Khansali",
-    title: "Parth Khansali | AI & Software Engineer in Dehradun",
+    siteName: siteConfig.name,
+    title: "Parth Khansali — computer science student and software developer",
     description:
-      "I build things I wish already existed: adaptive AI systems, mobile products, and useful software with a human edge.",
+      "Developer of GEHU Connect, a campus app used by roughly a thousand students. Netwich, ARANYA and other builds in the open.",
     images: [
       {
-        url: "/developer-night-banner.jpg",
-        width: 1376,
-        height: 768,
-        alt: "A pixel-art developer workspace overlooking the Doon Valley at night",
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Parth Khansali, computer science student and software developer",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Parth Khansali | AI & Software Engineer in Dehradun",
+    title: "Parth Khansali — computer science student and software developer",
     description:
-      "I build things I wish already existed: adaptive AI systems, mobile products, and useful software with a human edge.",
-    images: ["/developer-night-banner.jpg"],
+      "Developer of GEHU Connect, a campus app used by roughly a thousand students.",
+    images: ["/opengraph-image"],
   },
   robots: {
     index: true,
@@ -96,151 +87,50 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
+      "max-video-preview": -1,
     },
   },
   icons: {
-    icon: asset("/icon.png"),
-    apple: asset("/icon.png"),
+    icon: [{ url: "/icon.png", type: "image/png", sizes: "512x512" }],
+    apple: [{ url: "/icon.png", sizes: "512x512" }],
   },
-};
-
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Person",
-       "@id": `${siteConfig.url}/#person`,
-      name: "Parth Khansali",
-      alternateName: "ParthKhansali",
-       url: siteConfig.url,
-      image: [
-         absoluteUrl("/profile.jpg"),
-         absoluteUrl("/developer-night-banner.jpg"),
-      ],
-      jobTitle: "AI & Software Engineer",
-      description:
-        "Computer Science student and independent builder focused on AI systems, full-stack products, distributed workflows, and research-minded engineering.",
-      homeLocation: {
-        "@type": "Place",
-        name: "Dehradun, Uttarakhand, India",
-      },
-      alumniOf: {
-        "@type": "CollegeOrUniversity",
-        name: "Graphic Era Hill University",
-      },
-       sameAs: [siteConfig.links.github, siteConfig.links.linkedin, siteConfig.links.instagram],
-      mainEntityOfPage: {
-         "@id": `${siteConfig.url}/#profile`,
-      },
-      knowsAbout: [
-        "Artificial intelligence",
-        "Software engineering",
-        "Adaptive learning systems",
-        "Distributed systems",
-        "React Native",
-        "Spring Boot",
-        "Next.js",
-        "Python",
-      ],
-    },
-    {
-      "@type": "ProfilePage",
-       "@id": `${siteConfig.url}/#profile`,
-       url: siteConfig.url,
-      name: "Parth Khansali — AI & Software Engineer",
-      dateModified: "2026-10-24",
-      mainEntity: {
-        "@id": `${siteConfig.url}/#person`,
-      },
-    },
-    {
-      "@type": "WebSite",
-       "@id": `${siteConfig.url}/#website`,
-       url: siteConfig.url,
-      name: "Parth Khansali Portfolio",
-      description: "Portfolio of Parth Khansali: Developer, Builder, Problem Solver",
-      publisher: {
-         "@id": `${siteConfig.url}/#person`,
-      },
-    },
-    {
-      "@type": "SoftwareApplication",
-      "@id": "https://gehuconnect.in/#app",
-      name: "GEHU Connect",
-      applicationCategory: "SocialNetworkingApplication",
-      operatingSystem: "iOS, Android, React Native",
-      author: {
-         "@id": `${siteConfig.url}/#person`,
-      },
-      description:
-        "Student community and networking platform built with React Native and Spring Boot for Graphic Era Hill University students.",
-      url: "https://gehuconnect.in",
-    },
-  ],
+  manifest: "/manifest.webmanifest",
+  // Stop iOS Safari from turning the email address into a phone-style link.
+  formatDetection: { telephone: false, address: false, email: false },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
+      className={`${hostGrotesk.variable} ${atkinsonMono.variable}`}
+      suppressHydrationWarning
     >
-      <head>
+      <body>
+        <JsonLd data={identityGraph()} />
+        <a className="skip-link" href="#main">
+          Skip to content
+        </a>
+        <SiteHeader />
+        <main id="main">{children}</main>
+        <SiteFooter />
+        {/*
+         * Prefetch the next page on likely navigation. Chrome-only, ignored
+         * everywhere else, and cheap: it fetches HTML, it does not boot a
+         * renderer, so nothing competes with the current page for main thread.
+         */}
         <script
+          type="speculationrules"
           dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                if ('scrollRestoration' in history) {
-                  history.scrollRestoration = 'manual';
-                }
-                window.scrollTo(0, 0);
-              } catch (e) {}
-            `,
+            __html: JSON.stringify({
+              prefetch: [{ where: { href_matches: "/*" }, eagerness: "moderate" }],
+            }),
           }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      </head>
-      <body className="min-h-screen bg-[#0f0f0d] text-[#f0ece4] selection:bg-[#d4a843]/25 selection:text-white">
-
-        {/* Global Twinkling Starfield Canvas Background */}
-        <StarfieldCanvas />
-
-        {/* Radial Mouse Torchlight Spotlight */}
-        <CursorSpotlight />
-
-        {/* Interactive Cursor-Following Oneko Cat Assistant */}
-        <CursorAssistant />
-
-        {/* Global Search Command Palette (⌘K) */}
-        <CommandPalette />
-
-        {/* Lenis Smooth Scroll Wrapper */}
-        <SmoothScroll>
-          <AnimeScrollHUD />
-          <ScrollDots />
-          <CustomCursor />
-          <Navbar />
-          {children}
-        </SmoothScroll>
-
-        {/* Global Resume Preview & Download Modal mounted at body bottom */}
-        <ResumeModal />
-
-        {/* Real-time Guestbook Review Celebration & Live Wave Easter Egg Toast */}
-        <LiveReviewCelebration />
-
-        {/* Playable Retro Arcade Easter Egg (Nether Dash) */}
-        <RetroArcadeModal />
       </body>
     </html>
   );

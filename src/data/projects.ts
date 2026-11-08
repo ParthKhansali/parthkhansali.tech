@@ -1,167 +1,248 @@
 import { siteConfig } from "@/data/site";
 
+/**
+ * Project facts. Everything here comes from one of three places: Parth's own
+ * brief, the live deployment, or the public repository. Nothing is inferred,
+ * and no number appears that he did not give.
+ *
+ * `tier` drives presentation order and schema: exactly one project is the
+ * flagship.
+ */
+export type ProjectTier = "flagship" | "completed" | "ongoing";
+
+export interface ProjectLink {
+  label: string;
+  href: string;
+}
+
 export interface Project {
-  id: string;
-  title: string;
-  subtitle: string;
-  description: string;
-  bullets?: string[];
-  techStack: string[];
-  category: "web" | "ml" | "tools" | "mobile";
-  featured: boolean;
-  status?: string;
-  buttonText?: string;
-  image?: string;
-  visualizer?: "equalizer" | "pipeline" | "radar" | "optical" | "search" | "stream";
-  glowColor?: string;
-  links: {
-    demo?: string;
-    github?: string;
-  };
+  slug: string;
+  name: string;
+  tier: ProjectTier;
+  /** Short, factual, no adjectives doing the work of evidence. */
+  kind: string;
+  status: string;
+  /** One sentence. Used for meta descriptions and index rows. */
+  summary: string;
+  /** Long-form body for the project page. */
+  body: string[];
+  /** What actually happens inside it. Real implementation detail only. */
+  details: { label: string; text: string }[];
+  stack: string[];
+  links: ProjectLink[];
+  /** Schema.org type that honestly describes the artefact. */
+  schemaType: "SoftwareApplication" | "SoftwareSourceCode" | "CreativeWork";
+  operatingSystem?: string;
+  applicationCategory?: string;
+  /** Highlighted reading shown beside the project on its page. */
+  reading?: { value: string; unit: string; note: string };
 }
 
 export const projects: Project[] = [
   {
-    id: "gehu-connect",
-    title: "GEHU Connect",
-    subtitle: "Student Community & Networking Platform",
-    description:
-      "College life has a strange habit of spreading itself across ten different group chats. GEHU Connect is our attempt to put some of it back in one place: people, communities, conversations and campus stuff, in one app.",
-    bullets: [
-      "A React Native app with a Spring Boot backend: auth, profiles, communities and a campus feed.",
-      "Cloudflare R2 and AWS SDK for reliable media uploads without choking the server.",
-      "Deployed and being used by real students at GEHU, in alpha.",
+    slug: "gehu-connect",
+    name: "GEHU Connect",
+    tier: "flagship",
+    kind: "Campus networking app",
+    status: "Deployed",
+    summary:
+      "A student community and networking app for Graphic Era Hill University, used by roughly a thousand students.",
+    body: [
+      "College life spreads itself across a dozen group chats, three notice boards and one WhatsApp forward nobody can find again. GEHU Connect puts people, communities and campus conversation back in one place, on the phone students already have in their hand.",
+      "It is a React Native app on an Expo build pipeline, talking to a Spring Boot API written in Java. Media uploads go to Cloudflare R2 through the AWS SDK, so photos never sit on the application server or bloat a deploy.",
+      "This is the project that taught me the difference between something that runs and something people use. Roughly a thousand students have it installed. That number changes what you care about: request latency, upload failure, whether the sign-up flow survives a bad campus network.",
     ],
-    techStack: ["React Native", "Expo", "Java", "Spring Boot", "Cloudflare R2", "AWS SDK", "REST APIs"],
-    category: "mobile",
-    featured: true,
-    status: "Deployed · Alpha",
-    glowColor: "6, 214, 160",
-    buttonText: "Open GEHU Connect →",
-    links: {
-      demo: siteConfig.projects.gehuConnect.demo,
+    details: [
+      {
+        label: "Client",
+        text: "React Native with Expo, shipping one codebase to iOS and Android.",
+      },
+      {
+        label: "API",
+        text: "Spring Boot in Java, exposing REST endpoints for auth, profiles, communities and the campus feed.",
+      },
+      {
+        label: "Media",
+        text: "Cloudflare R2 through the AWS SDK, keeping uploads off the application server.",
+      },
+      {
+        label: "State of it",
+        text: "Deployed and in active use by students at GEHU. Adoption is the interesting part; the feature list was never the hard bit.",
+      },
+    ],
+    stack: [
+      "React Native",
+      "Expo",
+      "Java",
+      "Spring Boot",
+      "Cloudflare R2",
+      "AWS SDK",
+      "REST APIs",
+    ],
+    // No public URL is listed: the domain previously used for the app is
+    // parked, and linking a dead host is worse than linking nothing.
+    links: [],
+    schemaType: "SoftwareApplication",
+    operatingSystem: "Android, iOS",
+    applicationCategory: "SocialNetworkingApplication",
+    reading: {
+      value: "~1,000",
+      unit: "students",
+      note: "using the deployed app at GEHU",
     },
   },
   {
-    id: "omnimentor",
-    title: "OmniMentor",
-    subtitle: "Anticipatory AI Classroom OS",
-    description:
-      "We kept wondering what a classroom would feel like if the software noticed where you were getting stuck before you had to ask. OmniMentor is that question turned into something you can click on: a learning layer that keeps context, adapts to where you are, and hands you an explanation at the moment it is useful.",
-    bullets: [
-      "Contextual explanations instead of disconnected one-shots.",
-      "Adaptive pacing based on where students actually encounter difficulty.",
-      "Modular architecture built around OmniProfile, OmniPredict, OmniLoop and OmniFlow.",
+    slug: "netwich",
+    name: "Netwich",
+    tier: "completed",
+    kind: "macOS networking app",
+    status: "Completed and released",
+    summary:
+      "A native macOS app that bonds Wi-Fi, Ethernet and phone tethering into one connection with failover, running entirely on your own machine.",
+    body: [
+      "Most Macs already have more than one way onto the internet: office Wi-Fi, a phone tethered over USB, a 5G hotspot, a cable. macOS picks one default interface and leaves the rest idle. Netwich uses all of them at once.",
+      "It runs a local SOCKS5 proxy on 127.0.0.1:1080 and binds each outgoing socket to a specific physical interface with Apple's IP_BOUND_IF control. Large downloads are split into byte-range chunks and spread across the live links. Flows are placed by a weighted least-connections scheduler, and each interface is continuously scored on round-trip time and throughput with EWMA smoothing, so a link that degrades loses traffic without killing the connections already on it.",
+      "No relay, no subscription, no account, no telemetry. It is a SwiftUI app for macOS 14 and later, written in Swift 6, and it idles under half a percent of CPU because there is no background daemon to speak of.",
     ],
-    techStack: ["Next.js", "React", "Node.js", "Python", "AI APIs"],
-    category: "ml",
-    featured: true,
-    status: "Exploring",
-    visualizer: "equalizer",
-    glowColor: "114, 9, 183",
-    buttonText: "See OmniMentor →",
-    links: {
-      github: siteConfig.projects.omniMentor.github,
-    },
+    details: [
+      {
+        label: "Routing",
+        text: "A local SOCKS5 proxy on 127.0.0.1:1080 binds individual TCP sockets to physical interfaces using IP_BOUND_IF.",
+      },
+      {
+        label: "Scheduling",
+        text: "Adaptive weighted least-connections placement across every healthy interface.",
+      },
+      {
+        label: "Health",
+        text: "Round-trip time and throughput are sampled continuously and smoothed with an EWMA, so a failing link is demoted before users notice.",
+      },
+      {
+        label: "Downloads",
+        text: "Byte-range chunking splits a single large transfer across all active connections.",
+      },
+    ],
+    stack: ["Swift 6", "SwiftUI", "macOS 14+", "SOCKS5", "IP_BOUND_IF"],
+    links: [
+      { label: "Source on GitHub", href: "https://github.com/ParthKhansali/Netwich" },
+      // Deliberately the releases index, not /releases/latest: GitHub is
+      // currently answering the single-release pages with a 504.
+      {
+        label: "Releases",
+        href: "https://github.com/ParthKhansali/Netwich/releases",
+      },
+    ],
+    schemaType: "SoftwareApplication",
+    operatingSystem: "macOS 14 or later",
+    applicationCategory: "UtilitiesApplication",
   },
   {
-    id: "forgeflow",
-    title: "ForgeFlow",
-    subtitle: "Workflow Automation Tool",
-    description:
-      "We got tired of making the same files by copy-pasting things, running commands manually and checking terminal output over and over. So we are building ForgeFlow: a workflow automation tool that uses Python libraries and AI to turn repetitive steps into something the computer handles on its own.",
-    bullets: [
-      "Less copy-paste. Less terminal babysitting. More done.",
-      "Transforms command sequences into reproducible automation pipelines.",
+    slug: "aranya",
+    name: "ARANYA",
+    tier: "ongoing",
+    kind: "Geospatial intelligence platform",
+    status: "In progress",
+    summary:
+      "A geospatial platform that reads wildlife-conflict signals across India, piloted in Uttarakhand.",
+    body: [
+      "ARANYA is an attempt to make forest and wildlife data answer a practical question: where is conflict likely next, and what should a field team do about it? It tracks animal movement and activity, watches habitat change, and marks conservation hotspots so response can be evidence-led rather than reactive.",
+      "Uttarakhand is the pilot region. The interesting engineering problem is not the map; it is reconciling sparse, inconsistent records from different sources into something a ranger can act on.",
+      "It is being built as a hackathon project and is still in progress.",
     ],
-    techStack: ["Python", "AI", "Automation", "Workflow Tooling"],
-    category: "tools",
-    featured: true,
-    status: "Building",
-    visualizer: "pipeline",
-    glowColor: "67, 97, 238",
-    buttonText: "Explore ForgeFlow →",
-    links: {},
+    details: [
+      {
+        label: "Scope",
+        text: "Conflict prediction, movement monitoring, habitat change and conservation hotspots.",
+      },
+      {
+        label: "Pilot",
+        text: "Uttarakhand, India.",
+      },
+      {
+        label: "Hard part",
+        text: "Joining fragmented field records into a single layer that stays honest about its uncertainty.",
+      },
+    ],
+    stack: ["JavaScript", "Geospatial data", "Mapping"],
+    links: [
+      { label: "Live prototype", href: "https://project-aranya.vercel.app" },
+      { label: "Source on GitHub", href: "https://github.com/ParthKhansali/Project-Aranya" },
+    ],
+    schemaType: "SoftwareSourceCode",
   },
   {
-    id: "aranya",
-    title: "ARANYA",
-    subtitle: "Real-World Data & Maps",
-    description:
-      "ARANYA started with a simple question: can maps, data and AI make difficult real-world information easier to understand? Right now it is about turning fragmented Forest Rights Act records, evidence and claims into something you can actually trace: where a record came from, what it connects to, and what it supports.",
-    bullets: [
-      "Evidence registry and claim intelligence for legacy records.",
-      "Provenance and traceability for messy historical documents.",
-      "Spatial context for Uttarakhand: forest areas, fire risk and community zones.",
+    slug: "orvess-pat",
+    name: "ORVESS-PAT",
+    tier: "ongoing",
+    kind: "Optical tracking simulation",
+    status: "In progress",
+    summary:
+      "A simulation suite for optical tracking and free-space optical communication, written in Python.",
+    body: [
+      "ORVESS-PAT started as an ISRO Smart India Hackathon problem in optical rendezvous and free-space optical communication, and turned into a question I wanted answered properly: what actually happens between light landing on a sensor and a system deciding it has a usable observation?",
+      "The work is in simulation: a focal-plane array model, sub-pixel centroiding to recover a target position smaller than one pixel, observation quality scoring, adaptive filtering, and Monte Carlo runs to see which parts of the pipeline survive noise.",
+      "It is an ongoing hackathon project, not a finished instrument.",
     ],
-    techStack: ["Geospatial", "Data Pipelines", "AI Records", "Maps"],
-    category: "ml",
-    featured: true,
-    status: "Early",
-    visualizer: "radar",
-    glowColor: "255, 107, 107",
-    buttonText: "Explore ARANYA →",
-    links: {
-      demo: siteConfig.projects.aranya.demo,
-      github: siteConfig.projects.aranya.github,
-    },
+    details: [
+      {
+        label: "Sensor model",
+        text: "A simulated focal-plane array with sub-pixel centroiding to recover target position below pixel resolution.",
+      },
+      {
+        label: "Pipeline",
+        text: "Observation quality scoring, adaptive filtering and explicit failure reasoning.",
+      },
+      {
+        label: "Validation",
+        text: "Monte Carlo sweeps across noise conditions to find where the pipeline breaks.",
+      },
+    ],
+    stack: ["Python", "Simulation", "Monte Carlo", "Optical tracking"],
+    links: [],
+    schemaType: "SoftwareSourceCode",
   },
   {
-    id: "orvess-pat",
-    title: "ORVESS-PAT",
-    subtitle: "Optical Rendezvous & Validation Experiment Simulation Suite",
-    description:
-      "A research-flavoured detour that started from an ISRO Smart India Hackathon problem in optical tracking and free-space optical communication. I got curious about what happens between light hitting a sensor and a system deciding it has a usable observation, so I ended up writing pieces of the simulation.",
-    bullets: [
-      "Sensor/FPA simulation and sub-pixel centroiding algorithms.",
-      "Observation quality, adaptive filtering and failure reasoning.",
-      "Gimbal tracking and Monte Carlo runs to see what holds up under noise.",
+    slug: "meghavyuha",
+    name: "Meghavyuha",
+    tier: "ongoing",
+    kind: "Web application",
+    status: "In progress",
+    summary: "An ongoing hackathon build, deployed as a TypeScript web application.",
+    body: [
+      "Meghavyuha is a hackathon project in progress. It is a TypeScript web application, deployed and reachable at meghavyuha.vercel.app.",
+      "I would rather leave this description short than pad it with claims the repository does not support. When the build is finished, the specifics go here.",
     ],
-    techStack: ["Python", "Simulation", "Monte Carlo", "Optical Tracking"],
-    category: "tools",
-    featured: true,
-    status: "Research",
-    visualizer: "optical",
-    glowColor: "114, 9, 183",
-    buttonText: "View Research Notes →",
-    links: {},
-  },
-  {
-    id: "resume-screener",
-    title: "Resume Screener Search Engine",
-    subtitle: "Search, from scratch",
-    description:
-      "Search engines felt like magic, so I built a small one to find out what is underneath: an inverted index, TF-IDF and BM25 ranking, a FastAPI backend, and a React front end that lets you search through candidate resumes.",
-    bullets: [
-      "Inverted index with tokenization, stop-word filtering and BM25 scoring.",
-      "FastAPI service with sub-millisecond query responses on cached indices.",
+    details: [
+      {
+        label: "Status",
+        text: "Active hackathon build, still changing.",
+      },
+      {
+        label: "Surface",
+        text: "A TypeScript web application, deployed on Vercel.",
+      },
     ],
-    techStack: ["Python", "FastAPI", "React", "BM25", "TF-IDF", "Inverted Index"],
-    category: "web",
-    featured: true,
-    status: "Complete",
-    visualizer: "search",
-    glowColor: "67, 97, 238",
-    buttonText: "View Code →",
-    links: {},
-  },
-  {
-    id: "autohire",
-    title: "AutoHire",
-    subtitle: "AI-Powered Hiring Platform",
-    description:
-      "An event-driven recruitment platform built to take manual coordination out of candidate workflows. Instead of people chasing spreadsheets, candidate pipelines move asynchronously on distributed event streams.",
-    bullets: [
-      "Distributed asynchronous pipelines on Apache Kafka and Zookeeper.",
-      "Backend services for candidate tracking, scoring and workflow orchestration.",
-    ],
-    techStack: ["Node.js", "Kafka", "Zookeeper", "MongoDB"],
-    category: "web",
-    featured: true,
-    status: "2025",
-    visualizer: "stream",
-    glowColor: "255, 107, 107",
-    buttonText: "View Pipeline →",
-    links: {},
+    stack: ["TypeScript"],
+    links: [{ label: "Live deployment", href: "https://meghavyuha.vercel.app" }],
+    schemaType: "SoftwareSourceCode",
   },
 ];
+
+export const flagship = projects.find((project) => project.tier === "flagship")!;
+
+export const otherProjects = projects
+  .filter((project) => project.tier !== "flagship")
+  .sort((a, b) => {
+    const order: Record<ProjectTier, number> = {
+      flagship: 0,
+      completed: 1,
+      ongoing: 2,
+    };
+    return order[a.tier] - order[b.tier] || a.name.localeCompare(b.name);
+  });
+
+export function getProject(slug: string): Project | undefined {
+  return projects.find((project) => project.slug === slug);
+}
+
+export const projectUrl = (slug: string) => `${siteConfig.url}/projects/${slug}`;

@@ -1,31 +1,47 @@
 import type { MetadataRoute } from "next";
-import { siteConfig } from "@/data/site";
+import { siteConfig, CONTENT_UPDATED } from "@/data/site";
+import { projects } from "@/data/projects";
 
 export const dynamic = "force-static";
 
-const LAST_UPDATED = new Date("2026-10-24T00:00:00.000Z");
-
+/**
+ * Only canonical, indexable, public URLs. API routes, the 404 and the OG image
+ * route are deliberately absent.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = siteConfig.url;
+  const lastModified = new Date(`${CONTENT_UPDATED}T00:00:00.000Z`);
+  const base = siteConfig.url;
 
   return [
     {
-      url: baseUrl,
-      lastModified: LAST_UPDATED,
-      changeFrequency: "weekly",
-      priority: 1.0,
+      url: `${base}/`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 1,
     },
     {
-      url: `${baseUrl}/projects`,
-      lastModified: LAST_UPDATED,
-      changeFrequency: "weekly",
+      url: `${base}/projects`,
+      lastModified,
+      changeFrequency: "monthly",
       priority: 0.9,
     },
+    ...projects.map((project) => ({
+      url: `${base}/projects/${project.slug}`,
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: project.tier === "flagship" ? 0.9 : 0.7,
+    })),
     {
-      url: `${baseUrl}/resume`,
-      lastModified: LAST_UPDATED,
+      url: `${base}/resume`,
+      lastModified,
       changeFrequency: "monthly",
-      priority: 0.8,
+      priority: 0.7,
+    },
+    {
+      url: `${base}/lounge`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.5,
     },
   ];
 }
