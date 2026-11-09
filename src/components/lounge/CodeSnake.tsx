@@ -77,7 +77,7 @@ export default function CodeSnake() {
       ctx.stroke();
     }
 
-    ctx.fillStyle = "#f0517c";
+    ctx.fillStyle = "#00ef4e";
     ctx.fillRect(food.current.x * CELL + 3, food.current.y * CELL + 3, CELL - 6, CELL - 6);
 
     snake.current.forEach((part, index) => {

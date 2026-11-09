@@ -33,7 +33,7 @@ export const siteConfig = {
     institution: "Graphic Era Hill University",
     degree: "B.Tech, Computer Science and Engineering",
     location: "Dehradun, Uttarakhand",
-    period: "2024 — 2028",
+    period: "2024 to 2028",
   },
 } as const;
 

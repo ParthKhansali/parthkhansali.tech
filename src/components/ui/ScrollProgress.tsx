@@ -2,29 +2,31 @@
 
 import { useEffect, useRef } from "react";
 
-/** A two-pixel readout of how far down the page you are. */
+/**
+ * Side scroll progress indicator borrowed from Tajmirul's portfolio.
+ * A fixed pill capsule on the right side of the screen that smoothly tracks
+ * how far down the page the visitor has scrolled.
+ */
 export default function ScrollProgress() {
-  const bar = useRef<HTMLDivElement>(null);
+  const thumbRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const node = bar.current;
-    if (!node) return;
-
     let frame = 0;
 
-    const update = () => {
+    const handleScroll = () => {
       frame = 0;
+      if (!thumbRef.current) return;
       const doc = document.documentElement;
       const max = doc.scrollHeight - doc.clientHeight;
-      const progress = max > 0 ? Math.min(1, doc.scrollTop / max) : 0;
-      node.style.transform = `scaleX(${progress.toFixed(4)})`;
+      const progress = max > 0 ? Math.min(100, Math.max(0, (doc.scrollTop / max) * 100)) : 0;
+      thumbRef.current.style.transform = `translateY(-${(100 - progress).toFixed(2)}%)`;
     };
 
     const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update);
+      if (!frame) frame = requestAnimationFrame(handleScroll);
     };
 
-    update();
+    handleScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
 
@@ -35,5 +37,9 @@ export default function ScrollProgress() {
     };
   }, []);
 
-  return <div ref={bar} className="progress" aria-hidden="true" />;
+  return (
+    <div className="side-scrollbar" aria-hidden="true">
+      <div className="side-scrollbar__thumb" ref={thumbRef} />
+    </div>
+  );
 }

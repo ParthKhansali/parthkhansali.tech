@@ -9,7 +9,7 @@ type Time = { h: number; m: number; s: number };
  *
  * The server has no idea what time it is for the reader, so it renders an
  * ornamental 10:10 face and a dash. The client fills in the real IST time after
- * hydration — no mismatch, and nothing the page claims depends on it.
+ * hydration: no mismatch, and nothing the page claims depends on it.
  */
 export default function ClockCard() {
   const [time, setTime] = useState<Time | null>(null);

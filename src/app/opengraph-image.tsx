@@ -22,8 +22,8 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "72px",
-          background: "#07070a",
-          color: "#f5f5f8",
+          background: "#141416",
+          color: "#ededed",
           fontFamily: "sans-serif",
         }}
       >
@@ -35,9 +35,9 @@ export default function OpengraphImage() {
               justifyContent: "center",
               width: "46px",
               height: "46px",
-              border: "1px solid #f0517c",
+              border: "1px solid #00ef4e",
               borderRadius: "12px",
-              color: "#f0517c",
+              color: "#00ef4e",
               fontSize: "19px",
             }}
           >
@@ -90,7 +90,7 @@ export default function OpengraphImage() {
               display: "flex",
               alignItems: "baseline",
               gap: "10px",
-              color: "#f0517c",
+              color: "#00ef4e",
             }}
           >
             <span style={{ fontSize: "46px", letterSpacing: "-0.03em" }}>~1,000</span>

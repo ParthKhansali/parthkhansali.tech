@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import LocalClock from "@/components/ui/LocalClock";
 import { siteConfig, socialLinks } from "@/data/site";
 
@@ -24,10 +25,17 @@ export default function SiteFooter() {
       <div className="shell">
         <div className="footer-grid">
           <div className="footer-brand">
-            <Link href="/" className="brand">
-              <span className="brand__mark" aria-hidden="true">
-                PK
-              </span>
+            <Link href="/" className="brand" aria-label="Parth Khansali home">
+              <div className="brand__pfp-wrap">
+                <Image
+                  src="/profile.jpg"
+                  alt="Parth Khansali"
+                  width={34}
+                  height={34}
+                  className="brand__avatar"
+                />
+                <span className="brand__pulse" aria-hidden="true" />
+              </div>
               <span className="brand__name">Parth Khansali</span>
             </Link>
             <p className="footer-note">

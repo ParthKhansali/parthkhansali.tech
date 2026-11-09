@@ -5,6 +5,9 @@ import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
 import JsonLd from "@/components/seo/JsonLd";
 import ScrollProgress from "@/components/ui/ScrollProgress";
+import ParticleBackground from "@/components/ui/ParticleBackground";
+import SpotlightCardListener from "@/components/ui/SpotlightCardListener";
+import ProjectCursorBadge from "@/components/ui/ProjectCursorBadge";
 import { identityGraph } from "@/lib/seo";
 import { siteConfig } from "@/data/site";
 
@@ -30,15 +33,15 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#07070a",
+  themeColor: "#141416",
   colorScheme: "dark",
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: "Parth Khansali — computer science student and software developer",
-    template: "%s — Parth Khansali",
+    default: "Parth Khansali: Computer Science Student & Software Developer",
+    template: "%s | Parth Khansali",
   },
   description:
     "Parth Khansali is a computer science student in Dehradun, India, and the developer of GEHU Connect, a campus app used by roughly a thousand students.",
@@ -63,7 +66,7 @@ export const metadata: Metadata = {
     locale: "en_IN",
     url: siteConfig.url,
     siteName: siteConfig.name,
-    title: "Parth Khansali — computer science student and software developer",
+    title: "Parth Khansali: Computer Science Student & Software Developer",
     description:
       "Developer of GEHU Connect, a campus app used by roughly a thousand students. Netwich, ARANYA and other builds in the open.",
     images: [
@@ -77,7 +80,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Parth Khansali — computer science student and software developer",
+    title: "Parth Khansali: Computer Science Student & Software Developer",
     description:
       "Developer of GEHU Connect, a campus app used by roughly a thousand students.",
     images: ["/opengraph-image"],
@@ -113,10 +116,10 @@ export default function RootLayout({
     >
       <body>
         <JsonLd data={identityGraph()} />
+        <ParticleBackground />
         <ScrollProgress />
-        <a className="email-rail" href={`mailto:${siteConfig.email}`}>
-          {siteConfig.email}
-        </a>
+        <SpotlightCardListener />
+        <ProjectCursorBadge />
         <a className="skip-link" href="#main">
           Skip to content
         </a>

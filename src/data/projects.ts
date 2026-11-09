@@ -138,7 +138,7 @@ export const projects: Project[] = [
       height: 984,
       alt: "Netwich 0.1.0: aggregate throughput across live links, the connection list with Wi-Fi readiness, and the speed-check controls.",
       caption:
-        "Netwich 0.1.0 — the overview window, idle with one link attached. Every connection gets a weight and a health reading before traffic is placed on it.",
+        "Netwich 0.1.0: the overview window, idle with one link attached. Every connection gets a weight and a health reading before traffic is placed on it.",
     },
     stack: ["Swift 6", "SwiftUI", "macOS 14+", "SOCKS5", "IP_BOUND_IF"],
     links: [
@@ -186,9 +186,9 @@ export const projects: Project[] = [
       srcSet: "/shots/aranya-720.jpg 720w, /shots/aranya-1440.jpg 1440w",
       width: 1440,
       height: 900,
-      alt: "ARANYA's Uttarakhand pilot: seven camera-trap stations listed beside a satellite terrain map of the Rajaji–Corbett corridor, with conflict and alert readouts along the top.",
+      alt: "ARANYA's Uttarakhand pilot: seven camera-trap stations listed beside a satellite terrain map of the Rajaji-Corbett corridor, with conflict and alert readouts along the top.",
       caption:
-        "ARANYA — the Uttarakhand pilot, seven camera-trap stations on the Rajaji–Corbett corridor.",
+        "ARANYA: the Uttarakhand pilot, seven camera-trap stations on the Rajaji-Corbett corridor.",
     },
     stack: ["JavaScript", "Geospatial data", "Mapping"],
     links: [
@@ -256,7 +256,7 @@ export const projects: Project[] = [
       height: 1034,
       alt: "Meghavyuha's full forecast dashboard for Dehradun: rainfall amount, probability and return-period bands, correction weights, model validation scores, and the alerts, model-analysis and system-health panels along the bottom.",
       caption:
-        "Meghavyuha — Dehradun district, the full workspace: adaptive forecast, correction weights, validation and alerts.",
+        "Meghavyuha: Dehradun district, the full workspace: adaptive forecast, correction weights, validation and alerts.",
     },
     stack: ["TypeScript"],
     links: [{ label: "Live deployment", href: "https://meghavyuha.vercel.app" }],

@@ -18,7 +18,7 @@ export const education: CVEntry[] = [
   {
     title: "B.Tech, Computer Science and Engineering",
     org: "Graphic Era Hill University, Dehradun",
-    period: "2024 — 2028",
+    period: "2024 to 2028",
     detail: "CGPA 7.6. Data structures, algorithms, databases, operating systems, computer networks.",
   },
   {
@@ -39,14 +39,14 @@ export const leadership: CVEntry[] = [
   {
     title: "Director General",
     org: "Graphic Era MUN Club",
-    period: "2024 — present",
+    period: "2024 to present",
     detail:
       "Runs the university Model United Nations club: conference planning, delegate management, committee operations and the logistics that keep a two-day event on schedule.",
   },
   {
     title: "Host and organizer",
     org: "University Model United Nations conferences",
-    period: "2025 — 2026",
+    period: "2025 to 2026",
     detail:
       "Organized and hosted multiple university-level conferences, from committee operations to participant experience.",
   },
@@ -60,7 +60,7 @@ export const leadership: CVEntry[] = [
   {
     title: "Delegate",
     org: "UNGA DISEC, IOC and global committees",
-    period: "2024 — present",
+    period: "2024 to present",
     detail:
       "Represented Pakistan, Switzerland and Mexico across international committees.",
   },
@@ -70,7 +70,7 @@ export const hackathons: CVEntry[] = [
   {
     title: "Hackaholic → iQOO Pune Hackathon",
     org: "Three hackathon sprints",
-    period: "2025 — 2026",
+    period: "2025 to 2026",
     detail:
       "Scope a build, cut it down to what can actually ship, and get a working deployed demo out inside the time limit.",
   },

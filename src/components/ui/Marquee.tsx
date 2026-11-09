@@ -3,7 +3,7 @@
  *
  * Two copies of the list are rendered so the track can translate by exactly
  * half its width and loop without a seam. The duplicate is hidden from
- * assistive tech; the ribbon itself is decorative — every phrase in it also
+ * assistive tech; the ribbon itself is decorative: every phrase in it also
  * appears in real copy on the page.
  */
 export default function Marquee({

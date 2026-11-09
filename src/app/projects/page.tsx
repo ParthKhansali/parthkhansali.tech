@@ -30,7 +30,7 @@ export default function ProjectsPage() {
           "@graph": [
             pageNode({
               path: "/projects",
-              name: "Work — Parth Khansali",
+              name: "Work: Parth Khansali",
               description,
               type: "CollectionPage",
             }),
@@ -50,7 +50,7 @@ export default function ProjectsPage() {
             <span aria-current="page">Work</span>
           </nav>
 
-          <p className="tag tag--dim">Index — five projects</p>
+          <p className="tag tag--dim">Index: five projects</p>
           <h1 className="display display--page" style={{ marginTop: "0.6rem" }}>
             Work<span style={{ color: "var(--accent)" }}>.</span>
           </h1>

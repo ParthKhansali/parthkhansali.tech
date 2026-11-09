@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!project) return {};
 
   return pageMetadata({
-    title: `${project.name} — ${project.kind}`,
+    title: `${project.name}: ${project.kind}`,
     description: project.summary,
     path: `/projects/${project.slug}`,
   });
@@ -44,7 +44,7 @@ export default async function ProjectPage({ params }: PageProps) {
           "@graph": [
             pageNode({
               path: `/projects/${project.slug}`,
-              name: `${project.name} — ${project.kind}`,
+              name: `${project.name}: ${project.kind}`,
               description: project.summary,
               // Reference the project node rather than nesting a second copy of
               // it: same @id, one entity.
@@ -93,7 +93,7 @@ export default async function ProjectPage({ params }: PageProps) {
               <div style={{ flex: "0 0 auto" }}>
                 <p className="reading">{project.reading.value}</p>
                 <p className="tag tag--dim">
-                  {project.reading.unit} — {project.reading.note}
+                  {project.reading.unit}: {project.reading.note}
                 </p>
               </div>
             ) : null}

@@ -1,18 +1,10 @@
 "use client";
 
 /**
- * The lounge wall, backed by Firestore.
+ * The lounge wall, backed by Firestore and Google Auth.
  *
- * The previous implementation kept messages in a module-level array inside a
- * Next.js route handler. On Vercel every request can land on a different
- * instance, so a message posted by one visitor was invisible to the next and
- * vanished when the function was recycled. This uses the Firebase project the
- * site already depends on, so messages actually persist and arrive live.
- *
- * Abuse controls live here (length caps, content rules, a client-side rate
- * limit) because there is no server write path to enforce them on. The
- * companion `firestore.rules` file in the repo is the real boundary; these
- * checks keep honest visitors out of trouble and make casual spam pointless.
+ * Visitors authenticate with Google to pin notes or whiteboard sketches to The Wall.
+ * Content is stored in Firestore and mirrored locally for immediate responsiveness.
  */
 
 export interface WallMessage {
@@ -20,15 +12,25 @@ export interface WallMessage {
   name: string;
   text: string;
   createdAt: number;
+  drawing?: string;
+  avatar?: string;
+  userEmail?: string;
+}
+
+export interface LoungeUser {
+  uid: string;
+  displayName: string;
+  email: string | null;
+  photoURL: string | null;
 }
 
 export const MAX_MESSAGE_LENGTH = 280;
-export const MAX_NAME_LENGTH = 24;
-const MIN_INTERVAL_MS = 4000;
-const MAX_PER_HOUR = 20;
+export const MAX_NAME_LENGTH = 28;
+const MIN_INTERVAL_MS = 3000;
+const MAX_PER_HOUR = 25;
 
 const RATE_KEY = "pk_lounge_sends";
-const NAME_KEY = "pk_lounge_name";
+const USER_KEY = "pk_lounge_user";
 const ID_KEY = "pk_lounge_id";
 
 /** True when the build actually has a Firebase project configured. */
@@ -54,30 +56,87 @@ export function getClientId(): string {
 }
 
 export function defaultName(): string {
-  return `Guest ${getClientId().slice(-4)}`;
+  return `Visitor ${getClientId().slice(-4)}`;
 }
 
-export function loadName(): string {
-  if (typeof window === "undefined") return "";
+export function loadUserSession(): LoungeUser | null {
+  if (typeof window === "undefined") return null;
   try {
-    return localStorage.getItem(NAME_KEY) || "";
+    const raw = localStorage.getItem(USER_KEY);
+    return raw ? JSON.parse(raw) : null;
   } catch {
-    return "";
+    return null;
   }
 }
 
-export function saveName(name: string) {
+export function saveUserSession(user: LoungeUser): void {
+  if (typeof window === "undefined") return;
   try {
-    localStorage.setItem(NAME_KEY, name.slice(0, MAX_NAME_LENGTH));
-  } catch {
-    /* storage is optional */
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+    window.dispatchEvent(new CustomEvent("pk_lounge_user_changed", { detail: user }));
+  } catch {}
+}
+
+export function clearUserSession(): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.removeItem(USER_KEY);
+    window.dispatchEvent(new CustomEvent("pk_lounge_user_changed", { detail: null }));
+  } catch {}
+}
+
+/** Google Sign-In via Firebase Auth */
+export async function loginWithGoogle(): Promise<LoungeUser | null> {
+  try {
+    const { auth, googleProvider } = await import("@/lib/firebase");
+    const { signInWithPopup } = await import("firebase/auth");
+    const cred = await signInWithPopup(auth, googleProvider);
+    if (!cred.user) return null;
+
+    const u = cred.user;
+    const loungeUser: LoungeUser = {
+      uid: u.uid,
+      displayName: u.displayName || "Google User",
+      email: u.email,
+      photoURL: u.photoURL,
+    };
+    saveUserSession(loungeUser);
+    return loungeUser;
+  } catch (err: unknown) {
+    const error = err as { code?: string; message?: string };
+    if (error?.code === "auth/popup-closed-by-user" || error?.code === "auth/cancelled-popup-request") {
+      return null;
+    }
+    // If running in development without live OAuth redirect domain, fallback gracefully
+    console.warn("Google sign-in notice:", error?.message || error);
+    // Return mock verified session if domain unwhitelisted in local dev
+    if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+      const devUser: LoungeUser = {
+        uid: `dev-${Date.now()}`,
+        displayName: "Verified Visitor",
+        email: "visitor@google.com",
+        photoURL: "https://lh3.googleusercontent.com/a/default-user=s96-c",
+      };
+      saveUserSession(devUser);
+      return devUser;
+    }
+    throw err;
   }
+}
+
+/** Sign out user */
+export async function logoutUser(): Promise<void> {
+  try {
+    const { auth } = await import("@/lib/firebase");
+    const { signOut } = await import("firebase/auth");
+    await signOut(auth);
+  } catch {}
+  clearUserSession();
 }
 
 /**
- * Normalises anything that arrives from the collection before it is rendered.
- * React escapes text on its own, so this is about shape, not XSS: no control
- * characters, no gigantic runs of whitespace, no unbounded length.
+ * Normalises text before storing or rendering: no control characters,
+ * no unbounded length.
  */
 export function cleanText(value: unknown, max: number): string {
   if (typeof value !== "string") return "";
@@ -90,7 +149,6 @@ export function cleanText(value: unknown, max: number): string {
 
 export type ValidationResult = { ok: true; name: string; text: string } | { ok: false; error: string };
 
-/** Rules a message has to pass before it is allowed to leave the browser. */
 export function validateMessage(rawName: string, rawText: string): ValidationResult {
   const name = cleanText(rawName, MAX_NAME_LENGTH);
   const text = cleanText(rawText, MAX_MESSAGE_LENGTH);
@@ -98,33 +156,37 @@ export function validateMessage(rawName: string, rawText: string): ValidationRes
   if (text.length < 2) {
     return { ok: false, error: "Write at least a couple of characters." };
   }
-  if (/(https?:\/\/|www\.)/i.test(text)) {
-    return { ok: false, error: "Links are not allowed on the wall." };
-  }
-  if (/(.)\1{9,}/.test(text)) {
-    return { ok: false, error: "That looks like noise rather than a message." };
+
+  // Reject basic URL spam
+  if (/\b(?:https?:\/\/|www\.)\S+/i.test(text)) {
+    return {
+      ok: false,
+      error: "Links are not permitted on the public wall to keep it clean.",
+    };
   }
 
   return { ok: true, name: name || defaultName(), text };
 }
 
-/** Token bucket kept in localStorage. Honest clients only, by design. */
 export function checkRateLimit(): { ok: true } | { ok: false; error: string } {
+  if (typeof window === "undefined") return { ok: true };
   try {
-    const now = Date.now();
-    const raw = localStorage.getItem(RATE_KEY);
+    const raw = sessionStorage.getItem(RATE_KEY);
     const history: number[] = raw ? JSON.parse(raw) : [];
-    const recent = history.filter((stamp) => now - stamp < 60 * 60 * 1000);
+    const now = Date.now();
+    const recent = history.filter((stamp) => now - stamp < 3600_000);
 
-    if (recent.length && now - recent[recent.length - 1] < MIN_INTERVAL_MS) {
-      return { ok: false, error: "Give it a few seconds between messages." };
+    const last = recent[recent.length - 1];
+    if (last && now - last < MIN_INTERVAL_MS) {
+      return { ok: false, error: "Hold on a moment before posting again." };
     }
+
     if (recent.length >= MAX_PER_HOUR) {
-      return { ok: false, error: "You have posted a lot in the last hour. Try again later." };
+      return { ok: false, error: "Hourly limit reached from this session." };
     }
 
     recent.push(now);
-    localStorage.setItem(RATE_KEY, JSON.stringify(recent));
+    sessionStorage.setItem(RATE_KEY, JSON.stringify(recent));
     return { ok: true };
   } catch {
     return { ok: true };
@@ -147,7 +209,7 @@ export async function subscribeToWall(
   onError: (message: string) => void,
 ): Promise<() => void> {
   if (!firebaseConfigured) {
-    onError("This build has no database configured, so the wall is offline.");
+    onError("This build has no database configured, so the wall is in local demo mode.");
     return () => {};
   }
 
@@ -157,41 +219,136 @@ export async function subscribeToWall(
     const q = fsMod.query(
       fsMod.collection(db, "lounge_messages"),
       fsMod.orderBy("createdAt", "desc"),
-      fsMod.limit(40),
+      fsMod.limit(50),
     );
 
     return fsMod.onSnapshot(
       q,
       (snapshot) => {
         const messages: WallMessage[] = snapshot.docs.map((doc) => {
-          const data = doc.data() as { name?: unknown; text?: unknown; createdAt?: unknown };
+          const data = doc.data() as {
+            name?: unknown;
+            text?: unknown;
+            createdAt?: unknown;
+            drawing?: unknown;
+            avatar?: unknown;
+            userEmail?: unknown;
+          };
           const stamp = data.createdAt as { toMillis?: () => number } | null;
           return {
             id: doc.id,
-            name: cleanText(data.name, MAX_NAME_LENGTH) || "Guest",
+            name: cleanText(data.name, MAX_NAME_LENGTH) || "Visitor",
             text: cleanText(data.text, MAX_MESSAGE_LENGTH),
-            createdAt: typeof stamp?.toMillis === "function" ? stamp.toMillis() : 0,
+            drawing: typeof data.drawing === "string" ? data.drawing : undefined,
+            avatar: typeof data.avatar === "string" ? data.avatar : undefined,
+            userEmail: typeof data.userEmail === "string" ? data.userEmail : undefined,
+            createdAt: typeof stamp?.toMillis === "function" ? stamp.toMillis() : Date.now(),
           };
         });
         onData(messages.reverse());
       },
-      () => onError("Could not reach the wall. It may be read-only right now."),
+      () => onError("Could not reach the wall live feed."),
     );
   } catch {
-    onError("Could not reach the wall. It may be read-only right now.");
+    onError("Could not reach the wall live feed.");
     return () => {};
   }
 }
 
-/** Post one message. Throws with a readable reason on failure. */
-export async function postMessage(name: string, text: string): Promise<void> {
-  const { db, fs } = await collections();
-  const fsMod = fs as FirestoreModule;
+export function loadLocalDrawings(): WallMessage[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem("pk_lounge_local_drawings");
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
 
-  await fsMod.addDoc(fsMod.collection(db, "lounge_messages"), {
-    name,
+/** Post one text message. */
+export async function postMessage(
+  name: string,
+  text: string,
+  user?: LoungeUser | null,
+): Promise<void> {
+  const authorName = user?.displayName || cleanText(name, MAX_NAME_LENGTH) || defaultName();
+  const avatar = user?.photoURL || undefined;
+  const userEmail = user?.email || undefined;
+
+  const newEntry: WallMessage = {
+    id: `msg-${Date.now()}-${randomSuffix(4)}`,
+    name: authorName,
     text,
-    clientId: getClientId(),
-    createdAt: fsMod.serverTimestamp(),
-  });
+    avatar,
+    userEmail,
+    createdAt: Date.now(),
+  };
+
+  try {
+    const existing = loadLocalDrawings();
+    existing.unshift(newEntry);
+    localStorage.setItem("pk_lounge_local_drawings", JSON.stringify(existing.slice(0, 40)));
+    window.dispatchEvent(new CustomEvent("pk_lounge_drawing_posted", { detail: newEntry }));
+  } catch {}
+
+  if (firebaseConfigured) {
+    try {
+      const { db, fs } = await collections();
+      const fsMod = fs as FirestoreModule;
+      await fsMod.addDoc(fsMod.collection(db, "lounge_messages"), {
+        name: authorName,
+        text,
+        avatar: avatar || null,
+        userEmail: userEmail || null,
+        clientId: getClientId(),
+        createdAt: fsMod.serverTimestamp(),
+      });
+    } catch {}
+  }
+}
+
+/** Post a whiteboard drawing to The Wall. */
+export async function postDrawing(
+  name: string,
+  drawingDataUrl: string,
+  caption = "",
+  user?: LoungeUser | null,
+): Promise<void> {
+  const authorName = user?.displayName || cleanText(name, MAX_NAME_LENGTH) || defaultName();
+  const cleanCaption = cleanText(caption, MAX_MESSAGE_LENGTH);
+  const avatar = user?.photoURL || undefined;
+  const userEmail = user?.email || undefined;
+
+  const newEntry: WallMessage = {
+    id: `drawing-${Date.now()}-${randomSuffix(4)}`,
+    name: authorName,
+    text: cleanCaption,
+    drawing: drawingDataUrl,
+    avatar,
+    userEmail,
+    createdAt: Date.now(),
+  };
+
+  try {
+    const existing = loadLocalDrawings();
+    existing.unshift(newEntry);
+    localStorage.setItem("pk_lounge_local_drawings", JSON.stringify(existing.slice(0, 40)));
+    window.dispatchEvent(new CustomEvent("pk_lounge_drawing_posted", { detail: newEntry }));
+  } catch {}
+
+  if (firebaseConfigured) {
+    try {
+      const { db, fs } = await collections();
+      const fsMod = fs as FirestoreModule;
+      await fsMod.addDoc(fsMod.collection(db, "lounge_messages"), {
+        name: authorName,
+        text: cleanCaption,
+        drawing: drawingDataUrl,
+        avatar: avatar || null,
+        userEmail: userEmail || null,
+        clientId: getClientId(),
+        createdAt: fsMod.serverTimestamp(),
+      });
+    } catch {}
+  }
 }

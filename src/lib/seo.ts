@@ -205,7 +205,7 @@ export function homeGraph() {
     "@graph": [
       pageNode({
         path: "/",
-        name: "Parth Khansali — computer science student and software developer",
+        name: "Parth Khansali: Computer Science Student & Software Developer",
         description:
           "The work of Parth Khansali: GEHU Connect, a campus app used by roughly a thousand students, plus Netwich and other builds.",
         type: "ProfilePage",

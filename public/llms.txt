@@ -1,0 +1,24 @@
+# Parth Khansali
+
+> Computer science student and software developer based in Dehradun, India. Developer of GEHU Connect, a campus networking app actively used by roughly a thousand students.
+
+## About
+Parth Khansali studies Computer Science and Engineering at Graphic Era Hill University (GEHU) in Dehradun, Uttarakhand, India (2024 to 2028, CGPA 7.6). He focuses on mobile-first applications, robust backend APIs, and systems engineering. He also serves as Director General of the Graphic Era Model United Nations Club.
+
+## Main Projects
+- [GEHU Connect](https://www.parthkhansali.tech/projects/gehu-connect): Campus community and networking application built with React Native, Expo, Java, Spring Boot, and Cloudflare R2 via AWS SDK. In daily active use by approximately 1,000 students at GEHU.
+- [Netwich](https://www.parthkhansali.tech/projects/netwich): Native macOS link bonding tool written in Swift 6 and SwiftUI. Bonds Wi-Fi, Ethernet, and tethered connections via local SOCKS5 proxy using Apple IP_BOUND_IF with zero external daemons.
+- [ARANYA](https://www.parthkhansali.tech/projects/aranya): Geospatial wildlife conflict intelligence platform piloting across Uttarakhand, monitoring animal movement and camera-trap telemetry along the Rajaji-Corbett corridor.
+- [ORVESS-PAT](https://www.parthkhansali.tech/projects/orvess-pat): Optical tracking simulation suite written in Python for focal-plane arrays, sub-pixel centroiding (sigma = 0.18 px), adaptive filtering, and Monte Carlo noise sweeps.
+- [Meghavyuha](https://www.parthkhansali.tech/projects/meghavyuha): Adaptive meteorological intelligence and flood risk dashboard deployed on Vercel.
+
+## Core Stack
+- Languages: Java, Python, TypeScript, JavaScript, Swift 6
+- Frameworks & Tools: React Native, Expo, Spring Boot, Next.js, Node.js, SwiftUI, MySQL, MongoDB, Git
+
+## Links
+- Website: https://www.parthkhansali.tech
+- GitHub: https://github.com/ParthKhansali
+- LinkedIn: https://www.linkedin.com/in/parth-khansali/
+- Full Context File: https://www.parthkhansali.tech/llms-full.txt
+

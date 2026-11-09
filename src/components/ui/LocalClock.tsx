@@ -5,7 +5,7 @@ import { useSyncExternalStore } from "react";
 /*
  * A clock in the visitor's browser, showing the time where Parth actually is.
  * The server has no idea what time it is for the reader, so it renders a dash
- * and the client fills the value in after hydration — no mismatch, no layout
+ * and the client fills the value in after hydration: no mismatch, no layout
  * shift because the string is a fixed width in a monospace face.
  */
 let current = "";

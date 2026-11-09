@@ -59,7 +59,7 @@ export default function ResumePage() {
           "@graph": [
             pageNode({
               path: "/resume",
-              name: "Resume — Parth Khansali",
+              name: "Resume: Parth Khansali",
               description,
             }),
             breadcrumbNode(trail),
@@ -136,7 +136,7 @@ export default function ResumePage() {
                   </Link>
                 </div>
                 <p className="cv-entry__org">
-                  {project.kind} — {project.status}
+                  {project.kind}: {project.status}
                 </p>
                 <p className="cv-entry__detail">{project.summary}</p>
                 <p className="measured" style={{ marginTop: "0.3rem", fontSize: "0.75rem" }}>
