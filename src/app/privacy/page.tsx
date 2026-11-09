@@ -7,7 +7,7 @@ import { siteConfig } from "@/data/site";
 export const metadata: Metadata = pageMetadata({
   title: "Privacy Policy",
   description:
-    "Privacy Policy for parthkhansali.com: details on authentication for The Wall, data collection, and rights.",
+    "Privacy Policy for parthkhansali.tech: details on authentication for The Wall, data collection, and rights.",
   path: "/privacy",
 });
 
@@ -15,7 +15,7 @@ export default function PrivacyPage() {
   const jsonLd = pageNode({
     path: "/privacy",
     name: "Privacy Policy",
-    description: "Privacy Policy for parthkhansali.com",
+    description: "Privacy Policy for parthkhansali.tech",
     type: "WebPage",
   });
 
@@ -44,7 +44,7 @@ export default function PrivacyPage() {
         <article className="prose-block" style={{ display: "flex", flexDirection: "column", gap: "2rem", lineHeight: "1.7", color: "var(--fg)" }}>
           <section>
             <p style={{ fontSize: "1.1rem" }}>
-              Your privacy matters. This policy explains exactly what data parthkhansali.com collects, why it is collected, and how you can control it.
+              Your privacy matters. This policy explains exactly what data parthkhansali.tech collects, why it is collected, and how you can control it.
             </p>
           </section>
 

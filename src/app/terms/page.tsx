@@ -7,7 +7,7 @@ import { siteConfig } from "@/data/site";
 export const metadata: Metadata = pageMetadata({
   title: "Terms of Use",
   description:
-    "Terms of Use for parthkhansali.com: intellectual property, acceptable use, and visitor wall guidelines.",
+    "Terms of Use for parthkhansali.tech: intellectual property, acceptable use, and visitor wall guidelines.",
   path: "/terms",
 });
 
@@ -15,7 +15,7 @@ export default function TermsPage() {
   const jsonLd = pageNode({
     path: "/terms",
     name: "Terms of Use",
-    description: "Terms of Use for parthkhansali.com",
+    description: "Terms of Use for parthkhansali.tech",
     type: "WebPage",
   });
 
@@ -44,7 +44,7 @@ export default function TermsPage() {
         <article className="prose-block" style={{ display: "flex", flexDirection: "column", gap: "2rem", lineHeight: "1.7", color: "var(--fg)" }}>
           <section>
             <p style={{ fontSize: "1.1rem" }}>
-              By accessing and using parthkhansali.com, you agree to the following terms and conditions. Please read them carefully.
+              By accessing and using parthkhansali.tech, you agree to the following terms and conditions. Please read them carefully.
             </p>
           </section>
 
@@ -84,7 +84,7 @@ export default function TermsPage() {
               User Generated Content (The Wall)
             </h2>
             <p>
-              The Wall feature allows visitors to pin notes and whiteboard drawings. By submitting content, you grant parthkhansali.com a non-exclusive license to display that content on the website. You are responsible for ensuring your submissions do not infringe on third-party rights. We reserve the right to remove any submission at our sole discretion.
+              The Wall feature allows visitors to pin notes and whiteboard drawings. By submitting content, you grant parthkhansali.tech a non-exclusive license to display that content on the website. You are responsible for ensuring your submissions do not infringe on third-party rights. We reserve the right to remove any submission at our sole discretion.
             </p>
           </section>
 

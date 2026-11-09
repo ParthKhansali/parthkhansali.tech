@@ -4,7 +4,7 @@ This portfolio now treats the lounge as a small social product inside the portfo
 
 ## Public URL and launch order
 
-The currently verified deployment is `https://parthkhansali-dev.vercel.app`. The custom domain `parthkhansali.com` should not be used in metadata until its DNS records resolve. Set this before a production build:
+The currently verified deployment is `https://www.parthkhansali.tech`.
 
 ```env
 NEXT_PUBLIC_SITE_URL=https://parthkhansali-dev.vercel.app
@@ -15,7 +15,7 @@ If you later connect the custom domain, change the value and redeploy. The metad
 ### Link audit completed on 24 October 2026
 
 - Portfolio deployment: `https://parthkhansali-dev.vercel.app` — responds successfully.
-- Custom domain: `https://parthkhansali.com` — DNS did not resolve from the development environment, so it is no longer used as the default canonical URL.
+- Custom domain: `https://www.parthkhansali.tech` is the active canonical production domain.
 - GitHub profile and confirmed repositories — reachable.
 - GEHU Connect demo — responds successfully.
 - ARANYA demo and repository — reachable and linked.

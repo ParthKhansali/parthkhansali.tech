@@ -1,7 +1,7 @@
 # Parth Khansali Portfolio SEO Plan
 
 **Prepared:** 24 October 2026  
-**Primary domain assumed by the app:** `https://parthkhansali.com`  
+**Primary domain assumed by the app:** `https://www.parthkhansali.tech`  
 **Positioning:** Parth Khansali — AI and software engineering student in Dehradun building useful systems with personality.
 
 This is a practical SEO plan for the portfolio as it exists today. It is intentionally honest: the site should make Parth's real work easier to understand and discover, not manufacture authority or claim results that have not been verified.
@@ -70,7 +70,7 @@ Each page should have one descriptive `<h1>`, a short original summary, a visibl
 
 ### Days 1–7: establish the baseline
 
-- Verify `parthkhansali.com` ownership in Google Search Console and Bing Webmaster Tools.
+- Verify `parthkhansali.tech` ownership in Google Search Console and Bing Webmaster Tools.
 - Add both the root and `www` host variants if both resolve; choose one canonical host and redirect the other.
 - Submit `/sitemap.xml` in Search Console.
 - Inspect `/`, `/projects`, and `/resume` with URL Inspection.
