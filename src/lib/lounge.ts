@@ -107,19 +107,7 @@ export async function loginWithGoogle(): Promise<LoungeUser | null> {
     if (error?.code === "auth/popup-closed-by-user" || error?.code === "auth/cancelled-popup-request") {
       return null;
     }
-    // If running in development without live OAuth redirect domain, fallback gracefully
     console.warn("Google sign-in notice:", error?.message || error);
-    // Return mock verified session if domain unwhitelisted in local dev
-    if (typeof window !== "undefined" && window.location.hostname === "localhost") {
-      const devUser: LoungeUser = {
-        uid: `dev-${Date.now()}`,
-        displayName: "Verified Visitor",
-        email: "visitor@google.com",
-        photoURL: "https://lh3.googleusercontent.com/a/default-user=s96-c",
-      };
-      saveUserSession(devUser);
-      return devUser;
-    }
     throw err;
   }
 }

@@ -1,9 +1,15 @@
 import type { NextConfig } from "next";
 
+const basePath = process.env.BASE_PATH || "";
+
 const nextConfig: NextConfig = {
+  output: "export",
+  trailingSlash: true,
+  images: {
+    unoptimized: true,
+  },
+  basePath,
   reactStrictMode: true,
-  // The framework reports its own name in a response header by default; there
-  // is no reason to volunteer it.
   poweredByHeader: false,
 };
 
