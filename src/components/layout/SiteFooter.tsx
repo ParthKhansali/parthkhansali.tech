@@ -69,7 +69,7 @@ export default function SiteFooter() {
             © {new Date().getFullYear()} {siteConfig.name}
           </span>
           <span>
-            Set in Instrument Serif, Host Grotesk and Atkinson Hyperlegible Mono.
+            Set in Space Grotesk and JetBrains Mono.
           </span>
         </div>
       </div>

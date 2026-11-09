@@ -52,4 +52,4 @@ export const socialLinks = [
 ] as const;
 
 /** Last content revision, used for sitemap `lastModified` and JSON-LD. */
-export const CONTENT_UPDATED = "2026-11-08";
+export const CONTENT_UPDATED = "2026-11-09";

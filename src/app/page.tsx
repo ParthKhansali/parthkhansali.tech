@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
 import Marquee from "@/components/ui/Marquee";
+import Magnetic from "@/components/ui/Magnetic";
+import SpotlightGrid from "@/components/ui/SpotlightGrid";
+import CursorPreview from "@/components/ui/CursorPreview";
 import { homeGraph, pageMetadata } from "@/lib/seo";
 import { siteConfig, socialLinks } from "@/data/site";
 import { flagship, otherProjects } from "@/data/projects";
@@ -24,11 +27,18 @@ const roles = [
   "Campus software",
   "React Native",
   "Spring Boot",
-  "macOS · Swift",
+  "Swift 6",
   "Geospatial data",
   "Optical tracking",
   "Model United Nations",
-  "Dehradun, India",
+  "Dehradun, IN",
+];
+
+const stats = [
+  { value: "05", label: "projects in the index" },
+  { value: "01", label: "in daily use" },
+  { value: "03", label: "still in progress" },
+  { value: "~1,000", label: "students on GEHU Connect" },
 ];
 
 const record = [
@@ -46,36 +56,31 @@ function FocalPlanePlate() {
         viewBox="0 0 480 300"
         preserveAspectRatio="xMidYMid slice"
         role="img"
-        aria-label="A simulated focal plane: a grid of sensor pixels with one blurred star image and the centroid marked below pixel resolution."
+        aria-label="A simulated focal plane: a grid of sensor pixels with one blurred star image and its sub-pixel centroid marked."
       >
         <defs>
           <radialGradient id="centroid-blob" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#ff4d23" stopOpacity="0.85" />
-            <stop offset="100%" stopColor="#ff4d23" stopOpacity="0" />
+            <stop offset="0%" stopColor="#45e0ff" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#45e0ff" stopOpacity="0" />
           </radialGradient>
           <pattern id="fpa-grid" width="24" height="24" patternUnits="userSpaceOnUse">
-            <path d="M24 0H0V24" fill="none" stroke="rgba(244,239,230,0.08)" strokeWidth="1" />
+            <path d="M24 0H0V24" fill="none" stroke="rgba(140,205,235,0.1)" strokeWidth="1" />
           </pattern>
         </defs>
 
         <rect width="480" height="300" fill="url(#fpa-grid)" />
-        <circle cx="253" cy="146" r="66" fill="url(#centroid-blob)" />
-        <circle cx="253" cy="146" r="2.5" fill="#f4efe6" />
+        <circle cx="253" cy="146" r="64" fill="url(#centroid-blob)" />
+        <circle cx="253" cy="146" r="2.5" fill="#e6f0f7" />
 
-        <g stroke="rgba(244,239,230,0.5)" strokeWidth="1">
-          <line x1="253" y1="96" x2="253" y2="196" strokeDasharray="3 4" />
-          <line x1="203" y1="146" x2="303" y2="146" strokeDasharray="3 4" />
+        <g stroke="rgba(230,240,247,0.55)" strokeWidth="1">
+          <line x1="253" y1="98" x2="253" y2="194" strokeDasharray="3 4" />
+          <line x1="205" y1="146" x2="301" y2="146" strokeDasharray="3 4" />
         </g>
 
-        <g
-          fill="#76716a"
-          fontFamily="var(--font-mono)"
-          fontSize="8"
-          letterSpacing="1.6"
-        >
-          <text x="24" y="28">FPA 1024 × 1024</text>
-          <text x="24" y="282">SUB-PIXEL CENTROID</text>
-          <text x="330" y="282">σ = 0.18 px</text>
+        <g fill="#5f7284" fontFamily="var(--font-mono)" fontSize="8" letterSpacing="1.6">
+          <text x="22" y="26">FPA 1024 × 1024</text>
+          <text x="22" y="284">SUB-PIXEL CENTROID</text>
+          <text x="342" y="284">σ = 0.18 px</text>
         </g>
       </svg>
       <span className="plate__caption">Simulated focal plane</span>
@@ -93,67 +98,96 @@ export default function HomePage() {
       {/* ---------------------------------------------------------------- */}
       <section className="masthead">
         <div className="shell">
+          <p className="console">
+            <span className="console__path">~/parth</span>
+            <span className="console__caret">$</span>
+            <span className="console__cmd">whoami</span>
+            <span className="console__out">
+              computer science student · software developer
+            </span>
+            <span className="console__cursor" aria-hidden="true" />
+          </p>
+
           <div className="masthead__meta">
             <p className="tag">
               <span className="pulse" aria-hidden="true" />
               Open to internships
             </p>
-            <p className="tag tag--dim">
-              Dehradun, India · 30.31°N 78.03°E
-            </p>
+            <p className="tag tag--dim">30.3165° N, 78.0322° E</p>
             <p className="tag tag--dim">B.Tech CSE · 2024—2028</p>
           </div>
 
           <div className="masthead__body">
-            <h1 className="masthead__name">
-              <span className="line">Parth</span>
-              <span className="line line--accent">
-                Khansali<span className="dot">.</span>
-              </span>
-            </h1>
+            <div>
+              <h1 className="masthead__name">
+                <span className="line">Parth</span>{" "}
+                <span className="line line--ghost">Khansali</span>
+              </h1>
 
-            <div className="masthead__id">
-              <figure className="idcard">
+              <p className="masthead__lede">
+                Computer science student in Dehradun. I build software, then keep it
+                running once real people start using it.
+              </p>
+
+              <div className="masthead__actions">
+                <Magnetic>
+                  <a className="btn btn--primary" href="#work">
+                    See the work <span aria-hidden="true">↘</span>
+                  </a>
+                </Magnetic>
+                <Magnetic>
+                  <Link className="btn" href="/resume">
+                    Resume
+                  </Link>
+                </Magnetic>
+                <a className="link measured" href={`mailto:${siteConfig.email}`}>
+                  {siteConfig.email}
+                </a>
+              </div>
+            </div>
+
+            <aside className="hero-card">
+              <div className="hud">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/shots/parth-640.jpg"
                   srcSet="/shots/parth-320.jpg 320w, /shots/parth-640.jpg 640w"
-                  sizes="(max-width: 980px) 96px, 264px"
+                  sizes="(max-width: 980px) 112px, 264px"
                   alt="Parth Khansali"
                   width={640}
                   height={640}
                   fetchPriority="high"
                 />
-                <figcaption>Fig. 01 — the author</figcaption>
-              </figure>
-
-              <div className="masthead__now">
-                <p className="tag tag--dim">Currently</p>
-                <p className="masthead__nowtext">
-                  Building <strong>{flagship.name}</strong> — the campus app, now at
-                  roughly a thousand students.
-                </p>
+                <span className="hud__scan" aria-hidden="true" />
+                <span className="hud__tag">FIG.01 — AUTHOR</span>
               </div>
-            </div>
+
+              <div className="terminal">
+                <p>
+                  <span>›</span> currently
+                </p>
+                <p className="terminal__out">
+                  <strong>{flagship.name}</strong> — ~1,000 students
+                </p>
+                <p>
+                  <span>›</span> based
+                </p>
+                <p className="terminal__out">Dehradun, IN · GMT+5:30</p>
+                <p>
+                  <span>›</span> open_to
+                </p>
+                <p className="terminal__out">software internships</p>
+              </div>
+            </aside>
           </div>
 
-          <div className="masthead__foot">
-            <p className="masthead__lede">
-              Computer science student in Dehradun. I build software, then keep it
-              running once real people start using it.
-            </p>
-
-            <div className="masthead__actions">
-              <a className="btn btn--primary" href="#work">
-                See the work
-              </a>
-              <Link className="btn" href="/resume">
-                Read the resume
-              </Link>
-              <a className="link" href={`mailto:${siteConfig.email}`}>
-                {siteConfig.email}
-              </a>
-            </div>
+          <div className="stats">
+            {stats.map((stat) => (
+              <div className="stat" key={stat.label}>
+                <span className="stat__value">{stat.value}</span>
+                <span className="stat__label">{stat.label}</span>
+              </div>
+            ))}
           </div>
         </div>
 
@@ -161,12 +195,12 @@ export default function HomePage() {
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* The flagship, printed                                             */}
+      {/* The flagship, as a blueprint                                      */}
       {/* ---------------------------------------------------------------- */}
       <section className="folio" id="flagship">
         <div className="shell">
           <div className="folio__strip">
-            <span>01 — Flagship</span>
+            <span>01 / Flagship</span>
             <span>Deployed · ~1,000 students</span>
             <span>Graphic Era Hill University</span>
           </div>
@@ -188,7 +222,7 @@ export default function HomePage() {
                 ))}
               </dl>
 
-              <div className="chip-list" style={{ marginTop: "1.35rem" }}>
+              <div className="chip-list" style={{ marginTop: "1.25rem" }}>
                 {flagship.stack.map((item) => (
                   <span className="chip" key={item}>
                     {item}
@@ -196,7 +230,7 @@ export default function HomePage() {
                 ))}
               </div>
 
-              <p style={{ marginTop: "1.5rem" }}>
+              <p style={{ marginTop: "1.35rem" }}>
                 <Link className="link" href={`/projects/${flagship.slug}`}>
                   How GEHU Connect is built →
                 </Link>
@@ -223,7 +257,7 @@ export default function HomePage() {
         <div className="shell">
           <div className="section-head">
             <div>
-              <p className="tag tag--dim">02 — Selected work</p>
+              <p className="tag tag--dim">{"// 02 — Selected work"}</p>
               <h2>Four builds, four different problems.</h2>
             </div>
             <p className="section-note">
@@ -232,15 +266,15 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="work">
-            {otherProjects.map((project, index) => {
-              const wide = index % 4 === 0 || index % 4 === 3;
-
-              return (
+          <CursorPreview>
+            <SpotlightGrid className="work">
+              {otherProjects.map((project, index) => (
                 <Link
                   key={project.slug}
                   href={`/projects/${project.slug}`}
-                  className={`work-card ${wide ? "work-card--wide" : "work-card--narrow"}`}
+                  className="work-card"
+                  data-spotlight
+                  data-preview={project.media?.src}
                 >
                   <div className="work-card__top">
                     <span className="work-card__index">
@@ -260,7 +294,7 @@ export default function HomePage() {
                       <img
                         src={project.media.src}
                         srcSet={project.media.srcSet}
-                        sizes="(max-width: 900px) 100vw, 640px"
+                        sizes="(max-width: 900px) 100vw, 590px"
                         alt={project.media.alt}
                         width={project.media.width}
                         height={project.media.height}
@@ -287,11 +321,11 @@ export default function HomePage() {
                     </span>
                   </div>
                 </Link>
-              );
-            })}
-          </div>
+              ))}
+            </SpotlightGrid>
+          </CursorPreview>
 
-          <p style={{ marginTop: "2rem" }}>
+          <p style={{ marginTop: "1.75rem" }}>
             <Link className="link" href="/projects">
               All projects, in one place →
             </Link>
@@ -306,7 +340,7 @@ export default function HomePage() {
         <div className="shell">
           <div className="section-head">
             <div>
-              <p className="tag tag--dim">03 — How I work</p>
+              <p className="tag tag--dim">{"// 03 — How I work"}</p>
               <h2>The interesting part is never the feature.</h2>
             </div>
             <p className="section-note">
@@ -371,7 +405,7 @@ export default function HomePage() {
         <div className="shell">
           <div className="section-head">
             <div>
-              <p className="tag tag--dim">04 — Record</p>
+              <p className="tag tag--dim">{"// 04 — Record"}</p>
               <h2>Dates, places, and what I was doing there.</h2>
             </div>
             <p className="section-note">
@@ -406,7 +440,7 @@ export default function HomePage() {
       {/* ---------------------------------------------------------------- */}
       <section className="cta" id="contact">
         <div className="shell">
-          <p className="tag">05 — Contact</p>
+          <p className="tag">05 / Contact</p>
           <h2 className="cta__title">Got a problem worth an afternoon?</h2>
 
           <a className="cta__email" href={`mailto:${siteConfig.email}`}>
