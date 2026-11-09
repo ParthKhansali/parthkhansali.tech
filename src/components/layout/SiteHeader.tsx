@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import LocalClock from "@/components/ui/LocalClock";
 import { siteConfig } from "@/data/site";
 
 const navigation = [
@@ -23,7 +24,7 @@ export default function SiteHeader() {
   return (
     <header className="site-header">
       <div className="shell site-header__inner">
-        <Link href="/" className="wordmark" aria-label="Parth Khansali, home">
+        <Link href="/" className="wordmark">
           <span className="wordmark__mark" aria-hidden="true">
             PK
           </span>
@@ -44,8 +45,10 @@ export default function SiteHeader() {
         </nav>
 
         <div className="site-header__actions">
+          <LocalClock />
+
           <a className="btn btn--primary header-cta" href={`mailto:${siteConfig.email}`}>
-            Email me
+            Say hello
           </a>
 
           <details className="menu">

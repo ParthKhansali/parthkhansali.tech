@@ -61,10 +61,10 @@ export default function CodeSnake() {
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
 
-    ctx.fillStyle = "#0b0e12";
+    ctx.fillStyle = "#0a0a0c";
     ctx.fillRect(0, 0, LOGICAL, LOGICAL);
 
-    ctx.strokeStyle = "rgba(120, 140, 170, 0.10)";
+    ctx.strokeStyle = "rgba(244, 239, 230, 0.07)";
     ctx.lineWidth = 1;
     for (let i = 1; i < CELLS; i += 1) {
       ctx.beginPath();
@@ -77,11 +77,11 @@ export default function CodeSnake() {
       ctx.stroke();
     }
 
-    ctx.fillStyle = "#6fb3ff";
+    ctx.fillStyle = "#ff4d23";
     ctx.fillRect(food.current.x * CELL + 3, food.current.y * CELL + 3, CELL - 6, CELL - 6);
 
     snake.current.forEach((part, index) => {
-      ctx.fillStyle = index === 0 ? "#f0b04a" : "rgba(240, 176, 74, 0.55)";
+      ctx.fillStyle = index === 0 ? "#f4efe6" : "rgba(244, 239, 230, 0.45)";
       ctx.fillRect(part.x * CELL + 1, part.y * CELL + 1, CELL - 2, CELL - 2);
     });
   }, []);

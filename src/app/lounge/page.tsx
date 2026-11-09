@@ -48,9 +48,7 @@ export default function LoungePage() {
             <span aria-current="page">Lounge</span>
           </nav>
 
-          <h1 className="display" style={{ fontSize: "clamp(2.5rem, 6vw, 3.75rem)" }}>
-            Lounge
-          </h1>
+          <h1 className="display display--page">Lounge</h1>
           <p className="lede" style={{ marginTop: "1rem" }}>
             Three small games and a wall. Everything here runs in your browser and
             needs no account. The wall is public and permanent, so treat it like a

@@ -1,5 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Host_Grotesk, Atkinson_Hyperlegible_Mono } from "next/font/google";
+import {
+  Host_Grotesk,
+  Atkinson_Hyperlegible_Mono,
+  Instrument_Serif,
+} from "next/font/google";
 import "./globals.css";
 import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
@@ -11,25 +15,42 @@ import { siteConfig } from "@/data/site";
  * Both faces are self-hosted by next/font, so there is no render-blocking
  * request to fonts.googleapis.com and no layout shift from a late font swap.
  */
+/*
+ * `optional` on the reading faces is deliberate. On a throttled phone the
+ * swap-in of Host Grotesk was repainting the largest paragraph at 3.3s and
+ * dragging the lab LCP with it. With `optional` the first paint keeps the
+ * metric-matched fallback, the webfont is cached for every later view, and
+ * the page never repaints behind the reader. The display serif keeps `swap`
+ * because its swap does not change which element is largest.
+ */
 const hostGrotesk = Host_Grotesk({
   subsets: ["latin"],
   weight: ["400", "500"],
   variable: "--font-host-grotesk",
+  display: "optional",
+});
+
+/* The display face. One weight, used large; the grotesk does the reading. */
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-instrument",
   display: "swap",
 });
 
 const atkinsonMono = Atkinson_Hyperlegible_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400"],
   variable: "--font-atkinson",
-  display: "swap",
+  display: "optional",
 });
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#0e1116",
+  themeColor: "#08080a",
   colorScheme: "dark",
 };
 
@@ -107,7 +128,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${hostGrotesk.variable} ${atkinsonMono.variable}`}
+      className={`${hostGrotesk.variable} ${atkinsonMono.variable} ${instrumentSerif.variable}`}
       suppressHydrationWarning
     >
       <body>

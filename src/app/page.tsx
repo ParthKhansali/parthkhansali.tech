@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
+import Marquee from "@/components/ui/Marquee";
 import { homeGraph, pageMetadata } from "@/lib/seo";
 import { siteConfig, socialLinks } from "@/data/site";
 import { flagship, otherProjects } from "@/data/projects";
@@ -19,119 +20,175 @@ export const metadata: Metadata = {
   title: { absolute: "Parth Khansali — computer science student and software developer" },
 };
 
+const roles = [
+  "Campus software",
+  "React Native",
+  "Spring Boot",
+  "macOS · Swift",
+  "Geospatial data",
+  "Optical tracking",
+  "Model United Nations",
+  "Dehradun, India",
+];
+
+const record = [
+  { ...education[0], kind: "Academics" },
+  { ...leadership[0], kind: "Leadership" },
+  { ...hackathons[0], kind: "Hackathons" },
+  { ...leadership[1], kind: "Leadership" },
+];
+
+/** The plate shown where a project has no screenshot of its own. */
+function FocalPlanePlate() {
+  return (
+    <div className="plate">
+      <svg
+        viewBox="0 0 480 300"
+        preserveAspectRatio="xMidYMid slice"
+        role="img"
+        aria-label="A simulated focal plane: a grid of sensor pixels with one blurred star image and the centroid marked below pixel resolution."
+      >
+        <defs>
+          <radialGradient id="centroid-blob" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#ff4d23" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="#ff4d23" stopOpacity="0" />
+          </radialGradient>
+          <pattern id="fpa-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+            <path d="M24 0H0V24" fill="none" stroke="rgba(244,239,230,0.08)" strokeWidth="1" />
+          </pattern>
+        </defs>
+
+        <rect width="480" height="300" fill="url(#fpa-grid)" />
+        <circle cx="253" cy="146" r="66" fill="url(#centroid-blob)" />
+        <circle cx="253" cy="146" r="2.5" fill="#f4efe6" />
+
+        <g stroke="rgba(244,239,230,0.5)" strokeWidth="1">
+          <line x1="253" y1="96" x2="253" y2="196" strokeDasharray="3 4" />
+          <line x1="203" y1="146" x2="303" y2="146" strokeDasharray="3 4" />
+        </g>
+
+        <g
+          fill="#76716a"
+          fontFamily="var(--font-mono)"
+          fontSize="8"
+          letterSpacing="1.6"
+        >
+          <text x="24" y="28">FPA 1024 × 1024</text>
+          <text x="24" y="282">SUB-PIXEL CENTROID</text>
+          <text x="330" y="282">σ = 0.18 px</text>
+        </g>
+      </svg>
+      <span className="plate__caption">Simulated focal plane</span>
+    </div>
+  );
+}
+
 export default function HomePage() {
   return (
     <>
       <JsonLd data={homeGraph()} />
 
       {/* ---------------------------------------------------------------- */}
-      {/* Hero                                                             */}
+      {/* Masthead                                                          */}
       {/* ---------------------------------------------------------------- */}
-      <section className="section" style={{ paddingBlockStart: "clamp(2.5rem, 6vw, 4rem)" }}>
+      <section className="masthead">
         <div className="shell">
-          <div className="hero-grid">
-            <div>
-              <h1 className="display">Parth Khansali</h1>
-              <p className="lede" style={{ marginTop: "1.25rem" }}>
-                Computer science student in Dehradun. I build software, then keep it
-                running once real people start using it.
-              </p>
+          <div className="masthead__meta">
+            <p className="tag">
+              <span className="pulse" aria-hidden="true" />
+              Open to internships
+            </p>
+            <p className="tag tag--dim">
+              Dehradun, India · 30.31°N 78.03°E
+            </p>
+            <p className="tag tag--dim">B.Tech CSE · 2024—2028</p>
+          </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "0.75rem",
-                  marginTop: "1.75rem",
-                }}
-              >
-                <a className="btn btn--primary" href="#work">
-                  See the work
-                </a>
-                <Link className="btn" href="/resume">
-                  Read the resume
-                </Link>
-                <a className="btn btn--quiet" href={`mailto:${siteConfig.email}`}>
-                  {siteConfig.email}
-                </a>
+          <div className="masthead__body">
+            <h1 className="masthead__name">
+              <span className="line">Parth</span>
+              <span className="line line--accent">
+                Khansali<span className="dot">.</span>
+              </span>
+            </h1>
+
+            <div className="masthead__id">
+              <figure className="idcard">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/shots/parth-640.jpg"
+                  srcSet="/shots/parth-320.jpg 320w, /shots/parth-640.jpg 640w"
+                  sizes="(max-width: 980px) 96px, 264px"
+                  alt="Parth Khansali"
+                  width={640}
+                  height={640}
+                  fetchPriority="high"
+                />
+                <figcaption>Fig. 01 — the author</figcaption>
+              </figure>
+
+              <div className="masthead__now">
+                <p className="tag tag--dim">Currently</p>
+                <p className="masthead__nowtext">
+                  Building <strong>{flagship.name}</strong> — the campus app, now at
+                  roughly a thousand students.
+                </p>
               </div>
             </div>
+          </div>
 
-            {/* The signature: the flagship shown as a record, not a screenshot. */}
-            <aside className="panel" aria-labelledby="flagship-reading">
-              <div className="panel-head">
-                <span className="label">Flagship</span>
-                <span className="chip chip--ok">{flagship.status}</span>
-              </div>
-              <div className="panel-body">
-                <p className="label">{flagship.name}</p>
-                <p className="reading" id="flagship-reading" style={{ marginTop: "0.4rem" }}>
-                  ~1,000
-                </p>
-                <p className="label" style={{ marginTop: "0.35rem" }}>
-                  students using it at Graphic Era Hill University
-                </p>
+          <div className="masthead__foot">
+            <p className="masthead__lede">
+              Computer science student in Dehradun. I build software, then keep it
+              running once real people start using it.
+            </p>
 
-                <dl
-                  style={{
-                    display: "grid",
-                    gap: "0.5rem",
-                    marginTop: "1.25rem",
-                    paddingTop: "1rem",
-                    borderTop: "1px solid var(--rule)",
-                  }}
-                >
-                  {[
-                    ["Client", "React Native, Expo"],
-                    ["API", "Spring Boot, Java"],
-                    ["Media", "Cloudflare R2"],
-                  ].map(([label, value]) => (
-                    <div
-                      key={label}
-                      style={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        justifyContent: "space-between",
-                        gap: "0.5rem",
-                      }}
-                    >
-                      <dt className="label">{label}</dt>
-                      <dd className="measured" style={{ margin: 0 }}>
-                        {value}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-            </aside>
+            <div className="masthead__actions">
+              <a className="btn btn--primary" href="#work">
+                See the work
+              </a>
+              <Link className="btn" href="/resume">
+                Read the resume
+              </Link>
+              <a className="link" href={`mailto:${siteConfig.email}`}>
+                {siteConfig.email}
+              </a>
+            </div>
           </div>
         </div>
+
+        <Marquee items={roles} />
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* Flagship                                                         */}
+      {/* The flagship, printed                                             */}
       {/* ---------------------------------------------------------------- */}
-      <section className="band band--deep section" id="flagship">
+      <section className="folio" id="flagship">
         <div className="shell">
-          <div className="section-head">
-            <h2>The one that is actually in people&apos;s hands</h2>
-            <p className="section-note">
-              Most side projects end at a demo. This one did not, and that changed
-              what the work was about.
-            </p>
+          <div className="folio__strip">
+            <span>01 — Flagship</span>
+            <span>Deployed · ~1,000 students</span>
+            <span>Graphic Era Hill University</span>
           </div>
 
-          <div className="feature-grid">
+          <div className="folio__grid">
             <div>
-              <h3 style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.25rem)" }}>
-                {flagship.name}
-              </h3>
-              <p className="body-copy" style={{ marginTop: "0.85rem" }}>
-                {flagship.body[0]}
-              </p>
+              <h2 className="folio__title">{flagship.name}</h2>
+              <p className="folio__kicker">The one with users.</p>
+
+              <p className="body-copy">{flagship.body[0]}</p>
               <p className="body-copy">{flagship.body[2]}</p>
 
-              <div className="chip-list" style={{ marginTop: "1.25rem" }}>
+              <dl className="spec">
+                {flagship.details.map((detail) => (
+                  <div className="spec__row" key={detail.label}>
+                    <dt>{detail.label}</dt>
+                    <dd>{detail.text}</dd>
+                  </div>
+                ))}
+              </dl>
+
+              <div className="chip-list" style={{ marginTop: "1.35rem" }}>
                 {flagship.stack.map((item) => (
                   <span className="chip" key={item}>
                     {item}
@@ -141,76 +198,117 @@ export default function HomePage() {
 
               <p style={{ marginTop: "1.5rem" }}>
                 <Link className="link" href={`/projects/${flagship.slug}`}>
-                  How GEHU Connect is built
+                  How GEHU Connect is built →
                 </Link>
               </p>
             </div>
 
-            <div className="panels">
-              {flagship.details.map((detail) => (
-                <div className="panel-body" key={detail.label}>
-                  <p className="label">{detail.label}</p>
-                  <p
-                    style={{
-                      marginTop: "0.3rem",
-                      color: "var(--ink-2)",
-                      fontSize: "0.9375rem",
-                      lineHeight: 1.55,
-                    }}
-                  >
-                    {detail.text}
-                  </p>
-                </div>
-              ))}
-            </div>
+            <aside className="folio__figure" aria-label="GEHU Connect, measured">
+              <p className="reading">{flagship.reading?.value}</p>
+              <p className="tag">{flagship.reading?.unit} using the deployed app</p>
+              <p className="folio__note">
+                A React Native client and a Spring Boot API, in daily use on a campus
+                network that is not always kind. Adoption is the interesting part; the
+                feature list was never the hard bit.
+              </p>
+            </aside>
           </div>
         </div>
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* Work index                                                       */}
+      {/* Work                                                              */}
       {/* ---------------------------------------------------------------- */}
       <section className="section" id="work">
         <div className="shell">
           <div className="section-head">
-            <h2>Everything else I&apos;m building</h2>
+            <div>
+              <p className="tag tag--dim">02 — Selected work</p>
+              <h2>Four builds, four different problems.</h2>
+            </div>
             <p className="section-note">
-              Completed work and things still moving. The status line tells you which
-              is which.
+              One released macOS app and three projects still moving. Each card says
+              which is which, because a demo is not a product.
             </p>
           </div>
 
-          <div className="trail">
-            {otherProjects.map((project) => (
-              <Link
-                key={project.slug}
-                href={`/projects/${project.slug}`}
-                className="trail-row trail-row--link"
-              >
-                <span className="trail-row__name">{project.name}</span>
-                <span className="trail-row__what">{project.summary}</span>
-                <span className="trail-row__meta">
-                  <span className="chip chip--instrument">{project.kind}</span>
-                </span>
-              </Link>
-            ))}
+          <div className="work">
+            {otherProjects.map((project, index) => {
+              const wide = index % 4 === 0 || index % 4 === 3;
+
+              return (
+                <Link
+                  key={project.slug}
+                  href={`/projects/${project.slug}`}
+                  className={`work-card ${wide ? "work-card--wide" : "work-card--narrow"}`}
+                >
+                  <div className="work-card__top">
+                    <span className="work-card__index">
+                      {String(index + 2).padStart(2, "0")}
+                    </span>
+                    <h3 className="work-card__name">{project.name}</h3>
+                    <span className="work-card__kind">
+                      {project.kind}
+                      <br />
+                      {project.status}
+                    </span>
+                  </div>
+
+                  {project.media ? (
+                    <span className="work-card__media">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={project.media.src}
+                        srcSet={project.media.srcSet}
+                        sizes="(max-width: 900px) 100vw, 640px"
+                        alt={project.media.alt}
+                        width={project.media.width}
+                        height={project.media.height}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </span>
+                  ) : (
+                    <FocalPlanePlate />
+                  )}
+
+                  <p className="work-card__blurb">{project.summary}</p>
+
+                  <div className="work-card__foot">
+                    <div className="chip-list">
+                      {project.stack.slice(0, 4).map((item) => (
+                        <span className="chip chip--instrument" key={item}>
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                    <span className="arrow" aria-hidden="true">
+                      ↗
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
 
-          <p style={{ marginTop: "1.5rem" }}>
+          <p style={{ marginTop: "2rem" }}>
             <Link className="link" href="/projects">
-              All projects, in one place
+              All projects, in one place →
             </Link>
           </p>
         </div>
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* About                                                            */}
+      {/* How I work                                                        */}
       {/* ---------------------------------------------------------------- */}
-      <section className="band band--deep section" id="about">
+      <section className="section band" id="about">
         <div className="shell">
           <div className="section-head">
-            <h2>How I work</h2>
+            <div>
+              <p className="tag tag--dim">03 — How I work</p>
+              <h2>The interesting part is never the feature.</h2>
+            </div>
             <p className="section-note">
               The short version, because nobody needs a third paragraph about passion.
             </p>
@@ -227,71 +325,69 @@ export default function HomePage() {
               </p>
               <p>
                 I like problems where the interesting part is not the feature but the
-                constraint. A campus network that has to survive a bad connection.
-                A Mac app that has to make two interfaces behave like one. A sensor
-                reading smaller than a pixel that still has to be trusted.
+                constraint. A campus network that has to survive a bad connection. A Mac
+                app that has to make two interfaces behave like one. A sensor reading
+                smaller than a pixel that still has to be trusted.
               </p>
               <p>
-                I also run the university&apos;s Model United Nations club, which is
-                the same job in a different costume: plan the thing, keep the schedule,
-                and stay calm when something breaks ten minutes before it starts.
+                I also run the university&apos;s Model United Nations club, which is the
+                same job in a different costume: plan the thing, keep the schedule, and
+                stay calm when something breaks ten minutes before it starts.
               </p>
             </div>
 
-            <div className="panels">
-              <div className="panel-body">
-                <p className="label">Currently</p>
-                <p style={{ marginTop: "0.3rem", color: "var(--ink-2)" }}>
-                  Building GEHU Connect, and finishing three hackathon projects in the
-                  open.
-                </p>
+            <dl className="spec spec--dark">
+              <div className="spec__row">
+                <dt>Role</dt>
+                <dd>Student, and the person who ships it</dd>
               </div>
-              <div className="panel-body">
-                <p className="label">Studying</p>
-                <p style={{ marginTop: "0.3rem", color: "var(--ink-2)" }}>
-                  {siteConfig.education.degree}, {siteConfig.education.period}.
-                </p>
+              <div className="spec__row">
+                <dt>Based</dt>
+                <dd>Dehradun, India · GMT+5:30</dd>
               </div>
-              <div className="panel-body">
-                <p className="label">Open to</p>
-                <p style={{ marginTop: "0.3rem", color: "var(--ink-2)" }}>
-                  Software engineering internships and problems that are deeper than
-                  they look.
-                </p>
+              <div className="spec__row">
+                <dt>Studying</dt>
+                <dd>
+                  {siteConfig.education.degree}, {siteConfig.education.period}
+                </dd>
               </div>
-            </div>
+              <div className="spec__row">
+                <dt>Running</dt>
+                <dd>Graphic Era MUN Club, as Director General</dd>
+              </div>
+              <div className="spec__row">
+                <dt>Open to</dt>
+                <dd>Software engineering internships, and problems deeper than they look</dd>
+              </div>
+            </dl>
           </div>
         </div>
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* Journey                                                          */}
+      {/* Record                                                            */}
       {/* ---------------------------------------------------------------- */}
       <section className="section" id="journey">
         <div className="shell">
           <div className="section-head">
-            <h2>The record</h2>
+            <div>
+              <p className="tag tag--dim">04 — Record</p>
+              <h2>Dates, places, and what I was doing there.</h2>
+            </div>
             <p className="section-note">
-              Dates, places and roles. The resume page has the long version.
+              The long version, with the full detail, is on the resume page.
             </p>
           </div>
 
-          <div className="trail">
-            {[
-              { ...education[0], kind: "Academics" },
-              { ...leadership[0], kind: "Leadership" },
-              { ...hackathons[0], kind: "Hackathons" },
-              { ...leadership[1], kind: "Leadership" },
-            ].map((entry) => (
+          <div className="trail timeline">
+            {record.map((entry) => (
               <div className="trail-row" key={`${entry.title}-${entry.period}`}>
-                <span className="measured" style={{ fontSize: "0.8125rem" }}>
-                  {entry.period}
-                </span>
+                <span className="measured">{entry.period}</span>
                 <span>
                   <span className="trail-row__name">{entry.title}</span>
                   <span
                     className="trail-row__what"
-                    style={{ display: "block", marginTop: "0.15rem" }}
+                    style={{ display: "block", marginTop: "0.2rem" }}
                   >
                     {entry.org}
                   </span>
@@ -306,47 +402,36 @@ export default function HomePage() {
       </section>
 
       {/* ---------------------------------------------------------------- */}
-      {/* Contact                                                          */}
+      {/* Contact                                                           */}
       {/* ---------------------------------------------------------------- */}
-      <section className="band band--deep section" id="contact">
+      <section className="cta" id="contact">
         <div className="shell">
-          <div className="contact-grid">
-            <div>
-              <h2 style={{ fontSize: "clamp(1.75rem, 3.6vw, 2.5rem)" }}>
-                If you have a problem worth an afternoon, send it over.
-              </h2>
-              <p className="body-copy" style={{ marginTop: "0.85rem" }}>
-                Email is the fastest way to reach me. I read everything, even when I
-                take a while to reply.
-              </p>
+          <p className="tag">05 — Contact</p>
+          <h2 className="cta__title">Got a problem worth an afternoon?</h2>
+
+          <a className="cta__email" href={`mailto:${siteConfig.email}`}>
+            {siteConfig.email}
+          </a>
+
+          <div className="cta__row">
+            <div className="cta__links">
+              {socialLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="me noopener noreferrer"
+                >
+                  {link.label}
+                </a>
+              ))}
             </div>
 
-            <div>
-              <a className="btn btn--primary" href={`mailto:${siteConfig.email}`}>
-                {siteConfig.email}
-              </a>
-              <ul
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "0.75rem 1.25rem",
-                  marginTop: "1.25rem",
-                }}
-              >
-                {socialLinks.map((link) => (
-                  <li key={link.href}>
-                    <a
-                      className="link"
-                      href={link.href}
-                      target="_blank"
-                      rel="me noopener noreferrer"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <p className="form-note">
+              Email is fastest; I read everything, even when I take a while to reply.
+              The <Link href="/lounge">lounge</Link> is open if you would rather leave a
+              note in public.
+            </p>
           </div>
         </div>
       </section>

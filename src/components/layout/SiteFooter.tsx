@@ -29,11 +29,11 @@ export default function SiteFooter() {
               </span>
               Parth Khansali
             </p>
-            <p className="section-note" style={{ marginTop: "0.75rem" }}>
+            <p className="section-note" style={{ marginTop: "0.9rem" }}>
               Computer science student in Dehradun, India. I build software and then
               write down what broke.
             </p>
-            <p className="measured" style={{ marginTop: "1rem", fontSize: "0.75rem" }}>
+            <p className="tag tag--dim" style={{ marginTop: "1rem" }}>
               {siteConfig.location.city}, {siteConfig.location.region}
             </p>
           </div>
@@ -69,10 +69,14 @@ export default function SiteFooter() {
             © {new Date().getFullYear()} {siteConfig.name}
           </span>
           <span>
-            Set in Host Grotesk and Atkinson Hyperlegible Mono. Built with Next.js.
+            Set in Instrument Serif, Host Grotesk and Atkinson Hyperlegible Mono.
           </span>
         </div>
       </div>
+
+      <p className="footer-mark" aria-hidden="true">
+        Parth Khansali
+      </p>
     </footer>
   );
 }

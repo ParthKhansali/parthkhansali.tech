@@ -50,8 +50,9 @@ export default function ProjectsPage() {
             <span aria-current="page">Work</span>
           </nav>
 
-          <h1 className="display" style={{ fontSize: "clamp(2.5rem, 6vw, 3.75rem)" }}>
-            Work
+          <p className="tag tag--dim">Index — five projects</p>
+          <h1 className="display display--page" style={{ marginTop: "0.6rem" }}>
+            Work<span style={{ color: "var(--accent)" }}>.</span>
           </h1>
           <p className="lede" style={{ marginTop: "1rem" }}>
             One shipped product with real users, one finished macOS app, three builds
@@ -60,63 +61,121 @@ export default function ProjectsPage() {
         </div>
       </div>
 
+      {/* The flagship gets the printed treatment, here as on the homepage. */}
+      <section className="folio">
+        <div className="shell">
+          <div className="folio__strip">
+            <span>Flagship</span>
+            <span>{flagship.status}</span>
+            <span>{flagship.kind}</span>
+          </div>
+
+          <div className="folio__grid">
+            <div>
+              <h2 className="folio__title">{flagship.name}</h2>
+              <p className="folio__kicker">The one with users.</p>
+              <p className="body-copy">{flagship.summary}</p>
+              <div className="chip-list" style={{ marginTop: "1.25rem" }}>
+                {flagship.stack.slice(0, 6).map((item) => (
+                  <span className="chip" key={item}>
+                    {item}
+                  </span>
+                ))}
+              </div>
+              <p style={{ marginTop: "1.5rem" }}>
+                <Link className="link" href={`/projects/${flagship.slug}`}>
+                  How GEHU Connect is built →
+                </Link>
+              </p>
+            </div>
+
+            <aside className="folio__figure">
+              <p className="reading">{flagship.reading?.value}</p>
+              <p className="tag">{flagship.reading?.unit} using the deployed app</p>
+            </aside>
+          </div>
+        </div>
+      </section>
+
       <section className="section">
         <div className="shell">
-          <h2 className="label" style={{ marginBottom: "1rem" }}>
-            Flagship
-          </h2>
-
-          <Link
-            href={`/projects/${flagship.slug}`}
-            className="panel"
-            style={{ display: "block", padding: "clamp(1.25rem, 3vw, 1.75rem)" }}
-          >
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                alignItems: "baseline",
-                justifyContent: "space-between",
-                gap: "0.5rem 1.5rem",
-              }}
-            >
-              <h3 style={{ fontSize: "clamp(1.5rem, 3.2vw, 2rem)" }}>{flagship.name}</h3>
-              <span className="chip chip--ok">{flagship.status}</span>
+          <div className="section-head">
+            <div>
+              <p className="tag tag--dim">Completed</p>
+              <h2>Finished, released, documented.</h2>
             </div>
-            <p className="body-copy" style={{ marginTop: "0.75rem" }}>
-              {flagship.summary}
+            <p className="section-note">
+              A project only counts as done here when it is out and someone could use it
+              without me in the room.
             </p>
-            <div className="chip-list" style={{ marginTop: "1rem" }}>
-              {flagship.stack.slice(0, 5).map((item) => (
-                <span className="chip chip--instrument" key={item}>
-                  {item}
-                </span>
-              ))}
-            </div>
-          </Link>
+          </div>
 
-          <h2 className="label" style={{ margin: "2.75rem 0 1rem" }}>
-            Completed
-          </h2>
-          <div className="trail">
+          <div className="work">
             {completed.map((project) => (
               <Link
                 key={project.slug}
                 href={`/projects/${project.slug}`}
-                className="trail-row trail-row--link"
+                className="work-card work-card--full"
               >
-                <span className="trail-row__name">{project.name}</span>
-                <span className="trail-row__what">{project.summary}</span>
-                <span className="trail-row__meta">
-                  <span className="chip chip--instrument">{project.kind}</span>
-                </span>
+                <div className="work-card__top">
+                  <span className="work-card__index">02</span>
+                  <h3 className="work-card__name">{project.name}</h3>
+                  <span className="work-card__kind">
+                    {project.kind}
+                    <br />
+                    {project.status}
+                  </span>
+                </div>
+
+                {project.media ? (
+                  <span className="work-card__media">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={project.media.src}
+                      srcSet={project.media.srcSet}
+                      sizes="(max-width: 900px) 100vw, 700px"
+                      alt={project.media.alt}
+                      width={project.media.width}
+                      height={project.media.height}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </span>
+                ) : null}
+
+                <p className="work-card__blurb">{project.summary}</p>
+
+                <div className="work-card__foot">
+                  <div className="chip-list">
+                    {project.stack.slice(0, 4).map((item) => (
+                      <span className="chip chip--instrument" key={item}>
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                  <span className="arrow" aria-hidden="true">
+                    ↗
+                  </span>
+                </div>
               </Link>
             ))}
           </div>
+        </div>
+      </section>
 
-          <h2 className="label" style={{ margin: "2.75rem 0 1rem" }}>
-            In progress
-          </h2>
+      <section className="section band">
+        <div className="shell">
+          <div className="section-head">
+            <div>
+              <p className="tag tag--dim">In progress</p>
+              <h2>Still moving.</h2>
+            </div>
+            <p className="section-note">
+              Hackathon builds and research tools that are not finished. They are listed
+              because the work is real, not because the result is.
+            </p>
+          </div>
+
           <div className="trail">
             {ongoing.map((project) => (
               <Link

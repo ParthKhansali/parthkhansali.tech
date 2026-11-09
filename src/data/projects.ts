@@ -36,6 +36,15 @@ export interface Project {
   applicationCategory?: string;
   /** Highlighted reading shown beside the project on its page. */
   reading?: { value: string; unit: string; note: string };
+  /** A real screenshot of the running project, where one exists. */
+  media?: {
+    src: string;
+    srcSet?: string;
+    width: number;
+    height: number;
+    alt: string;
+    caption: string;
+  };
 }
 
 export const projects: Project[] = [
@@ -122,6 +131,15 @@ export const projects: Project[] = [
         text: "Byte-range chunking splits a single large transfer across all active connections.",
       },
     ],
+    media: {
+      src: "/shots/netwich-1440.jpg",
+      srcSet: "/shots/netwich-720.jpg 720w, /shots/netwich-1440.jpg 1440w",
+      width: 1440,
+      height: 984,
+      alt: "Netwich 0.1.0: aggregate throughput across live links, the connection list with Wi-Fi readiness, and the speed-check controls.",
+      caption:
+        "Netwich 0.1.0 — the overview window, idle with one link attached. Every connection gets a weight and a health reading before traffic is placed on it.",
+    },
     stack: ["Swift 6", "SwiftUI", "macOS 14+", "SOCKS5", "IP_BOUND_IF"],
     links: [
       { label: "Source on GitHub", href: "https://github.com/ParthKhansali/Netwich" },
@@ -163,6 +181,15 @@ export const projects: Project[] = [
         text: "Joining fragmented field records into a single layer that stays honest about its uncertainty.",
       },
     ],
+    media: {
+      src: "/shots/aranya-1440.jpg",
+      srcSet: "/shots/aranya-720.jpg 720w, /shots/aranya-1440.jpg 1440w",
+      width: 1440,
+      height: 900,
+      alt: "ARANYA's Uttarakhand pilot: seven camera-trap stations listed beside a satellite terrain map of the Rajaji–Corbett corridor, with conflict and alert readouts along the top.",
+      caption:
+        "ARANYA — the Uttarakhand pilot, seven camera-trap stations on the Rajaji–Corbett corridor.",
+    },
     stack: ["JavaScript", "Geospatial data", "Mapping"],
     links: [
       { label: "Live prototype", href: "https://project-aranya.vercel.app" },
@@ -222,6 +249,15 @@ export const projects: Project[] = [
         text: "A TypeScript web application, deployed on Vercel.",
       },
     ],
+    media: {
+      src: "/shots/meghavyuha-1440.jpg",
+      srcSet: "/shots/meghavyuha-720.jpg 720w, /shots/meghavyuha-1440.jpg 1440w",
+      width: 1440,
+      height: 900,
+      alt: "Meghavyuha's forecast dashboard for Dehradun: rainfall amount, probability and return-period bands, correction weights, and model validation charts.",
+      caption:
+        "Meghavyuha — Dehradun district, the adaptive forecast beside its correction weights and validation scores.",
+    },
     stack: ["TypeScript"],
     links: [{ label: "Live deployment", href: "https://meghavyuha.vercel.app" }],
     schemaType: "SoftwareSourceCode",

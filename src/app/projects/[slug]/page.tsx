@@ -74,45 +74,65 @@ export default async function ProjectPage({ params }: PageProps) {
             style={{
               display: "flex",
               flexWrap: "wrap",
-              alignItems: "baseline",
+              alignItems: "flex-end",
               justifyContent: "space-between",
-              gap: "0.75rem 2rem",
+              gap: "1.5rem 3rem",
             }}
           >
             <div style={{ minWidth: 0 }}>
-              <h1
-                className="display"
-                style={{ fontSize: "clamp(2.25rem, 5.5vw, 3.5rem)" }}
-              >
+              <p className="tag tag--dim">{project.kind}</p>
+              <h1 className="display display--page" style={{ marginTop: "0.6rem" }}>
                 {project.name}
               </h1>
-              <p className="lede" style={{ marginTop: "0.85rem" }}>
+              <p className="lede" style={{ marginTop: "0.9rem" }}>
                 {project.summary}
               </p>
             </div>
 
             {project.reading ? (
-              <div className="panel" style={{ padding: "1rem 1.25rem" }}>
-                <p className="label">Measured</p>
-                <p className="reading" style={{ fontSize: "clamp(2rem, 5vw, 2.75rem)" }}>
-                  {project.reading.value}
-                </p>
-                <p className="label">
+              <div style={{ flex: "0 0 auto" }}>
+                <p className="reading">{project.reading.value}</p>
+                <p className="tag tag--dim">
                   {project.reading.unit} — {project.reading.note}
                 </p>
               </div>
             ) : null}
           </div>
 
-          <div
-            className="chip-list"
-            style={{ marginTop: "1.5rem", alignItems: "center" }}
-          >
+          <div className="chip-list" style={{ marginTop: "1.35rem" }}>
             <span className="chip chip--person">{project.status}</span>
-            <span className="chip chip--instrument">{project.kind}</span>
+            {project.stack.map((item) => (
+              <span className="chip chip--instrument" key={item}>
+                {item}
+              </span>
+            ))}
           </div>
         </div>
       </div>
+
+      {project.media ? (
+        <div className="shell">
+          <figure className="detail-media">
+            <div className="detail-media__frame">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={project.media.src}
+                srcSet={project.media.srcSet}
+                sizes="(max-width: 900px) 100vw, 1180px"
+                alt={project.media.alt}
+                width={project.media.width}
+                height={project.media.height}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <figcaption>
+              <span>{project.media.caption}</span>
+              <span aria-hidden="true">{project.stack[0]}</span>
+            </figcaption>
+          </figure>
+        </div>
+      ) : null}
 
       <section className="section">
         <div className="shell">
@@ -127,8 +147,8 @@ export default async function ProjectPage({ params }: PageProps) {
                   style={{
                     display: "flex",
                     flexWrap: "wrap",
-                    gap: "0.75rem",
-                    marginTop: "1rem",
+                    gap: "0.6rem",
+                    marginTop: "1.5rem",
                   }}
                 >
                   {project.links.map((link) => (
@@ -139,7 +159,7 @@ export default async function ProjectPage({ params }: PageProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      {link.label}
+                      {link.label} ↗
                     </a>
                   ))}
                 </div>
@@ -147,60 +167,60 @@ export default async function ProjectPage({ params }: PageProps) {
             </div>
 
             <div>
-              <div className="panels">
+              <p className="tag tag--dim">How it works</p>
+              <dl className="spec spec--dark" style={{ marginTop: "0.75rem" }}>
                 {project.details.map((detail) => (
-                  <div className="panel-body" key={detail.label}>
-                    <p className="label">{detail.label}</p>
-                    <p
-                      style={{
-                        marginTop: "0.3rem",
-                        color: "var(--ink-2)",
-                        fontSize: "0.9375rem",
-                        lineHeight: 1.55,
-                      }}
-                    >
-                      {detail.text}
-                    </p>
+                  <div className="spec__row" key={detail.label}>
+                    <dt>{detail.label}</dt>
+                    <dd>{detail.text}</dd>
                   </div>
                 ))}
-              </div>
-
-              <div style={{ marginTop: "1.75rem" }}>
-                <p className="label">Stack</p>
-                <div className="chip-list" style={{ marginTop: "0.5rem" }}>
-                  {project.stack.map((item) => (
-                    <span className="chip" key={item}>
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              </dl>
             </div>
           </div>
+        </div>
+      </section>
 
-          <nav
-            aria-label="Other projects"
-            style={{
-              marginTop: "3rem",
-              paddingTop: "1.5rem",
-              borderTop: "1px solid var(--rule)",
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "1rem 2rem",
-            }}
-          >
-            <Link className="link" href="/projects">
-              All work
+      <section className="section band">
+        <div className="shell">
+          <div className="section-head">
+            <div>
+              <p className="tag tag--dim">Keep reading</p>
+              <h2>Other work.</h2>
+            </div>
+            <p className="section-note">
+              Five projects in total, each with the constraints that shaped it.
+            </p>
+          </div>
+
+          <div className="trail">
+            <Link className="trail-row trail-row--link" href="/projects">
+              <span className="trail-row__name">All work</span>
+              <span className="trail-row__what">
+                The full index, with each project&apos;s stage spelled out.
+              </span>
+              <span className="trail-row__meta">
+                <span className="chip chip--person">Index</span>
+              </span>
             </Link>
+
             {projects
               .filter((item) => item.slug !== project.slug)
               .slice(0, 3)
               .map((item) => (
-                <Link key={item.slug} className="link" href={`/projects/${item.slug}`}>
-                  {item.name}
+                <Link
+                  key={item.slug}
+                  className="trail-row trail-row--link"
+                  href={`/projects/${item.slug}`}
+                >
+                  <span className="trail-row__name">{item.name}</span>
+                  <span className="trail-row__what">{item.summary}</span>
+                  <span className="trail-row__meta">
+                    <span className="chip chip--instrument">{item.status}</span>
+                  </span>
                 </Link>
               ))}
-          </nav>
+          </div>
         </div>
       </section>
     </>

@@ -77,9 +77,7 @@ export default function ResumePage() {
             <span aria-current="page">Resume</span>
           </nav>
 
-          <h1 className="display" style={{ fontSize: "clamp(2.5rem, 6vw, 3.75rem)" }}>
-            Parth Khansali
-          </h1>
+          <h1 className="display display--page">Parth Khansali</h1>
           <p className="lede" style={{ marginTop: "0.85rem" }}>
             Computer science student and software developer in Dehradun, India.
             Developer of GEHU Connect.

@@ -48,3 +48,6 @@ next-env.d.ts
 /.tools/
 /.hallmark/
 /skills-lock.json
+
+# Local design review captures
+/design-shots/
