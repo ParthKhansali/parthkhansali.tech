@@ -1,9 +1,10 @@
 import Link from "next/link";
+import LocalClock from "@/components/ui/LocalClock";
 import { siteConfig, socialLinks } from "@/data/site";
 
 const columns = [
   {
-    heading: "This site",
+    heading: "Pages",
     links: [
       { label: "Home", href: "/" },
       { label: "Work", href: "/projects" },
@@ -22,46 +23,65 @@ export default function SiteFooter() {
     <footer className="site-footer">
       <div className="shell">
         <div className="footer-grid">
-          <div>
-            <p className="wordmark">
-              <span className="wordmark__mark" aria-hidden="true">
+          <div className="footer-brand">
+            <Link href="/" className="brand">
+              <span className="brand__mark" aria-hidden="true">
                 PK
               </span>
-              Parth Khansali
-            </p>
-            <p className="section-note" style={{ marginTop: "0.9rem" }}>
+              <span className="brand__name">Parth Khansali</span>
+            </Link>
+            <p className="footer-note">
               Computer science student in Dehradun, India. I build software and then
               write down what broke.
             </p>
-            <p className="tag tag--dim" style={{ marginTop: "1rem" }}>
-              {siteConfig.location.city}, {siteConfig.location.region}
+            <p className="pill pill--quiet footer-status">
+              <span className="pulse" aria-hidden="true" />
+              Open to internships
             </p>
           </div>
 
-          {columns.map((column) => (
-            <nav key={column.heading} aria-label={column.heading}>
-              <p className="label">{column.heading}</p>
-              <div className="footer-list">
-                {column.links.map((link) =>
-                  link.href.startsWith("http") ? (
-                    <a
-                      key={link.href}
-                      className="nav-link"
-                      href={link.href}
-                      target="_blank"
-                      rel="me noopener noreferrer"
-                    >
-                      {link.label}
-                    </a>
-                  ) : (
-                    <Link key={link.href} className="nav-link" href={link.href}>
-                      {link.label}
-                    </Link>
-                  ),
-                )}
-              </div>
-            </nav>
-          ))}
+          <nav aria-label="Pages">
+            <p className="label">{columns[0].heading}</p>
+            <div className="footer-list">
+              {columns[0].links.map((link) => (
+                <Link key={link.href} className="footer-link" href={link.href}>
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </nav>
+
+          <nav aria-label="Elsewhere">
+            <p className="label">{columns[1].heading}</p>
+            <div className="footer-list">
+              {columns[1].links.map((link) => (
+                <a
+                  key={link.href}
+                  className="footer-link"
+                  href={link.href}
+                  target="_blank"
+                  rel="me noopener noreferrer"
+                >
+                  {link.label} ↗
+                </a>
+              ))}
+            </div>
+          </nav>
+
+          <div>
+            <p className="label">Contact</p>
+            <div className="footer-list">
+              <a className="footer-link" href={`mailto:${siteConfig.email}`}>
+                {siteConfig.email}
+              </a>
+              <a className="footer-link" href={siteConfig.resumePath} download>
+                Download CV
+              </a>
+              <a className="footer-link" href="#main">
+                Back to top ↑
+              </a>
+            </div>
+          </div>
         </div>
 
         <div className="colophon">
@@ -69,14 +89,11 @@ export default function SiteFooter() {
             © {new Date().getFullYear()} {siteConfig.name}
           </span>
           <span>
-            Set in Space Grotesk and JetBrains Mono.
+            {siteConfig.location.city}, {siteConfig.location.region} · <LocalClock />
           </span>
+          <span>Set in Plus Jakarta Sans.</span>
         </div>
       </div>
-
-      <p className="footer-mark" aria-hidden="true">
-        Parth Khansali
-      </p>
     </footer>
   );
 }

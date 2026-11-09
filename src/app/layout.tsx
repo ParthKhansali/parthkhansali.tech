@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Space_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import SiteHeader from "@/components/layout/SiteHeader";
 import SiteFooter from "@/components/layout/SiteFooter";
@@ -19,17 +19,10 @@ import { siteConfig } from "@/data/site";
  * fallback, the real face is cached for every later view, and the page never
  * repaints behind the reader.
  */
-const spaceGrotesk = Space_Grotesk({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  variable: "--font-space",
-  display: "optional",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-jetbrains",
+  weight: ["400", "500", "700", "800"],
+  variable: "--font-jakarta",
   display: "optional",
 });
 
@@ -37,7 +30,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#05070b",
+  themeColor: "#07070a",
   colorScheme: "dark",
 };
 
@@ -115,12 +108,15 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+      className={jakarta.variable}
       suppressHydrationWarning
     >
       <body>
         <JsonLd data={identityGraph()} />
         <ScrollProgress />
+        <a className="email-rail" href={`mailto:${siteConfig.email}`}>
+          {siteConfig.email}
+        </a>
         <a className="skip-link" href="#main">
           Skip to content
         </a>

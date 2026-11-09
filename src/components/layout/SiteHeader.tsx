@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import LocalClock from "@/components/ui/LocalClock";
 import { siteConfig } from "@/data/site";
 
 const navigation = [
+  { href: "/", label: "Home" },
   { href: "/projects", label: "Work" },
   { href: "/resume", label: "Resume" },
   { href: "/lounge", label: "Lounge" },
@@ -24,19 +24,19 @@ export default function SiteHeader() {
   return (
     <header className="site-header">
       <div className="shell site-header__inner">
-        <Link href="/" className="wordmark">
-          <span className="wordmark__mark" aria-hidden="true">
+        <Link href="/" className="brand">
+          <span className="brand__mark" aria-hidden="true">
             PK
           </span>
-          Parth Khansali
+          <span className="brand__name">Parth</span>
         </Link>
 
-        <nav className="site-nav" aria-label="Primary">
+        <nav className="nav-pill" aria-label="Primary">
           {navigation.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="nav-link"
+              className="nav-pill__link"
               aria-current={isCurrent(pathname, item.href) ? "page" : undefined}
             >
               {item.label}
@@ -45,26 +45,24 @@ export default function SiteHeader() {
         </nav>
 
         <div className="site-header__actions">
-          <LocalClock />
-
-          <a className="btn btn--primary header-cta" href={`mailto:${siteConfig.email}`}>
-            Say hello
+          <a className="btn btn--primary btn--small" href={`mailto:${siteConfig.email}`}>
+            Say hi
           </a>
 
           <details className="menu">
-            <summary>Menu</summary>
+            <summary aria-label="Open menu">Menu</summary>
             <div className="menu__panel">
               {navigation.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="nav-link"
+                  className="nav-pill__link"
                   aria-current={isCurrent(pathname, item.href) ? "page" : undefined}
                 >
                   {item.label}
                 </Link>
               ))}
-              <a className="nav-link" href={`mailto:${siteConfig.email}`}>
+              <a className="nav-pill__link" href={`mailto:${siteConfig.email}`}>
                 Email me
               </a>
             </div>

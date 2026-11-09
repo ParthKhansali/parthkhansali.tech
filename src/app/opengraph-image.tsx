@@ -22,8 +22,8 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: "72px",
-          background: "#0e1116",
-          color: "#eef2f7",
+          background: "#07070a",
+          color: "#f5f5f8",
           fontFamily: "sans-serif",
         }}
       >
@@ -35,15 +35,15 @@ export default function OpengraphImage() {
               justifyContent: "center",
               width: "46px",
               height: "46px",
-              border: "1px solid #3c4a5c",
-              borderRadius: "8px",
-              color: "#6fb3ff",
+              border: "1px solid #f0517c",
+              borderRadius: "12px",
+              color: "#f0517c",
               fontSize: "19px",
             }}
           >
             PK
           </div>
-          <div style={{ display: "flex", color: "#8b9aae", fontSize: "22px" }}>
+          <div style={{ display: "flex", color: "#8a8a99", fontSize: "22px" }}>
             parthkhansali.tech
           </div>
         </div>
@@ -53,8 +53,8 @@ export default function OpengraphImage() {
             style={{
               display: "flex",
               fontSize: "104px",
-              fontWeight: 500,
-              letterSpacing: "-0.035em",
+              fontWeight: 800,
+              letterSpacing: "-0.045em",
               lineHeight: 1,
             }}
           >
@@ -64,7 +64,7 @@ export default function OpengraphImage() {
             style={{
               display: "flex",
               fontSize: "32px",
-              color: "#a9b6c7",
+              color: "#b0b0bd",
               lineHeight: 1.35,
               maxWidth: "820px",
             }}
@@ -78,11 +78,11 @@ export default function OpengraphImage() {
             display: "flex",
             alignItems: "flex-end",
             justifyContent: "space-between",
-            borderTop: "1px solid #2a3544",
+            borderTop: "1px solid rgba(255,255,255,0.14)",
             paddingTop: "26px",
           }}
         >
-          <div style={{ display: "flex", fontSize: "22px", color: "#8b9aae" }}>
+          <div style={{ display: "flex", fontSize: "22px", color: "#8a8a99" }}>
             Developer of GEHU Connect · Netwich · ARANYA
           </div>
           <div
@@ -90,11 +90,11 @@ export default function OpengraphImage() {
               display: "flex",
               alignItems: "baseline",
               gap: "10px",
-              color: "#f0b04a",
+              color: "#f0517c",
             }}
           >
             <span style={{ fontSize: "46px", letterSpacing: "-0.03em" }}>~1,000</span>
-            <span style={{ fontSize: "20px", color: "#a9b6c7" }}>students</span>
+            <span style={{ fontSize: "20px", color: "#b0b0bd" }}>students</span>
           </div>
         </div>
       </div>

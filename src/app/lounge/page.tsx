@@ -77,7 +77,7 @@ export default function LoungePage() {
         </div>
       </section>
 
-      <section className="band band--deep section">
+      <section className="band band--deep section" id="wall">
         <div className="shell">
           <div className="section-head">
             <h2>The wall</h2>

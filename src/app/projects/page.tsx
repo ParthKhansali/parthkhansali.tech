@@ -117,14 +117,9 @@ export default function ProjectsPage() {
                 href={`/projects/${project.slug}`}
                 className="work-card work-card--full"
               >
-                <div className="work-card__top">
+                <div className="work-card__meta">
                   <span className="work-card__index">02</span>
-                  <h3 className="work-card__name">{project.name}</h3>
-                  <span className="work-card__kind">
-                    {project.kind}
-                    <br />
-                    {project.status}
-                  </span>
+                  <span>{project.kind}</span>
                 </div>
 
                 {project.media ? (
@@ -143,19 +138,24 @@ export default function ProjectsPage() {
                   </span>
                 ) : null}
 
+                <div className="work-card__head">
+                  <h3 className="work-card__name">{project.name}</h3>
+                  <span className="arrow" aria-hidden="true">
+                    ↗
+                  </span>
+                </div>
+
                 <p className="work-card__blurb">{project.summary}</p>
 
                 <div className="work-card__foot">
                   <div className="chip-list">
                     {project.stack.slice(0, 4).map((item) => (
-                      <span className="chip chip--instrument" key={item}>
+                      <span className="chip" key={item}>
                         {item}
                       </span>
                     ))}
                   </div>
-                  <span className="arrow" aria-hidden="true">
-                    ↗
-                  </span>
+                  <span className="chip chip--status">{project.status}</span>
                 </div>
               </Link>
             ))}
