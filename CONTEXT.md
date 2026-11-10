@@ -8,8 +8,12 @@ A technical portfolio and interactive visitor lounge built with Next.js App Rout
 - **Styling**: Vanilla CSS tokens in `src/app/globals.css`. Strict near-black cyber-palette with electric emerald (`#00ef4e`) and cyan (`#00cbf0`) accents.
 - **Typography**: Plus Jakarta Sans (`--font-display`, `--font-body`) and JetBrains Mono (`--font-mono`).
 - **Deployments**:
-  - **GitHub Pages**: `https://parthkhansali.github.io/E-Portfolio/` (automated via `.github/workflows/deploy.yml` with `BASE_PATH=/E-Portfolio`).
+  - **GitHub Pages**: `https://parthkhansali.github.io/E-Portfolio/` (automated via `.github/workflows/deploy.yml` with `BASE_PATH=/E-Portfolio` and `withBasePath` helper in `src/data/site.ts`).
   - **Production Custom Domain**: `https://parthkhansali.tech` (Vercel deployment).
+- **Theme & UI**:
+  - Full Light and Dark modes (`html.dark` / `html:not(.dark)`) with View Transitions feathered radial wave toggle (`src/components/ui/ThemeToggle.tsx`).
+  - Consistent monochrome stroke SVG icon set (`src/components/ui/Icons.tsx`).
+  - Custom vertical side scrollbar (`ScrollProgress`), with native browser scrollbars hidden.
 
 ## Key Routes & Features
 
@@ -45,3 +49,4 @@ A technical portfolio and interactive visitor lounge built with Next.js App Rout
 - Dynamic 1200x630 OpenGraph and Twitter cards (`src/app/opengraph-image.tsx`).
 - Automatic XML Sitemap (`src/app/sitemap.ts`) and Robots (`src/app/robots.ts`).
 - AI Agent discovery endpoints: `/llms.txt` and `/llms-full.txt`.
+

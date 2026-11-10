@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import LocalClock from "@/components/ui/LocalClock";
-import { siteConfig, socialLinks } from "@/data/site";
+import { siteConfig, socialLinks, withBasePath } from "@/data/site";
 
 const columns = [
   {
@@ -28,7 +28,7 @@ export default function SiteFooter() {
             <Link href="/" className="brand" aria-label="Parth Khansali home">
               <div className="brand__pfp-wrap">
                 <Image
-                  src="/profile.jpg"
+                  src={withBasePath("/profile.jpg")}
                   alt="Parth Khansali"
                   width={34}
                   height={34}
@@ -82,7 +82,11 @@ export default function SiteFooter() {
               <a className="footer-link" href={`mailto:${siteConfig.email}`}>
                 {siteConfig.email}
               </a>
-              <a className="footer-link" href={siteConfig.resumePath} download>
+              <a
+                className="footer-link"
+                href={siteConfig.resumePath}
+                download="Parth Khansali Resume.pdf"
+              >
                 Download CV
               </a>
               <a className="footer-link" href="#main">

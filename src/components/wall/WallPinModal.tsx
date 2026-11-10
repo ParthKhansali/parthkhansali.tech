@@ -10,6 +10,14 @@ import {
   cleanText,
   MAX_MESSAGE_LENGTH,
 } from "@/lib/lounge";
+import {
+  IconBrush,
+  IconEraser,
+  IconPen,
+  IconPin,
+  IconTrash,
+  IconUndo,
+} from "@/components/ui/Icons";
 
 interface WallPinModalProps {
   isOpen: boolean;
@@ -55,7 +63,7 @@ export default function WallPinModal({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [activeTool, setActiveTool] = useState<"pen" | "marker" | "eraser">("pen");
   const [activeColor, setActiveColor] = useState<string>("#00ef4e");
-  const [strokeWidth, setStrokeWidth] = useState<number>(4);
+  const strokeWidth = 4;
   const [canUndo, setCanUndo] = useState(false);
   const historyRef = useRef<ImageData[]>([]);
   const isDrawingRef = useRef(false);
@@ -384,21 +392,24 @@ export default function WallPinModal({
                   className={`wall-tool-btn ${activeTool === "pen" ? "is-active" : ""}`}
                   onClick={() => setActiveTool("pen")}
                 >
-                  ✏️ Pen
+                  <IconPen size={13} />
+                  <span>Pen</span>
                 </button>
                 <button
                   type="button"
                   className={`wall-tool-btn ${activeTool === "marker" ? "is-active" : ""}`}
                   onClick={() => setActiveTool("marker")}
                 >
-                  🖌️ Marker
+                  <IconBrush size={13} />
+                  <span>Marker</span>
                 </button>
                 <button
                   type="button"
                   className={`wall-tool-btn ${activeTool === "eraser" ? "is-active" : ""}`}
                   onClick={() => setActiveTool("eraser")}
                 >
-                  🧹 Eraser
+                  <IconEraser size={13} />
+                  <span>Eraser</span>
                 </button>
               </div>
 
@@ -425,14 +436,16 @@ export default function WallPinModal({
                   onClick={handleUndo}
                   disabled={!canUndo}
                 >
-                  ↩ Undo
+                  <IconUndo size={13} />
+                  <span>Undo</span>
                 </button>
                 <button
                   type="button"
                   className="wall-tool-btn"
                   onClick={handleClear}
                 >
-                  🗑️ Clear
+                  <IconTrash size={13} />
+                  <span>Clear</span>
                 </button>
               </div>
             </div>
@@ -464,7 +477,8 @@ export default function WallPinModal({
             onClick={handleSubmit}
             disabled={submitting || (activeTab === "note" && !noteText.trim())}
           >
-            {submitting ? "Pinning..." : activeTab === "note" ? "📌 Pin Note" : "🚀 Pin Sketch"}
+            <IconPin size={14} />
+            <span>{submitting ? "Pinning..." : activeTab === "note" ? "Pin Note" : "Pin Sketch"}</span>
           </button>
         </div>
       </div>

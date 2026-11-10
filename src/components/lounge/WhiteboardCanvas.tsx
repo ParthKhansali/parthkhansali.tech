@@ -2,6 +2,17 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { loadUserSession, loginWithGoogle, postDrawing } from "@/lib/lounge";
+import {
+  IconBrush,
+  IconDownload,
+  IconEraser,
+  IconHighlighter,
+  IconPalette,
+  IconPen,
+  IconPin,
+  IconTrash,
+  IconUndo,
+} from "@/components/ui/Icons";
 
 type ToolType = "pen" | "marker" | "highlighter" | "eraser";
 
@@ -289,7 +300,8 @@ export default function WhiteboardCanvas() {
             title="Fine Pen"
             aria-label="Fine Pen tool"
           >
-            ✏️ Pen
+            <IconPen size={14} />
+            <span>Pen</span>
           </button>
           <button
             type="button"
@@ -298,7 +310,8 @@ export default function WhiteboardCanvas() {
             title="Marker Brush"
             aria-label="Marker Brush tool"
           >
-            🖌️ Marker
+            <IconBrush size={14} />
+            <span>Marker</span>
           </button>
           <button
             type="button"
@@ -307,7 +320,8 @@ export default function WhiteboardCanvas() {
             title="Translucent Highlighter"
             aria-label="Highlighter tool"
           >
-            🖍️ Highlight
+            <IconHighlighter size={14} />
+            <span>Highlight</span>
           </button>
           <button
             type="button"
@@ -316,7 +330,8 @@ export default function WhiteboardCanvas() {
             title="Eraser"
             aria-label="Eraser tool"
           >
-            🧹 Eraser
+            <IconEraser size={14} />
+            <span>Eraser</span>
           </button>
         </div>
 
@@ -367,7 +382,8 @@ export default function WhiteboardCanvas() {
             title="Undo last stroke"
             aria-label="Undo stroke"
           >
-            ↩ Undo
+            <IconUndo size={14} />
+            <span>Undo</span>
           </button>
           <button
             type="button"
@@ -376,7 +392,8 @@ export default function WhiteboardCanvas() {
             title="Clear whiteboard"
             aria-label="Clear canvas"
           >
-            🗑️ Clear
+            <IconTrash size={14} />
+            <span>Clear</span>
           </button>
           <button
             type="button"
@@ -385,7 +402,8 @@ export default function WhiteboardCanvas() {
             title="Download drawing as PNG"
             aria-label="Download sketch"
           >
-            💾 Export PNG
+            <IconDownload size={14} />
+            <span>Export PNG</span>
           </button>
           <button
             type="button"
@@ -395,14 +413,18 @@ export default function WhiteboardCanvas() {
             title="Post this sketch to The Wall below"
             aria-label="Post sketch to wall"
           >
-            {posting ? "Posting..." : "🚀 Post to Wall"}
+            <IconPin size={14} />
+            <span>{posting ? "Posting..." : "Post to Wall"}</span>
           </button>
         </div>
       </div>
 
       {postNotice && (
         <div className="whiteboard-notice" role="status">
-          <span>🎨 {postNotice}</span>
+          <span style={{ display: "inline-flex", alignItems: "center", gap: "0.4rem" }}>
+            <IconPalette size={14} />
+            <span>{postNotice}</span>
+          </span>
         </div>
       )}
 

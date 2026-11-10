@@ -10,7 +10,7 @@ import HeroAsciiReveal from "@/components/ui/HeroAsciiReveal";
 import ExperienceTimeline from "@/components/ui/ExperienceTimeline";
 import ProjectsShowcase from "@/components/ui/ProjectsShowcase";
 import { homeGraph, pageMetadata } from "@/lib/seo";
-import { siteConfig, socialLinks } from "@/data/site";
+import { siteConfig, socialLinks, withBasePath } from "@/data/site";
 import { projects, flagship } from "@/data/projects";
 import { education, hackathons, leadership } from "@/data/resume";
 
@@ -173,7 +173,7 @@ export default function HomePage() {
             <article className="card bio-card reveal">
               <div className="bio-card__head">
                 <Image
-                  src="/profile.jpg"
+                  src={withBasePath("/profile.jpg")}
                   alt="Parth Khansali"
                   width={56}
                   height={56}

@@ -220,27 +220,31 @@ export default function HeroAsciiReveal() {
           const alpha = (baseAmbientAlpha + spotBoost) * centerFalloff;
           if (alpha < 0.015) continue;
 
-          // Color grading:
-          // Stream head: bright white/emerald
-          // Near spotlight: electric neon emerald #00ef4e and cyan #00cbf0
-          // Ambient trail: deep cyber emerald
+          const isDark = document.documentElement.classList.contains("dark");
           const char = stream.chars[row % stream.chars.length] || "0";
 
           if (i === 0 && (inSpotlight || Math.random() < 0.2)) {
-            // Bright stream head
-            ctx.fillStyle = `rgba(255, 255, 255, ${Math.min(1, alpha * 1.5)})`;
-            ctx.shadowColor = "rgba(0, 239, 78, 0.8)";
-            ctx.shadowBlur = 8;
+            ctx.fillStyle = isDark
+              ? `rgba(255, 255, 255, ${Math.min(1, alpha * 1.5)})`
+              : `rgba(12, 42, 22, ${Math.min(0.85, alpha * 1.4)})`;
+            ctx.shadowColor = isDark ? "rgba(0, 239, 78, 0.8)" : "rgba(0, 153, 52, 0.35)";
+            ctx.shadowBlur = isDark ? 8 : 4;
           } else if (spotBoost > 0.35) {
-            ctx.fillStyle = `rgba(0, 239, 78, ${alpha})`;
-            ctx.shadowColor = "rgba(0, 239, 78, 0.4)";
-            ctx.shadowBlur = 4;
+            ctx.fillStyle = isDark
+              ? `rgba(0, 239, 78, ${alpha})`
+              : `rgba(0, 145, 48, ${Math.min(0.8, alpha)})`;
+            ctx.shadowColor = isDark ? "rgba(0, 239, 78, 0.4)" : "transparent";
+            ctx.shadowBlur = isDark ? 4 : 0;
           } else if (spotBoost > 0.1) {
-            ctx.fillStyle = `rgba(0, 203, 240, ${alpha * 0.9})`;
+            ctx.fillStyle = isDark
+              ? `rgba(0, 203, 240, ${alpha * 0.9})`
+              : `rgba(2, 132, 199, ${Math.min(0.75, alpha * 0.85)})`;
             ctx.shadowColor = "transparent";
             ctx.shadowBlur = 0;
           } else {
-            ctx.fillStyle = `rgba(0, 239, 78, ${alpha * 0.75})`;
+            ctx.fillStyle = isDark
+              ? `rgba(0, 239, 78, ${alpha * 0.75})`
+              : `rgba(0, 130, 44, ${Math.min(0.45, alpha * 0.65)})`;
             ctx.shadowColor = "transparent";
             ctx.shadowBlur = 0;
           }

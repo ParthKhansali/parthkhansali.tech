@@ -8,6 +8,14 @@
  * right at build time.
  */
 export const CANONICAL_ORIGIN = "https://www.parthkhansali.tech";
+export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
+/** Prefix a site-relative static asset path with Next.js BASE_PATH when set. */
+export function withBasePath(path: string): string {
+  if (!path.startsWith("/") || !BASE_PATH) return path;
+  if (path === BASE_PATH || path.startsWith(`${BASE_PATH}/`)) return path;
+  return `${BASE_PATH}${path}`;
+}
 
 export const siteConfig = {
   name: "Parth Khansali",
@@ -22,7 +30,7 @@ export const siteConfig = {
   },
   role: "Computer Science student and software developer",
   email: "parthkhansali@gmail.com",
-  resumePath: "/parth_resume.pdf",
+  resumePath: withBasePath("/parth_resume.pdf"),
   links: {
     github: "https://github.com/ParthKhansali",
     linkedin: "https://www.linkedin.com/in/parth-khansali/",

@@ -9,7 +9,7 @@ import ParticleBackground from "@/components/ui/ParticleBackground";
 import SpotlightCardListener from "@/components/ui/SpotlightCardListener";
 import ProjectCursorBadge from "@/components/ui/ProjectCursorBadge";
 import { identityGraph } from "@/lib/seo";
-import { siteConfig } from "@/data/site";
+import { siteConfig, withBasePath } from "@/data/site";
 
 /*
  * Both faces are self-hosted by next/font, so there is no render-blocking
@@ -34,7 +34,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: "#141416",
-  colorScheme: "dark",
+  colorScheme: "dark light",
 };
 
 export const metadata: Metadata = {
@@ -97,13 +97,15 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: [{ url: "/icon.png", type: "image/png", sizes: "512x512" }],
-    apple: [{ url: "/icon.png", sizes: "512x512" }],
+    icon: [{ url: withBasePath("/icon.png"), type: "image/png", sizes: "512x512" }],
+    apple: [{ url: withBasePath("/icon.png"), sizes: "512x512" }],
   },
-  manifest: "/manifest.webmanifest",
+  manifest: withBasePath("/manifest.webmanifest"),
   // Stop iOS Safari from turning the email address into a phone-style link.
   formatDetection: { telephone: false, address: false, email: false },
 };
+
+const themeInitScript = `(function(){try{var s=localStorage.getItem("theme");var d=s?s==="dark":true;document.documentElement.classList.toggle("dark",d);var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",d?"#141416":"#f6f8f7");}catch(e){}})();`;
 
 export default function RootLayout({
   children,
@@ -111,9 +113,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={jakarta.variable}
+      className={`${jakarta.variable} dark`}
       suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body>
         <JsonLd data={identityGraph()} />
         <ParticleBackground />

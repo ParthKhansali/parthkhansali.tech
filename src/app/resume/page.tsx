@@ -95,7 +95,7 @@ export default function ResumePage() {
             <a
               className="btn btn--primary"
               href={siteConfig.resumePath}
-              download
+              download="Parth Khansali Resume.pdf"
               type="application/pdf"
             >
               Download PDF

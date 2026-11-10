@@ -15,6 +15,7 @@ import WallPinModal from "@/components/wall/WallPinModal";
 import RetroCrtStation from "@/components/lounge/RetroCrtStation";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbNode, pageNode } from "@/lib/seo";
+import { IconPen } from "@/components/ui/Icons";
 
 export default function LoungePage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -24,7 +25,10 @@ export default function LoungePage() {
 
   // Restore user session on mount
   useEffect(() => {
-    setCurrentUser(loadUserSession());
+    queueMicrotask(() => {
+      const saved = loadUserSession();
+      if (saved) setCurrentUser(saved);
+    });
 
     // Listen to Firebase auth changes if available
     import("@/lib/firebase")
@@ -75,7 +79,9 @@ export default function LoungePage() {
     };
 
     const initialLive = local.map(convertToPin);
-    setLivePins(initialLive);
+    if (initialLive.length > 0) {
+      queueMicrotask(() => setLivePins(initialLive));
+    }
 
     // Subscribe to live Firestore updates
     let unsubscribe: (() => void) | undefined;
@@ -171,7 +177,7 @@ export default function LoungePage() {
                 className="btn btn--primary wall-pin-cta-btn"
                 onClick={() => setModalOpen(true)}
               >
-                <span className="wall-pin-cta-icon" aria-hidden="true">✏️</span>
+                <IconPen size={16} className="wall-pin-cta-icon" />
                 <span>Pin Something</span>
               </button>
               <p className="wall-cta-subnote">No password needed · Google Sign-in available</p>

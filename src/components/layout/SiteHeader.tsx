@@ -4,8 +4,10 @@ import { useEffect, useRef, useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { siteConfig } from "@/data/site";
+import { siteConfig, withBasePath } from "@/data/site";
 import { projects } from "@/data/projects";
+import ThemeToggle from "@/components/ui/ThemeToggle";
+import { IconSun, IconSunrise, IconSunset, IconMoon } from "@/components/ui/Icons";
 
 const navigation = [
   { href: "/", label: "Home" },
@@ -21,12 +23,21 @@ function isCurrent(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function getGreeting(): { text: string; icon: string } {
+type GreetingKind = "morning" | "afternoon" | "evening" | "night";
+
+function getGreeting(): { text: string; kind: GreetingKind } {
   const hour = new Date().getHours();
-  if (hour >= 5 && hour < 12) return { text: "Good Morning", icon: "☀️" };
-  if (hour >= 12 && hour < 18) return { text: "Good Afternoon", icon: "🌤️" };
-  if (hour >= 18 && hour < 22) return { text: "Good Evening", icon: "🌆" };
-  return { text: "Good Night", icon: "🌙" };
+  if (hour >= 5 && hour < 12) return { text: "Good Morning", kind: "morning" };
+  if (hour >= 12 && hour < 18) return { text: "Good Afternoon", kind: "afternoon" };
+  if (hour >= 18 && hour < 22) return { text: "Good Evening", kind: "evening" };
+  return { text: "Good Night", kind: "night" };
+}
+
+function GreetingIcon({ kind }: { kind: GreetingKind }) {
+  if (kind === "morning") return <IconSunrise size={14} />;
+  if (kind === "afternoon") return <IconSun size={14} />;
+  if (kind === "evening") return <IconSunset size={14} />;
+  return <IconMoon size={14} />;
 }
 
 export default function SiteHeader() {
@@ -34,22 +45,25 @@ export default function SiteHeader() {
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [greeting, setGreeting] = useState<{ text: string; icon: string }>({
+  const [greeting, setGreeting] = useState<{ text: string; kind: GreetingKind }>({
     text: "Hello",
-    icon: "🌤️",
+    kind: "afternoon",
   });
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
-  const [themeDark, setThemeDark] = useState(true);
-  const [copiedEmail, setCopiedEmail] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const navRef = useRef<HTMLElement>(null);
   const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
+  const closeModal = () => {
+    setModalOpen(false);
+    setSearchQuery("");
+  };
+
   useEffect(() => {
-    setGreeting(getGreeting());
+    queueMicrotask(() => setGreeting(getGreeting()));
   }, []);
 
   // Update sliding pill indicator position on desktop
@@ -76,14 +90,14 @@ export default function SiteHeader() {
   useEffect(() => {
     if (modalOpen) {
       document.body.style.overflow = "hidden";
-      setTimeout(() => searchInputRef.current?.focus(), 80);
-    } else {
-      document.body.style.overflow = "";
-      setSearchQuery("");
+      const focusTimer = setTimeout(() => searchInputRef.current?.focus(), 80);
+      return () => {
+        clearTimeout(focusTimer);
+        document.body.style.overflow = "";
+      };
     }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    document.body.style.overflow = "";
+    return undefined;
   }, [modalOpen]);
 
   // Keyboard shortcut: Cmd+K or Ctrl+K to open, Esc to close
@@ -91,10 +105,13 @@ export default function SiteHeader() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
-        setModalOpen((prev) => !prev);
+        setModalOpen((prev) => {
+          if (prev) setSearchQuery("");
+          return !prev;
+        });
       }
       if (e.key === "Escape" && modalOpen) {
-        setModalOpen(false);
+        closeModal();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -113,18 +130,6 @@ export default function SiteHeader() {
         p.stack.some((s) => s.toLowerCase().includes(q))
     );
   }, [searchQuery]);
-
-  const handleCopyEmail = () => {
-    if (navigator?.clipboard) {
-      navigator.clipboard.writeText(siteConfig.email).catch(() => {});
-    }
-    setCopiedEmail(true);
-    setToastMessage(`Email copied: ${siteConfig.email}`);
-    setTimeout(() => {
-      setCopiedEmail(false);
-      setToastMessage(null);
-    }, 2800);
-  };
 
   // Robust Say Hi / Reach Out action
   const handleSayHi = (e: React.MouseEvent) => {
@@ -169,7 +174,7 @@ export default function SiteHeader() {
         <Link href="/" className="brand" aria-label="Parth Khansali home">
           <div className="brand__pfp-wrap">
             <Image
-              src="/profile.jpg"
+              src={withBasePath("/profile.jpg")}
               alt="Parth Khansali"
               width={34}
               height={34}
@@ -250,6 +255,9 @@ export default function SiteHeader() {
             <span className="nav-search-key">⌘K</span>
           </button>
 
+          {/* Theme Switcher with Circular Reveal */}
+          <ThemeToggle className="nav-theme-btn" />
+
           {/* Say Hi Button with multi-action fallback */}
           <button
             type="button"
@@ -260,16 +268,16 @@ export default function SiteHeader() {
             Say hi
           </button>
 
-          {/* Mobile floating greeting button from awrs.me */}
+          {/* Mobile floating greeting button */}
           <button
             type="button"
             className="mobile-nav-trigger"
-            onClick={() => setModalOpen((prev) => !prev)}
+            onClick={() => (modalOpen ? closeModal() : setModalOpen(true))}
             aria-label={modalOpen ? "Close menu" : "Open menu"}
             aria-expanded={modalOpen}
           >
             <span className="mobile-nav-trigger__icon" aria-hidden="true">
-              {greeting.icon}
+              <GreetingIcon kind={greeting.kind} />
             </span>
             <span className="mobile-nav-trigger__text">Menu</span>
             <span className={`mobile-nav-trigger__burger ${modalOpen ? "is-open" : ""}`} aria-hidden="true">
@@ -280,9 +288,9 @@ export default function SiteHeader() {
         </div>
       </div>
 
-      {/* awrs.me Exact Navigation & Command Sheet Modal */}
+      {/* Navigation & Command Sheet Modal */}
       {modalOpen && (
-        <div className="awrs-modal-backdrop" onClick={() => setModalOpen(false)}>
+        <div className="awrs-modal-backdrop" onClick={closeModal}>
           <div
             className="awrs-modal-card card"
             onClick={(e) => e.stopPropagation()}
@@ -290,7 +298,7 @@ export default function SiteHeader() {
             aria-modal="true"
             aria-label="Site Navigation and Jump"
           >
-            {/* Top Toolbar: Search + Reach Out + Lang + Theme */}
+            {/* Top Toolbar: Search + Reach Out + Theme */}
             <div className="awrs-modal-top">
               <div className="awrs-search-bar">
                 <svg
@@ -335,58 +343,14 @@ export default function SiteHeader() {
                 type="button"
                 className="awrs-reachout-btn"
                 onClick={(e) => {
-                  setModalOpen(false);
+                  closeModal();
                   handleSayHi(e);
                 }}
               >
                 Reach out
               </button>
 
-              <button
-                type="button"
-                className="awrs-icon-btn"
-                onClick={handleCopyEmail}
-                title={copiedEmail ? "Email copied!" : "Copy email address"}
-                aria-label="Copy email address"
-              >
-                {copiedEmail ? (
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2.5">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                ) : (
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10" />
-                    <line x1="2" y1="12" x2="22" y2="12" />
-                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-                  </svg>
-                )}
-              </button>
-
-              <button
-                type="button"
-                className="awrs-icon-btn"
-                onClick={() => setThemeDark((prev) => !prev)}
-                title="Toggle ambient lighting"
-                aria-label="Toggle ambient lighting"
-              >
-                {themeDark ? (
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="5" />
-                    <line x1="12" y1="1" x2="12" y2="3" />
-                    <line x1="12" y1="21" x2="12" y2="23" />
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                    <line x1="1" y1="12" x2="3" y2="12" />
-                    <line x1="21" y1="12" x2="23" y2="12" />
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                  </svg>
-                ) : (
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                  </svg>
-                )}
-              </button>
+              <ThemeToggle className="awrs-icon-btn" />
             </div>
 
             {/* Instant Project Search Results Dropdown */}
@@ -398,7 +362,7 @@ export default function SiteHeader() {
                       key={proj.slug}
                       href={`/projects/${proj.slug}`}
                       className="awrs-search-item"
-                      onClick={() => setModalOpen(false)}
+                      onClick={closeModal}
                     >
                       <div className="awrs-search-item__info">
                         <span className="awrs-search-item__name">{proj.name}</span>
@@ -420,7 +384,7 @@ export default function SiteHeader() {
                 <Link
                   href="/"
                   className={`awrs-page-tile ${pathname === "/" ? "is-active" : ""}`}
-                  onClick={() => setModalOpen(false)}
+                  onClick={closeModal}
                 >
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -432,7 +396,7 @@ export default function SiteHeader() {
                 <Link
                   href="/projects"
                   className={`awrs-page-tile ${pathname.startsWith("/projects") ? "is-active" : ""}`}
-                  onClick={() => setModalOpen(false)}
+                  onClick={closeModal}
                 >
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
@@ -443,7 +407,7 @@ export default function SiteHeader() {
                 <Link
                   href="/resume"
                   className={`awrs-page-tile ${pathname === "/resume" ? "is-active" : ""}`}
-                  onClick={() => setModalOpen(false)}
+                  onClick={closeModal}
                 >
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
@@ -457,7 +421,7 @@ export default function SiteHeader() {
                 <Link
                   href="/lounge"
                   className={`awrs-page-tile ${pathname === "/lounge" ? "is-active" : ""}`}
-                  onClick={() => setModalOpen(false)}
+                  onClick={closeModal}
                 >
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <rect x="2" y="6" width="20" height="12" rx="2" />
@@ -473,7 +437,7 @@ export default function SiteHeader() {
                   href="/#contact"
                   className="awrs-page-tile"
                   onClick={(e) => {
-                    setModalOpen(false);
+                    closeModal();
                     handleSayHi(e);
                   }}
                 >
@@ -497,7 +461,7 @@ export default function SiteHeader() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="awrs-connect-tile"
-                  onClick={() => setModalOpen(false)}
+                  onClick={closeModal}
                 >
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
@@ -511,7 +475,7 @@ export default function SiteHeader() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="awrs-connect-tile"
-                  onClick={() => setModalOpen(false)}
+                  onClick={closeModal}
                 >
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
@@ -525,7 +489,7 @@ export default function SiteHeader() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="awrs-connect-tile"
-                  onClick={() => setModalOpen(false)}
+                  onClick={closeModal}
                 >
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -538,7 +502,7 @@ export default function SiteHeader() {
                   href={`mailto:${siteConfig.email}`}
                   className="awrs-connect-tile"
                   onClick={(e) => {
-                    setModalOpen(false);
+                    closeModal();
                     handleSayHi(e);
                   }}
                 >
@@ -559,7 +523,7 @@ export default function SiteHeader() {
                 <Link
                   href="/privacy"
                   className="awrs-legal-tile"
-                  onClick={() => setModalOpen(false)}
+                  onClick={closeModal}
                 >
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
@@ -571,7 +535,7 @@ export default function SiteHeader() {
                 <Link
                   href="/terms"
                   className="awrs-legal-tile"
-                  onClick={() => setModalOpen(false)}
+                  onClick={closeModal}
                 >
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />

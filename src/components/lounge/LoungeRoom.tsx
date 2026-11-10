@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { IconPin } from "@/components/ui/Icons";
 import {
   MAX_MESSAGE_LENGTH,
   checkRateLimit,
@@ -41,7 +42,10 @@ export default function LoungeRoom() {
 
   // Monitor Google Auth state
   useEffect(() => {
-    setUser(loadUserSession());
+    queueMicrotask(() => {
+      const saved = loadUserSession();
+      if (saved) setUser(saved);
+    });
 
     // Listen to Firebase auth changes if available
     let unsubscribeAuth: (() => void) | undefined;
@@ -79,10 +83,13 @@ export default function LoungeRoom() {
     // Load locally saved whiteboard drawings
     const local = loadLocalDrawings();
     if (local.length > 0) {
-      setMessages(local);
-      if (!firebaseConfigured) {
-        setStatus("live");
-      }
+      queueMicrotask(() => {
+        if (!mounted.current) return;
+        setMessages(local);
+        if (!firebaseConfigured) {
+          setStatus("live");
+        }
+      });
     }
 
     let unsubscribe: (() => void) | undefined;
@@ -353,7 +360,8 @@ export default function LoungeRoom() {
 
           <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
             <button className="btn btn--primary" type="submit" disabled={sending || !text.trim()}>
-              {sending ? "Pinning..." : "📌 Pin note to The Wall"}
+              <IconPin size={14} />
+              <span>{sending ? "Pinning..." : "Pin note to The Wall"}</span>
             </button>
           </div>
         </form>

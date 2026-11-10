@@ -1,4 +1,4 @@
-import { siteConfig } from "@/data/site";
+import { siteConfig, withBasePath } from "@/data/site";
 
 /**
  * Project facts. Everything here comes from one of three places: Parth's own
@@ -132,8 +132,8 @@ export const projects: Project[] = [
       },
     ],
     media: {
-      src: "/shots/netwich-1440.jpg",
-      srcSet: "/shots/netwich-720.jpg 720w, /shots/netwich-1440.jpg 1440w",
+      src: withBasePath("/shots/netwich-1440.jpg"),
+      srcSet: `${withBasePath("/shots/netwich-720.jpg")} 720w, ${withBasePath("/shots/netwich-1440.jpg")} 1440w`,
       width: 1440,
       height: 984,
       alt: "Netwich 0.1.0: aggregate throughput across live links, the connection list with Wi-Fi readiness, and the speed-check controls.",
@@ -182,8 +182,8 @@ export const projects: Project[] = [
       },
     ],
     media: {
-      src: "/shots/aranya-1440.jpg",
-      srcSet: "/shots/aranya-720.jpg 720w, /shots/aranya-1440.jpg 1440w",
+      src: withBasePath("/shots/aranya-1440.jpg"),
+      srcSet: `${withBasePath("/shots/aranya-720.jpg")} 720w, ${withBasePath("/shots/aranya-1440.jpg")} 1440w`,
       width: 1440,
       height: 900,
       alt: "ARANYA's Uttarakhand pilot: seven camera-trap stations listed beside a satellite terrain map of the Rajaji-Corbett corridor, with conflict and alert readouts along the top.",
@@ -250,8 +250,8 @@ export const projects: Project[] = [
       },
     ],
     media: {
-      src: "/shots/meghavyuha-1600.jpg",
-      srcSet: "/shots/meghavyuha-800.jpg 800w, /shots/meghavyuha-1600.jpg 1600w",
+      src: withBasePath("/shots/meghavyuha-1600.jpg"),
+      srcSet: `${withBasePath("/shots/meghavyuha-800.jpg")} 800w, ${withBasePath("/shots/meghavyuha-1600.jpg")} 1600w`,
       width: 1600,
       height: 1034,
       alt: "Meghavyuha's full forecast dashboard for Dehradun: rainfall amount, probability and return-period bands, correction weights, model validation scores, and the alerts, model-analysis and system-health panels along the bottom.",
