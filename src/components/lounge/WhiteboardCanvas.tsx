@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { loadUserSession, loginWithGoogle, postDrawing } from "@/lib/lounge";
+import { formatGoogleAuthError, loadUserSession, loginWithGoogle, postDrawing } from "@/lib/lounge";
 import {
   IconBrush,
   IconDownload,
@@ -279,9 +279,9 @@ export default function WhiteboardCanvas() {
       if (wallEl) {
         wallEl.scrollIntoView({ behavior: "smooth" });
       }
-    } catch {
-      setPostNotice("Could not post drawing. Try Export PNG instead.");
-      setTimeout(() => setPostNotice(null), 4000);
+    } catch (err) {
+      setPostNotice(formatGoogleAuthError(err));
+      setTimeout(() => setPostNotice(null), 5000);
     } finally {
       setPosting(false);
     }

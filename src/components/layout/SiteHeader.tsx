@@ -7,7 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { siteConfig, withBasePath } from "@/data/site";
 import { projects } from "@/data/projects";
 import ThemeToggle from "@/components/ui/ThemeToggle";
-import { IconSun, IconSunrise, IconSunset, IconMoon } from "@/components/ui/Icons";
+import { IconClose, IconInstagram } from "@/components/ui/Icons";
 
 const navigation = [
   { href: "/", label: "Home" },
@@ -23,32 +23,11 @@ function isCurrent(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-type GreetingKind = "morning" | "afternoon" | "evening" | "night";
-
-function getGreeting(): { text: string; kind: GreetingKind } {
-  const hour = new Date().getHours();
-  if (hour >= 5 && hour < 12) return { text: "Good Morning", kind: "morning" };
-  if (hour >= 12 && hour < 18) return { text: "Good Afternoon", kind: "afternoon" };
-  if (hour >= 18 && hour < 22) return { text: "Good Evening", kind: "evening" };
-  return { text: "Good Night", kind: "night" };
-}
-
-function GreetingIcon({ kind }: { kind: GreetingKind }) {
-  if (kind === "morning") return <IconSunrise size={14} />;
-  if (kind === "afternoon") return <IconSun size={14} />;
-  if (kind === "evening") return <IconSunset size={14} />;
-  return <IconMoon size={14} />;
-}
-
 export default function SiteHeader() {
   const pathname = usePathname();
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [greeting, setGreeting] = useState<{ text: string; kind: GreetingKind }>({
-    text: "Hello",
-    kind: "afternoon",
-  });
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -61,10 +40,6 @@ export default function SiteHeader() {
     setModalOpen(false);
     setSearchQuery("");
   };
-
-  useEffect(() => {
-    queueMicrotask(() => setGreeting(getGreeting()));
-  }, []);
 
   // Update sliding pill indicator position on desktop
   useEffect(() => {
@@ -267,24 +242,6 @@ export default function SiteHeader() {
           >
             Say hi
           </button>
-
-          {/* Mobile floating greeting button */}
-          <button
-            type="button"
-            className="mobile-nav-trigger"
-            onClick={() => (modalOpen ? closeModal() : setModalOpen(true))}
-            aria-label={modalOpen ? "Close menu" : "Open menu"}
-            aria-expanded={modalOpen}
-          >
-            <span className="mobile-nav-trigger__icon" aria-hidden="true">
-              <GreetingIcon kind={greeting.kind} />
-            </span>
-            <span className="mobile-nav-trigger__text">Menu</span>
-            <span className={`mobile-nav-trigger__burger ${modalOpen ? "is-open" : ""}`} aria-hidden="true">
-              <span />
-              <span />
-            </span>
-          </button>
         </div>
       </div>
 
@@ -298,7 +255,7 @@ export default function SiteHeader() {
             aria-modal="true"
             aria-label="Site Navigation and Jump"
           >
-            {/* Top Toolbar: Search + Reach Out + Theme */}
+            {/* Top Toolbar: Search + Reach Out + Theme + Close */}
             <div className="awrs-modal-top">
               <div className="awrs-search-bar">
                 <svg
@@ -351,6 +308,16 @@ export default function SiteHeader() {
               </button>
 
               <ThemeToggle className="awrs-icon-btn" />
+
+              <button
+                type="button"
+                className="awrs-icon-btn awrs-close-btn"
+                onClick={closeModal}
+                aria-label="Close menu"
+                title="Close menu (Esc)"
+              >
+                <IconClose size={15} />
+              </button>
             </div>
 
             {/* Instant Project Search Results Dropdown */}
@@ -457,7 +424,7 @@ export default function SiteHeader() {
               <p className="awrs-section-label">CONNECT</p>
               <div className="awrs-connect-grid">
                 <a
-                  href="https://github.com/ParthKhansali"
+                  href={siteConfig.links.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="awrs-connect-tile"
@@ -471,7 +438,7 @@ export default function SiteHeader() {
                 </a>
 
                 <a
-                  href="https://linkedin.com/in/parthkhansali"
+                  href={siteConfig.links.linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="awrs-connect-tile"
@@ -485,16 +452,14 @@ export default function SiteHeader() {
                 </a>
 
                 <a
-                  href="https://x.com/ParthKhansali"
+                  href={siteConfig.links.instagram}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="awrs-connect-tile"
                   onClick={closeModal}
                 >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                  </svg>
-                  <span>X (Twitter)</span>
+                  <IconInstagram size={15} />
+                  <span>Instagram</span>
                   <span className="awrs-tile-ext">↗</span>
                 </a>
 

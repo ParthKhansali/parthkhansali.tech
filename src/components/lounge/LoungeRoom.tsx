@@ -7,6 +7,7 @@ import {
   checkRateLimit,
   cleanText,
   firebaseConfigured,
+  formatGoogleAuthError,
   loadLocalDrawings,
   loadUserSession,
   loginWithGoogle,
@@ -155,8 +156,8 @@ export default function LoungeRoom() {
       if (loggedUser) {
         setUser(loggedUser);
       }
-    } catch {
-      setError("Google authentication could not be completed. Please try again.");
+    } catch (err) {
+      setError(formatGoogleAuthError(err));
     } finally {
       setAuthLoading(false);
     }

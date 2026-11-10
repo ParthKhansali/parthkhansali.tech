@@ -38,9 +38,10 @@ A technical portfolio and interactive visitor lounge built with Next.js App Rout
 
 - **Firebase Auth & Firestore**:
   - Project: `portfolio-2addd`
-  - Collection: `wall` (read by anyone, created by authenticated Google users).
-  - Client Singleton: `src/lib/firebase.ts`.
-  - Authentication & LocalStorage Sync: `src/lib/lounge.ts`.
+  - Collection: `lounge_messages` (read by anyone, created by authenticated Google users, validated by `firestore.rules`).
+  - Client Config & Singleton: `src/lib/firebaseConfig.ts`, `src/lib/firebase.ts`.
+  - Authentication & LocalStorage Sync: `src/lib/lounge.ts` (Google popup sign-in with redirect fallback via `completeGoogleRedirect`).
+  - Security Headers: `vercel.json` uses `Cross-Origin-Opener-Policy: same-origin-allow-popups` so Firebase OAuth popups communicate cleanly on `parthkhansali.tech`.
 
 ## SEO & AI Discoverability
 

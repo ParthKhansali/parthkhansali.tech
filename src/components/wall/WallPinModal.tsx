@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import {
   type LoungeUser,
   loginWithGoogle,
+  formatGoogleAuthError,
   postMessage,
   postDrawing,
   checkRateLimit,
@@ -195,8 +196,8 @@ export default function WallPinModal({
       if (u) {
         onUserLogin(u);
       }
-    } catch {
-      setError("Google authentication could not be completed. Please try again.");
+    } catch (err) {
+      setError(formatGoogleAuthError(err));
     } finally {
       setAuthLoading(false);
     }

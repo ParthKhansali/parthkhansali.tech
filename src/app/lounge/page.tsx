@@ -5,8 +5,10 @@ import Link from "next/link";
 import {
   type LoungeUser,
   type WallMessage,
+  completeGoogleRedirect,
   loadUserSession,
   loadLocalDrawings,
+  saveUserSession,
   subscribeToWall,
 } from "@/lib/lounge";
 import { SEEDED_PINS, type WallPin } from "@/data/wallPins";
@@ -17,17 +19,49 @@ import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbNode, pageNode } from "@/lib/seo";
 import { IconPen } from "@/components/ui/Icons";
 
+function msgToWallPin(msg: WallMessage, index: number): WallPin {
+  const cleanTag = msg.text.startsWith("#")
+    ? msg.text.slice(1).split(" ")[0].replace(/[^a-zA-Z]/g, "")
+    : msg.drawing
+    ? "Sketch"
+    : "Visitor";
+
+  const displayText = msg.text.startsWith("#")
+    ? msg.text.replace(/^#[a-zA-Z]+\s*(?:·\s*)?/, "")
+    : msg.text;
+
+  return {
+    id: msg.id,
+    name: msg.name,
+    role: "Visitor",
+    avatar: msg.avatar || "",
+    text: displayText || (msg.drawing ? "Whiteboard sketch" : ""),
+    drawing: msg.drawing,
+    tag: cleanTag || (msg.drawing ? "Sketch" : "Visitor"),
+    createdAt: msg.createdAt || Date.now(),
+    likes: 1,
+    rotation: (index % 2 === 0 ? 1 : -1) * (0.6 + (index % 3) * 0.35),
+  };
+}
+
 export default function LoungePage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<LoungeUser | null>(null);
   const [livePins, setLivePins] = useState<WallPin[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Restore user session on mount
+  // Restore user session and complete redirect-based Google sign-in if returning
   useEffect(() => {
+    let active = true;
     queueMicrotask(() => {
       const saved = loadUserSession();
-      if (saved) setCurrentUser(saved);
+      if (saved && active) setCurrentUser(saved);
+    });
+
+    completeGoogleRedirect().then(({ user, wasRedirect }) => {
+      if (!active) return;
+      if (user) setCurrentUser(user);
+      if (wasRedirect) setModalOpen(true);
     });
 
     // Listen to Firebase auth changes if available
@@ -35,50 +69,29 @@ export default function LoungePage() {
       .then(({ auth }) => {
         import("firebase/auth").then(({ onAuthStateChanged }) => {
           onAuthStateChanged(auth, (u) => {
-            if (u) {
-              setCurrentUser({
+            if (u && active) {
+              const mapped: LoungeUser = {
                 uid: u.uid,
                 displayName: u.displayName || "Google User",
                 email: u.email,
                 photoURL: u.photoURL,
-              });
+              };
+              setCurrentUser(mapped);
+              saveUserSession(mapped);
             }
           });
         });
       })
       .catch(() => {});
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   // Merge live / local Firestore messages with seeded pins
   useEffect(() => {
-    const local = loadLocalDrawings();
-
-    const convertToPin = (msg: WallMessage, index: number): WallPin => {
-      const cleanTag = msg.text.startsWith("#")
-        ? msg.text.slice(1).split(" ")[0].replace(/[^a-zA-Z]/g, "")
-        : msg.drawing
-        ? "Sketch"
-        : "Visitor";
-
-      const displayText = msg.text.startsWith("#")
-        ? msg.text.replace(/^#[a-zA-Z]+\s*·\s*/, "")
-        : msg.text;
-
-      return {
-        id: msg.id,
-        name: msg.name,
-        role: "Visitor",
-        avatar: msg.avatar || "",
-        text: displayText,
-        drawing: msg.drawing,
-        tag: cleanTag,
-        createdAt: msg.createdAt || Date.now(),
-        likes: Math.floor(Math.random() * 8) + 4,
-        rotation: (index % 2 === 0 ? 1 : -1) * (0.8 + (index % 3) * 0.4),
-      };
-    };
-
-    const initialLive = local.map(convertToPin);
+    const initialLive = loadLocalDrawings().map(msgToWallPin);
     if (initialLive.length > 0) {
       queueMicrotask(() => setLivePins(initialLive));
     }
@@ -87,10 +100,12 @@ export default function LoungePage() {
     let unsubscribe: (() => void) | undefined;
     subscribeToWall(
       (incoming) => {
-        const converted = incoming.map(convertToPin);
+        const converted = incoming.map(msgToWallPin);
         const existingIds = new Set(converted.map((p) => p.id));
-        const combined = [...converted, ...initialLive.filter((p) => !existingIds.has(p.id))];
-        setLivePins(combined);
+        const localOnly = loadLocalDrawings()
+          .map(msgToWallPin)
+          .filter((p) => !existingIds.has(p.id));
+        setLivePins([...converted, ...localOnly]);
       },
       () => {}
     ).then((fn) => {
@@ -106,22 +121,10 @@ export default function LoungePage() {
     setToastMessage("Pinned to the Lounge! Your contribution is live.");
     setTimeout(() => setToastMessage(null), 4000);
 
-    const local = loadLocalDrawings();
+    const local = loadLocalDrawings().map(msgToWallPin);
     setLivePins((prev) => {
-      const newItems = local.map((msg, index) => ({
-        id: msg.id,
-        name: msg.name,
-        role: "Visitor",
-        avatar: msg.avatar || "",
-        text: msg.text,
-        drawing: msg.drawing,
-        tag: msg.drawing ? "Sketch" : "Visitor",
-        createdAt: msg.createdAt || Date.now(),
-        likes: 1,
-        rotation: (index % 2 === 0 ? 1 : -1) * 1.2,
-      }));
       const seen = new Set(prev.map((p) => p.id));
-      return [...newItems.filter((p) => !seen.has(p.id)), ...prev];
+      return [...local.filter((p) => !seen.has(p.id)), ...prev];
     });
   };
 

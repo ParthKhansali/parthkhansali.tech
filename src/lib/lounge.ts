@@ -7,6 +7,8 @@
  * Content is stored in Firestore and mirrored locally for immediate responsiveness.
  */
 
+import { firebaseConfig } from "@/lib/firebaseConfig";
+
 export interface WallMessage {
   id: string;
   name: string;
@@ -14,7 +16,6 @@ export interface WallMessage {
   createdAt: number;
   drawing?: string;
   avatar?: string;
-  userEmail?: string;
 }
 
 export interface LoungeUser {
@@ -32,10 +33,11 @@ const MAX_PER_HOUR = 25;
 const RATE_KEY = "pk_lounge_sends";
 const USER_KEY = "pk_lounge_user";
 const ID_KEY = "pk_lounge_id";
+const REDIRECT_FLAG = "pk_lounge_google_redirect";
 
 /** True when the build actually has a Firebase project configured. */
 export const firebaseConfigured = Boolean(
-  process.env.NEXT_PUBLIC_FIREBASE_API_KEY && process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  firebaseConfig.apiKey && firebaseConfig.projectId,
 );
 
 function randomSuffix(length = 4) {
@@ -85,29 +87,114 @@ export function clearUserSession(): void {
   } catch {}
 }
 
-/** Google Sign-In via Firebase Auth */
-export async function loginWithGoogle(): Promise<LoungeUser | null> {
-  try {
-    const { auth, googleProvider } = await import("@/lib/firebase");
-    const { signInWithPopup } = await import("firebase/auth");
-    const cred = await signInWithPopup(auth, googleProvider);
-    if (!cred.user) return null;
+function userFromFirebase(u: {
+  uid: string;
+  displayName: string | null;
+  email: string | null;
+  photoURL: string | null;
+}): LoungeUser {
+  return {
+    uid: u.uid,
+    displayName: u.displayName || "Google User",
+    email: u.email,
+    photoURL: u.photoURL,
+  };
+}
 
-    const u = cred.user;
-    const loungeUser: LoungeUser = {
-      uid: u.uid,
-      displayName: u.displayName || "Google User",
-      email: u.email,
-      photoURL: u.photoURL,
-    };
-    saveUserSession(loungeUser);
-    return loungeUser;
+export function formatGoogleAuthError(err: unknown): string {
+  const error = err as { code?: string; message?: string };
+  const code = error?.code || "";
+  const host = typeof window !== "undefined" ? window.location.hostname : "this domain";
+
+  if (code === "auth/unauthorized-domain") {
+    return `Domain "${host}" is not authorized in Firebase Authentication -> Authorized domains.`;
+  }
+  if (code === "auth/popup-blocked") {
+    return "Popup was blocked by the browser. Allow popups or retry with redirect.";
+  }
+  if (code === "auth/popup-closed-by-user") {
+    return "Sign-in window closed before finishing. Allow popups for this site and try again.";
+  }
+  if (code === "auth/network-request-failed") {
+    return "Network error while contacting Google Sign-in. Check your connection and retry.";
+  }
+  if (code === "auth/invalid-api-key" || code === "auth/missing-config") {
+    return "Firebase authentication is missing configuration for this deployment.";
+  }
+  return error?.message
+    ? `Google Sign-in failed (${code || "error"}): ${error.message}`
+    : "Google authentication could not be completed. Please try again.";
+}
+
+/** Finish any pending redirect-based Google Sign-In on page load. */
+export async function completeGoogleRedirect(): Promise<{
+  user: LoungeUser | null;
+  wasRedirect: boolean;
+}> {
+  if (!firebaseConfigured || typeof window === "undefined") {
+    return { user: null, wasRedirect: false };
+  }
+  let wasRedirect = false;
+  try {
+    wasRedirect = sessionStorage.getItem(REDIRECT_FLAG) === "1";
+    sessionStorage.removeItem(REDIRECT_FLAG);
+  } catch {}
+
+  try {
+    const [{ auth }, { getRedirectResult }] = await Promise.all([
+      import("@/lib/firebase"),
+      import("firebase/auth"),
+    ]);
+    const cred = await getRedirectResult(auth);
+    if (cred?.user) {
+      const loungeUser = userFromFirebase(cred.user);
+      saveUserSession(loungeUser);
+      return { user: loungeUser, wasRedirect: true };
+    }
+  } catch (err) {
+    console.warn("Google redirect sign-in notice:", err);
+  }
+  return { user: null, wasRedirect };
+}
+
+/** Google Sign-In via Firebase Auth (popup with automatic redirect fallback). */
+export async function loginWithGoogle(): Promise<LoungeUser | null> {
+  if (!firebaseConfigured) {
+    throw Object.assign(new Error("Missing Firebase configuration."), {
+      code: "auth/missing-config",
+    });
+  }
+
+  try {
+    const [{ auth, googleProvider }, { signInWithPopup, signInWithRedirect }] =
+      await Promise.all([import("@/lib/firebase"), import("firebase/auth")]);
+
+    try {
+      const cred = await signInWithPopup(auth, googleProvider);
+      if (!cred.user) return null;
+      const loungeUser = userFromFirebase(cred.user);
+      saveUserSession(loungeUser);
+      return loungeUser;
+    } catch (popupErr: unknown) {
+      const pErr = popupErr as { code?: string };
+      if (
+        pErr?.code === "auth/popup-blocked" ||
+        pErr?.code === "auth/operation-not-supported-in-this-environment"
+      ) {
+        try {
+          sessionStorage.setItem(REDIRECT_FLAG, "1");
+        } catch {}
+        await signInWithRedirect(auth, googleProvider);
+        return null;
+      }
+      throw popupErr;
+    }
   } catch (err: unknown) {
     const error = err as { code?: string; message?: string };
-    if (error?.code === "auth/popup-closed-by-user" || error?.code === "auth/cancelled-popup-request") {
+    if (error?.code === "auth/cancelled-popup-request") {
       return null;
     }
-    console.warn("Google sign-in notice:", error?.message || error);
+    console.warn("Google sign-in notice:", error?.code || error?.message || error);
     throw err;
   }
 }
@@ -220,7 +307,6 @@ export async function subscribeToWall(
             createdAt?: unknown;
             drawing?: unknown;
             avatar?: unknown;
-            userEmail?: unknown;
           };
           const stamp = data.createdAt as { toMillis?: () => number } | null;
           return {
@@ -229,7 +315,6 @@ export async function subscribeToWall(
             text: cleanText(data.text, MAX_MESSAGE_LENGTH),
             drawing: typeof data.drawing === "string" ? data.drawing : undefined,
             avatar: typeof data.avatar === "string" ? data.avatar : undefined,
-            userEmail: typeof data.userEmail === "string" ? data.userEmail : undefined,
             createdAt: typeof stamp?.toMillis === "function" ? stamp.toMillis() : Date.now(),
           };
         });
@@ -253,46 +338,71 @@ export function loadLocalDrawings(): WallMessage[] {
   }
 }
 
+function saveLocalPin(entry: WallMessage): void {
+  try {
+    const existing = loadLocalDrawings();
+    const filtered = existing.filter((item) => item.id !== entry.id);
+    filtered.unshift(entry);
+    localStorage.setItem("pk_lounge_local_drawings", JSON.stringify(filtered.slice(0, 40)));
+    window.dispatchEvent(new CustomEvent("pk_lounge_drawing_posted", { detail: entry }));
+  } catch {}
+}
+
 /** Post one text message. */
 export async function postMessage(
   name: string,
   text: string,
   user?: LoungeUser | null,
-): Promise<void> {
-  const authorName = user?.displayName || cleanText(name, MAX_NAME_LENGTH) || defaultName();
-  const avatar = user?.photoURL || undefined;
-  const userEmail = user?.email || undefined;
-
-  const newEntry: WallMessage = {
-    id: `msg-${Date.now()}-${randomSuffix(4)}`,
-    name: authorName,
-    text,
-    avatar,
-    userEmail,
-    createdAt: Date.now(),
-  };
-
-  try {
-    const existing = loadLocalDrawings();
-    existing.unshift(newEntry);
-    localStorage.setItem("pk_lounge_local_drawings", JSON.stringify(existing.slice(0, 40)));
-    window.dispatchEvent(new CustomEvent("pk_lounge_drawing_posted", { detail: newEntry }));
-  } catch {}
+): Promise<WallMessage> {
+  const authorName =
+    cleanText(user?.displayName || name, MAX_NAME_LENGTH) || defaultName();
+  const rawAvatar = user?.photoURL || "";
+  const avatar =
+    rawAvatar.startsWith("https://") ? rawAvatar.slice(0, 512) : undefined;
+  let remoteId: string | null = null;
 
   if (firebaseConfigured) {
     try {
       const { db, fs } = await collections();
       const fsMod = fs as FirestoreModule;
-      await fsMod.addDoc(fsMod.collection(db, "lounge_messages"), {
-        name: authorName,
-        text,
-        avatar: avatar || null,
-        userEmail: userEmail || null,
-        clientId: getClientId(),
-        createdAt: fsMod.serverTimestamp(),
-      });
-    } catch {}
+      const clientId = getClientId();
+      try {
+        const ref = await fsMod.addDoc(fsMod.collection(db, "lounge_messages"), {
+          name: authorName,
+          text,
+          clientId,
+          createdAt: fsMod.serverTimestamp(),
+          ...(user?.uid ? { uid: user.uid } : {}),
+          ...(avatar ? { avatar } : {}),
+        });
+        remoteId = ref.id;
+      } catch {
+        const fallbackRef = await fsMod.addDoc(
+          fsMod.collection(db, "lounge_messages"),
+          {
+            name: cleanText(authorName, 24) || "Visitor",
+            text: cleanText(text, MAX_MESSAGE_LENGTH),
+            clientId,
+            createdAt: fsMod.serverTimestamp(),
+          },
+        );
+        remoteId = fallbackRef.id;
+      }
+    } catch (err) {
+      console.warn("Firestore message write skipped:", err);
+    }
   }
+
+  const newEntry: WallMessage = {
+    id: remoteId || `msg-${Date.now()}-${randomSuffix(4)}`,
+    name: authorName,
+    text,
+    avatar,
+    createdAt: Date.now(),
+  };
+
+  saveLocalPin(newEntry);
+  return newEntry;
 }
 
 /** Post a whiteboard drawing to The Wall. */
@@ -301,42 +411,43 @@ export async function postDrawing(
   drawingDataUrl: string,
   caption = "",
   user?: LoungeUser | null,
-): Promise<void> {
-  const authorName = user?.displayName || cleanText(name, MAX_NAME_LENGTH) || defaultName();
+): Promise<WallMessage> {
+  const authorName =
+    cleanText(user?.displayName || name, MAX_NAME_LENGTH) || defaultName();
   const cleanCaption = cleanText(caption, MAX_MESSAGE_LENGTH);
-  const avatar = user?.photoURL || undefined;
-  const userEmail = user?.email || undefined;
-
-  const newEntry: WallMessage = {
-    id: `drawing-${Date.now()}-${randomSuffix(4)}`,
-    name: authorName,
-    text: cleanCaption,
-    drawing: drawingDataUrl,
-    avatar,
-    userEmail,
-    createdAt: Date.now(),
-  };
-
-  try {
-    const existing = loadLocalDrawings();
-    existing.unshift(newEntry);
-    localStorage.setItem("pk_lounge_local_drawings", JSON.stringify(existing.slice(0, 40)));
-    window.dispatchEvent(new CustomEvent("pk_lounge_drawing_posted", { detail: newEntry }));
-  } catch {}
+  const rawAvatar = user?.photoURL || "";
+  const avatar =
+    rawAvatar.startsWith("https://") ? rawAvatar.slice(0, 512) : undefined;
+  let remoteId: string | null = null;
 
   if (firebaseConfigured) {
     try {
       const { db, fs } = await collections();
       const fsMod = fs as FirestoreModule;
-      await fsMod.addDoc(fsMod.collection(db, "lounge_messages"), {
+      const ref = await fsMod.addDoc(fsMod.collection(db, "lounge_messages"), {
         name: authorName,
         text: cleanCaption,
         drawing: drawingDataUrl,
-        avatar: avatar || null,
-        userEmail: userEmail || null,
         clientId: getClientId(),
         createdAt: fsMod.serverTimestamp(),
+        ...(user?.uid ? { uid: user.uid } : {}),
+        ...(avatar ? { avatar } : {}),
       });
-    } catch {}
+      remoteId = ref.id;
+    } catch (err) {
+      console.warn("Firestore drawing write skipped:", err);
+    }
   }
+
+  const newEntry: WallMessage = {
+    id: remoteId || `drawing-${Date.now()}-${randomSuffix(4)}`,
+    name: authorName,
+    text: cleanCaption,
+    drawing: drawingDataUrl,
+    avatar,
+    createdAt: Date.now(),
+  };
+
+  saveLocalPin(newEntry);
+  return newEntry;
 }

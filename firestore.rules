@@ -1,40 +1,131 @@
 rules_version = '2';
 
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// This security rules file assumes the following data structures:
+//
+// Collection: lounge_messages
+// Document ID: auto-generated (or client-chosen messageId)
+// Fields:
+//   - name: string (required, length 1..40) - Author display name shown on the wall
+//   - text: string (required, length 0..280; >= 2 when drawing is absent; no URLs) - Note text or sketch caption
+//   - clientId: string (required, length 1..64) - Browser client identifier
+//   - uid: string (required, immutable, matches request.auth.uid) - Creator Firebase Auth UID
+//   - createdAt: timestamp (required, immutable, equals request.time) - Server-assigned creation timestamp
+//   - avatar: string | null (optional, if non-null must match ^https://.* and length <= 512) - Profile avatar URL
+//   - drawing: string (optional, length 16..350000, matches ^data:image/(webp|png);base64,[A-Za-z0-9+/=]+$) - Base64 sketch
+//
+// Disallowed fields:
+//   - userEmail and all other undeclared keys are rejected to prevent PII leaks on a public wall.
+//
+// ===============================================================
+
 /**
  * Firestore rules for parthkhansali.tech.
  *
- * The lounge wall is the only collection the browser writes to. It is open to
- * read (it is a public noticeboard) and tightly constrained on create: fixed
- * field set, length caps, no links, and a server timestamp the client cannot
- * forge. Nothing is editable or deletable from the client, so a posted message
- * cannot be rewritten afterwards.
+ * The community lounge wall (lounge_messages) is open to read so visitors can
+ * view pinned notes and whiteboard sketches, and tightly constrained on create:
+ * authenticated callers only, verified UID, fixed field allowlist (no PII like
+ * userEmail), length bounds, URL spam filtering, safe sketch image validation,
+ * and a server timestamp the client cannot forge. Nothing is editable or
+ * deletable from the client, so posted messages cannot be rewritten afterwards.
  *
  * Deploy with:  firebase deploy --only firestore:rules
  */
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    function isText(value, min, max) {
-      return value is string && value.size() >= min && value.size() <= max;
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    // Require a signed-in Firebase Auth user.
+    function isAuthenticated() {
+      return request.auth != null;
     }
 
+    // Verify the authenticated caller matches the claimed user ID.
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Ensure all required schema keys exist on the incoming document.
+    function hasRequiredFields(data, fields) {
+      return data.keys().hasAll(fields);
+    }
+
+    // Reject unvalidated arbitrary keys or PII fields (such as userEmail).
+    function hasOnlyAllowedFields(data, fields) {
+      return data.keys().hasOnly(fields);
+    }
+
+    // Enforce string type and length limits to prevent type juggling and 1MB DoS payloads.
+    function isText(value, minLen, maxLen) {
+      return value is string && value.size() >= minLen && value.size() <= maxLen;
+    }
+
+    // Reject URLs across both single-line and multiline text payloads.
+    function hasNoUrl(value) {
+      return !value.matches('(?is).*(https?://|www\\.).*');
+    }
+
+    // Allow omitted or null avatars; otherwise enforce bounded HTTPS URLs.
+    function isValidAvatar(data) {
+      return !('avatar' in data) ||
+        data.avatar == null ||
+        (data.avatar is string &&
+          data.avatar.size() <= 512 &&
+          data.avatar.matches('^https://.*'));
+    }
+
+    // Restrict whiteboard sketches to bounded PNG/WebP base64 data URLs (blocks SVG/HTML XSS and oversized payloads).
+    function isValidDrawingDataUrl(value) {
+      return value is string &&
+        value.size() >= 16 &&
+        value.size() <= 350000 &&
+        value.matches('^data:image/(webp|png);base64,[A-Za-z0-9+/=]+$');
+    }
+
+    // Domain validator for lounge_messages creates.
+    function isValidLoungeMessage(data) {
+      return hasRequiredFields(data, ['name', 'text', 'clientId', 'uid', 'createdAt']) &&
+        hasOnlyAllowedFields(data, ['name', 'text', 'clientId', 'uid', 'createdAt', 'avatar', 'drawing']) &&
+        isText(data.name, 1, 40) &&
+        isText(data.clientId, 1, 64) &&
+        data.uid is string &&
+        isOwner(data.uid) &&
+        // Require serverTimestamp() so clients cannot backdate or future-date wall ordering.
+        data.createdAt is timestamp &&
+        data.createdAt == request.time &&
+        isText(data.text, 0, 280) &&
+        hasNoUrl(data.text) &&
+        // Text-only notes require at least 2 characters; sketches may carry a short or empty caption.
+        (
+          (!('drawing' in data) && data.text.size() >= 2) ||
+          ('drawing' in data && isValidDrawingDataUrl(data.drawing))
+        ) &&
+        isValidAvatar(data);
+    }
+
+    // ===============================================================
+    // Collection Rules
+    // ===============================================================
+
     match /lounge_messages/{messageId} {
+      // Public visitor wall: supports document gets and ordered wall queries.
       allow read: if true;
 
-      allow create: if
-        request.resource.data.keys().hasOnly(['name', 'text', 'clientId', 'createdAt'])
-        && isText(request.resource.data.name, 1, 24)
-        && isText(request.resource.data.text, 2, 280)
-        && isText(request.resource.data.clientId, 1, 64)
-        && request.resource.data.createdAt == request.time
-        && !request.resource.data.text.matches('(?i).*(https?://|www\\.).*');
+      // Authenticated create only, bound to the caller's verified Firebase Auth UID.
+      allow create: if isAuthenticated() && isValidLoungeMessage(request.resource.data);
 
       // No edits and no deletes from the client. Moderation happens in the
       // Firebase console, where it is deliberate and logged.
       allow update, delete: if false;
     }
 
-    // Everything else is closed.
+    // Default deny: everything else is closed.
     match /{document=**} {
       allow read, write: if false;
     }
