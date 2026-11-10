@@ -426,6 +426,8 @@ export default function WallPinModal({
                       if (activeTool === "eraser") setActiveTool("pen");
                     }}
                     title={c.name}
+                    aria-label={c.name}
+                    aria-pressed={activeColor === c.hex && activeTool !== "eraser"}
                   />
                 ))}
               </div>

@@ -36,24 +36,24 @@ interface ChatMessage {
 const INITIAL_CHAT_MESSAGES: ChatMessage[] = [
   {
     id: "1",
-    sender: "Aarav_CSE",
-    kind: "dev",
-    text: "Anyone tested the sub-pixel centroid on ORVESS-PAT? Looks crisp.",
-    time: "23:42",
+    sender: "PARTH-OS",
+    kind: "system",
+    text: "Channel 02 (Local Terminal Chat) active. Messages stay in this browser session.",
+    time: "BOOT",
   },
   {
     id: "2",
-    sender: "Priya.dev",
-    kind: "guest",
-    text: "GEHU Connect feed running smooth on campus Wi-Fi today.",
-    time: "23:44",
+    sender: "HOST",
+    kind: "dev",
+    text: "Tip: Want a permanent message on the Lounge Wall? Use 'Pin Something' above the terminal.",
+    time: "INFO",
   },
   {
     id: "3",
-    sender: "LoungeHost",
+    sender: "PARTH-OS",
     kind: "system",
-    text: "Channel 01 to 04 online. Switch apps on the dock or dial knob.",
-    time: "23:47",
+    text: "Use the dock icons or VHF knob on the right to switch between Arcade, Chat, Lofi, and Cinema.",
+    time: "READY",
   },
 ];
 

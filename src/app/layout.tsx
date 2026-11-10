@@ -50,7 +50,6 @@ export const metadata: Metadata = {
   creator: siteConfig.name,
   publisher: siteConfig.name,
   category: "technology",
-  alternates: { canonical: "/" },
   keywords: [
     "Parth Khansali",
     "Khansali",
@@ -70,7 +69,7 @@ export const metadata: Metadata = {
     lastName: "Khansali",
     username: "ParthKhansali",
     locale: "en_IN",
-    url: siteConfig.url,
+    url: `${siteConfig.url}/`,
     siteName: siteConfig.name,
     title: "Parth Khansali: Computer Science Student & Software Developer",
     description:

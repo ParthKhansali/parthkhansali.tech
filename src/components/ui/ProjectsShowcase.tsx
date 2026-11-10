@@ -21,7 +21,7 @@ function GehuConnectMockup() {
             <p className="showcase-gehu__sub">Graphic Era Hill University</p>
           </div>
         </div>
-        <span className="showcase-gehu__pill">~1,000 Active</span>
+        <span className="showcase-gehu__pill">~1,000 Students</span>
       </div>
 
       <div className="showcase-gehu__body">
@@ -93,12 +93,12 @@ function SimulatedFocalPlane() {
         </g>
 
         <g fill="#b5b5b5" fontFamily="monospace" fontSize="9" letterSpacing="1.5">
-          <text x="24" y="28">FPA 1024 x 1024</text>
+          <text x="24" y="28">FPA 640 x 480</text>
           <text x="24" y="282">SUB-PIXEL CENTROID</text>
-          <text x="340" y="282">sigma = 0.18 px</text>
+          <text x="320" y="282">EKF q_t in [0, 1]</text>
         </g>
       </svg>
-      <span className="showcase-plate__badge">ISRO SIH Simulation Suite</span>
+      <span className="showcase-plate__badge">SIH Simulation Workbench</span>
     </div>
   );
 }
@@ -118,7 +118,6 @@ function ProjectVisual({ project }: { project: Project }) {
         width={640}
         height={400}
         className="project-card__img"
-        priority={project.slug === "netwich"}
       />
     );
   }

@@ -12,10 +12,20 @@ import ProjectsShowcase from "@/components/ui/ProjectsShowcase";
 import { homeGraph, pageMetadata } from "@/lib/seo";
 import { siteConfig, socialLinks, withBasePath } from "@/data/site";
 import { projects, flagship } from "@/data/projects";
-import { education, hackathons, leadership } from "@/data/resume";
+import { education } from "@/data/resume";
+import {
+  bugMuseumItems,
+  heroContent,
+  journeyBeats,
+  leadershipTimeline,
+  offDutyItems,
+  recognitionCards,
+  skillGroups,
+  workbenchItems,
+} from "@/data/portfolioContent";
 
 const description =
-  "Parth Khansali is a computer science student at Graphic Era Hill University in Dehradun, India, and the developer of GEHU Connect, a campus app used by roughly a thousand students.";
+  "Parth Khansali, CSE student in Dehradun (GEHU). Developer of GEHU Connect (~1,000 students) and Netwich for macOS. Work, notes, and leadership.";
 
 export const metadata: Metadata = {
   ...pageMetadata({
@@ -47,71 +57,9 @@ const ribbonB = [
 
 const stats = [
   { value: 5, label: "Projects built", prefix: "" },
-  { value: 1, label: "In daily use", prefix: "" },
-  { value: 3, label: "Still in progress", prefix: "" },
+  { value: 1, label: "Flagship with users", prefix: "" },
+  { value: 3, label: "In progress", prefix: "" },
   { value: 1000, label: "Students on GEHU Connect", prefix: "~" },
-];
-
-const skills = [
-  { name: "Java", abbr: "Ja" },
-  { name: "Python", abbr: "Py" },
-  { name: "TypeScript", abbr: "TS" },
-  { name: "JavaScript", abbr: "JS" },
-  { name: "React Native", abbr: "RN" },
-  { name: "Expo", abbr: "Ex" },
-  { name: "Spring Boot", abbr: "SB" },
-  { name: "Next.js", abbr: "Nx" },
-  { name: "Node.js", abbr: "No" },
-  { name: "MySQL", abbr: "My" },
-  { name: "MongoDB", abbr: "Mo" },
-  { name: "Git", abbr: "Gi" },
-];
-
-const experience = [
-  {
-    ...leadership[0],
-    tags: ["Leadership", "Conference ops", "Delegates"],
-    tone: "green",
-  },
-  {
-    ...leadership[1],
-    tags: ["Hosting", "Event logistics"],
-    tone: "lime",
-  },
-  {
-    ...leadership[2],
-    tags: ["Outreach", "Public speaking"],
-    tone: "sky",
-  },
-  {
-    ...hackathons[0],
-    tags: ["Rapid builds", "Deployed demos"],
-    tone: "amber",
-  },
-];
-
-const awards = [
-  {
-    title: "Director General",
-    org: "Graphic Era MUN Club",
-    period: "2024 to present",
-    detail:
-      "Runs the university Model United Nations club: conference planning, delegate management and the logistics that keep a two-day event on schedule.",
-  },
-  {
-    title: "Fifteen schools and counting",
-    org: "School outreach programme",
-    period: "2025",
-    detail:
-      "Ran MUN seminars, mock sessions and workshops in more than fifteen schools across Dehradun, most of them in rooms with no projector.",
-  },
-  {
-    title: "Three hackathon sprints",
-    org: "Hackaholic to iQOO Pune",
-    period: "2025 to 2026",
-    detail:
-      "Scope a build, cut it down to what can ship, and get a working deployed demo out inside the time limit. Twice that meant removing features.",
-  },
 ];
 
 export default function HomePage() {
@@ -129,6 +77,26 @@ export default function HomePage() {
           <p className="hero__role">
             Computer science student <span aria-hidden="true">·</span> Software developer
           </p>
+
+          <p className="hero__intro">
+            {heroContent.tagline} {heroContent.proofLine}
+          </p>
+
+          <div className="hero__actions">
+            <Magnetic strength={5}>
+              <a className="btn btn--primary" href="#work">
+                View Work <span aria-hidden="true">→</span>
+              </a>
+            </Magnetic>
+            <a
+              className="btn"
+              href={siteConfig.links.github}
+              target="_blank"
+              rel="me noopener noreferrer"
+            >
+              GitHub <span aria-hidden="true">↗</span>
+            </a>
+          </div>
 
           <div className="hero__meta">
             <span className="pill">
@@ -165,10 +133,10 @@ export default function HomePage() {
         <Marquee items={ribbonB} className="marquee--ghost" />
       </div>
 
-      {/* About ---------------------------------------------------------- */}
+      {/* About & Engineering Journey ------------------------------------ */}
       <section className="section" id="about">
         <div className="shell">
-          <p className="section-label">About Me</p>
+          <h2 className="section-label">About Me</h2>
 
           <div className="bento">
             <article className="card bio-card reveal">
@@ -181,34 +149,29 @@ export default function HomePage() {
                   className="avatar avatar--photo"
                 />
                 <div>
-                  <h2 className="bio-card__name">{siteConfig.name}</h2>
+                  <h3 className="bio-card__name">{siteConfig.name}</h3>
                   <p className="card-role">Software developer · Dehradun</p>
                 </div>
               </div>
 
               <p className="bio-card__text">
-                I&apos;m a computer science student who builds software and then keeps
-                it running once real people start using it. My work sits across a React
-                Native client, a Spring Boot API and the storage in between.
+                I&apos;m a computer science undergraduate at Graphic Era Hill University who builds software and keeps it running once real people depend on it.
               </p>
               <p className="bio-card__text">
-                {flagship.name} is the clearest example: a campus app now used by roughly
-                a thousand students. The interesting part was never the feature list: it
-                was the bad campus network, the upload failures and the sign-up flow.
+                {flagship.name} is the clearest example: a campus app built with React Native, Java Spring Boot, and Cloudflare R2 now used by roughly a thousand students. The interesting engineering never came from adding features: it came from flaky campus Wi-Fi, retry limits, and keeping API threads clear.
               </p>
               <p className="bio-card__text">
-                I also run the university Model United Nations club, which is the
-                same job in a different costume: plan the thing, keep the schedule, stay
-                calm when something breaks ten minutes before it starts.
+                Outside software, leading the university Model UN club taught me how to run large rooms, mediate disagreement, and explain hard problems plainly.
               </p>
 
               <div className="chip-list">
-                <span className="chip">Problem solving</span>
                 <span className="chip">Full-stack</span>
-                <span className="chip">MUN</span>
+                <span className="chip">Native macOS</span>
+                <span className="chip">Simulation &amp; GIS</span>
+                <span className="chip">MUN Leadership</span>
               </div>
 
-              <p className="card-meta">Based in Dehradun · open to remote</p>
+              <p className="card-meta">Based in Dehradun · open to remote or onsite internships</p>
             </article>
 
             <article className="card edu-card reveal">
@@ -216,23 +179,23 @@ export default function HomePage() {
               <h3 className="edu-card__school">{education[0].org.split(",")[0]}</h3>
               <p className="edu-card__degree">{siteConfig.education.degree}</p>
               <p className="edu-card__courses">
-                Data structures, algorithms, databases and networks.
+                Data structures, algorithms, databases, operating systems, computer networks.
               </p>
               <p className="card-meta">2024 to 2028 · CGPA 7.6</p>
             </article>
 
             <article className="card quote-card reveal">
               <p className="quote">
-                &ldquo;Loss does not deter me and victory does not praise me, I seek more.&rdquo;
+                &ldquo;Curious enough to break it. Stubborn enough to fix it.&rdquo;
               </p>
-              <p className="card-meta">Personal Creed</p>
+              <p className="card-meta">How I debug</p>
             </article>
 
             <article className="card vision-card reveal">
-              <p className="card-kicker">Have a vision?</p>
-              <h3 className="vision-card__title">Let&apos;s build it together.</h3>
+              <p className="card-kicker">Engineering record</p>
+              <h3 className="vision-card__title">Experience, projects &amp; CV.</h3>
               <Magnetic strength={6}>
-                <Link className="btn btn--dark" href="/resume">
+                <Link className="btn btn--dark" href="/resume/">
                   Resume <span aria-hidden="true">↗</span>
                 </Link>
               </Magnetic>
@@ -251,44 +214,39 @@ export default function HomePage() {
               ))}
             </div>
           </div>
+
+          <div className="journey-block" id="journey">
+            <div className="journey-head">
+              <h3 className="journey-head__title">From curiosity to code</h3>
+              <span className="measured">Dehradun · 2024 to 2026</span>
+            </div>
+            <div className="journey-grid">
+              {journeyBeats.map((beat) => (
+                <article className="card journey-card reveal" key={beat.title}>
+                  <span className="journey-card__period">{beat.period}</span>
+                  <h4 className="journey-card__title">{beat.title}</h4>
+                  <p className="journey-card__summary">{beat.summary}</p>
+                  {beat.link ? (
+                    <Link className="link journey-card__link" href={beat.link.href}>
+                      {beat.link.label} →
+                    </Link>
+                  ) : null}
+                </article>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Experience ----------------------------------------------------- */}
-      <section className="section" id="experience">
-        <div className="shell">
-          <p className="section-label">Experience</p>
-          <ExperienceTimeline items={experience} />
-        </div>
-      </section>
-
-      {/* Skills --------------------------------------------------------- */}
-      <section className="section" id="skills">
-        <div className="shell">
-          <p className="section-label">Skills & Stack</p>
-
-          <ul className="skill-grid">
-            {skills.map((skill) => (
-              <li className="skill-tile reveal" key={skill.name}>
-                <span className="skill-tile__abbr" aria-hidden="true">
-                  {skill.abbr}
-                </span>
-                <span className="skill-tile__name">{skill.name}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* Featured projects ---------------------------------------------- */}
+      {/* Featured projects (primary emphasis above leadership) ----------- */}
       <section className="section" id="work">
         <div className="shell">
           <div className="section-head">
             <div>
               <p className="section-label">Selected Projects</p>
-              <h2>Five builds, from real users to core systems.</h2>
+              <h2>Five builds, from campus users to socket relays.</h2>
             </div>
-            <Link className="link section-head__link" href="/projects">
+            <Link className="link section-head__link" href="/projects/">
               View all project details <span aria-hidden="true">→</span>
             </Link>
           </div>
@@ -297,53 +255,167 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Achievements --------------------------------------------------- */}
-      <section className="section" id="achievements">
+      {/* Practical Skills Matrix ---------------------------------------- */}
+      <section className="section" id="skills">
         <div className="shell">
-          <p className="section-label">Achievements</p>
+          <div className="section-head">
+            <div>
+              <p className="section-label">Skills &amp; Stack</p>
+              <h2>Tools paired with where they shipped.</h2>
+            </div>
+            <Link className="link section-head__link" href="/notes/">
+              Read engineering notes <span aria-hidden="true">→</span>
+            </Link>
+          </div>
 
-          <div className="award-grid">
-            {awards.map((award, index) => (
-              <article className="card award-card reveal" key={award.title}>
-                <span className="award-card__num" aria-hidden="true">
-                  _{String(index + 1).padStart(2, "0")}
-                </span>
-                <h3 className="award-card__title">{award.title}</h3>
-                <p className="award-card__meta">
-                  {award.org} · {award.period}
+          <div className="skill-domains">
+            {skillGroups.map((group) => (
+              <article className="card skill-domain-card reveal" key={group.area}>
+                <h3 className="skill-domain-card__title">{group.area}</h3>
+                <div className="chip-list">
+                  {group.items.map((item) => (
+                    <span className="chip" key={item}>
+                      {item}
+                    </span>
+                  ))}
+                </div>
+                <p className="skill-domain-card__used">
+                  Used in{" "}
+                  {group.usedIn.map((ref, idx) => (
+                    <span key={ref.href}>
+                      <Link className="link" href={ref.href}>
+                        {ref.label}
+                      </Link>
+                      {idx < group.usedIn.length - 1 ? ", " : ""}
+                    </span>
+                  ))}
                 </p>
-                <p className="award-card__detail">{award.detail}</p>
               </article>
             ))}
           </div>
-
-          <p className="award-foot">
-            <Link className="link" href="/resume">
-              The full record, with dates, is on the resume{" "}
-              <span aria-hidden="true">→</span>
-            </Link>
-          </p>
         </div>
       </section>
 
-      {/* Misc ----------------------------------------------------------- */}
+      {/* On My Workbench & Bug Museum ----------------------------------- */}
+      <section className="section band" id="workbench">
+        <div className="shell">
+          <div className="workbench-split">
+            <div>
+              <p className="section-label">Currently</p>
+              <h2 className="workbench-heading">On my workbench</h2>
+              <div className="workbench-stack">
+                {workbenchItems.map((item) => (
+                  <article className="card workbench-card reveal" key={item.title}>
+                    <p className="card-kicker">{item.label}</p>
+                    <h3 className="workbench-card__title">{item.title}</h3>
+                    <p className="workbench-card__detail">{item.detail}</p>
+                    {item.href ? (
+                      <Link className="link workbench-card__link" href={item.href}>
+                        Inspect build →
+                      </Link>
+                    ) : null}
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <p className="section-label">Bug Museum</p>
+              <h2 className="workbench-heading">Things that broke</h2>
+              <div className="workbench-stack">
+                {bugMuseumItems.map((bug) => (
+                  <Link className="card bug-card reveal" href={bug.href} key={bug.title}>
+                    <div className="bug-card__top">
+                      <span className="tag">{bug.project}</span>
+                      <span className="arrow" aria-hidden="true">
+                        ↗
+                      </span>
+                    </div>
+                    <h3 className="bug-card__title">{bug.title}</h3>
+                    <p className="bug-card__detail">{bug.detail}</p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Consolidated Leadership, MUN & Recognition --------------------- */}
+      <section className="section" id="leadership">
+        <div className="shell">
+          <div className="section-head">
+            <div>
+              <p className="section-label">Leadership &amp; Recognition</p>
+              <h2>Running rooms, mentoring speakers, shipping sprints.</h2>
+            </div>
+            <Link className="link section-head__link" href="/resume/">
+              Full record with dates <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+
+          <ExperienceTimeline items={leadershipTimeline} />
+
+          <div className="award-grid" style={{ marginTop: "2.25rem" }}>
+            {recognitionCards.map((item, index) => (
+              <article className="card award-card reveal" key={item.title}>
+                <span className="award-card__num" aria-hidden="true">
+                  _{String(index + 1).padStart(2, "0")} · {item.kind.toUpperCase()}
+                </span>
+                <h3 className="award-card__title">{item.title}</h3>
+                <p className="award-card__meta">
+                  {item.org} · {item.period}
+                </p>
+                <p className="award-card__detail">{item.detail}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Beyond the Build + The Lounge Teaser --------------------------- */}
       <section className="section" id="misc">
         <div className="shell">
-          <p className="section-label">The Lounge</p>
+          <h2 className="section-label">Beyond the Build &amp; The Lounge</h2>
 
-          <article className="misc-card reveal">
+          <div className="offduty-strip" aria-label="Interests outside coding">
+            {offDutyItems.map((facet) => (
+              <div className="card offduty-chip-card" key={facet.id}>
+                <p className="offduty-chip-card__title">
+                  {facet.href ? (
+                    <a
+                      href={facet.href}
+                      target="_blank"
+                      rel="me noopener noreferrer"
+                      className="link"
+                    >
+                      {facet.label} ↗
+                    </a>
+                  ) : (
+                    facet.label
+                  )}
+                </p>
+                <p className="offduty-chip-card__detail">{facet.detail}</p>
+                {facet.optionalDetail ? (
+                  <p className="offduty-chip-card__extra">{facet.optionalDetail}</p>
+                ) : null}
+              </div>
+            ))}
+          </div>
+
+          <article className="misc-card reveal" style={{ marginTop: "1.25rem" }}>
             <div className="misc-card__body">
-              <h2 className="misc-card__title">Wanna leave your mark?</h2>
+              <h3 className="misc-card__title">Wanna leave your mark?</h3>
               <p className="misc-card__text">
-                The lounge has a community visitor board for notes and sketches, plus a retro CRT workstation with arcade games, live chat, and lofi beats.
+                The Lounge has a community visitor board for verified notes and whiteboard sketches, plus a retro CRT workstation with Snake, Pong, reflex tests, and lofi beats.
               </p>
             </div>
             <div className="misc-card__actions">
-              <Link className="btn btn--primary" href="/lounge">
+              <Link className="btn btn--primary" href="/lounge/">
                 Visit the lounge <span aria-hidden="true">↗</span>
               </Link>
-              <Link className="btn" href="/lounge">
-                Pin something
+              <Link className="btn" href="/notes/">
+                Engineering notes
               </Link>
             </div>
           </article>
@@ -370,7 +442,7 @@ export default function HomePage() {
                   Get in touch <span aria-hidden="true">↗</span>
                 </a>
               </Magnetic>
-              <Link className="btn btn--ghost" href="/resume">
+              <Link className="btn btn--ghost" href="/resume/">
                 Resume
               </Link>
             </div>

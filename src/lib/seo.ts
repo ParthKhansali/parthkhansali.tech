@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { absoluteUrl, siteConfig, CONTENT_UPDATED } from "@/data/site";
+import { absoluteUrl, canonicalPath, CONTENT_UPDATED, ROUTE_UPDATED, siteConfig } from "@/data/site";
 import { projects, type Project } from "@/data/projects";
 
 const DEFAULT_OG_IMAGE = "/opengraph-image";
@@ -10,14 +10,14 @@ type PageMeta = {
   path: string;
   /** Absolute or site-relative image path. */
   image?: string;
-  type?: "website" | "profile";
+  type?: "website" | "profile" | "article";
   noIndex?: boolean;
 };
 
 /**
  * Every page builds its metadata here so canonical, Open Graph and Twitter
  * can never drift apart. `metadataBase` in the root layout turns the relative
- * URLs into absolutes, so `path` is always the canonical site path.
+ * URLs into absolutes, so `path` is always normalized with `canonicalPath`.
  */
 export function pageMetadata({
   title,
@@ -27,12 +27,13 @@ export function pageMetadata({
   type = "website",
   noIndex = false,
 }: PageMeta): Metadata {
-  const url = absoluteUrl(path);
+  const canonical = canonicalPath(path);
+  const url = absoluteUrl(canonical);
 
   return {
     title,
     description,
-    alternates: { canonical: path },
+    alternates: { canonical },
     openGraph: {
       type,
       ...(type === "profile"
@@ -75,7 +76,7 @@ export function personNode() {
     givenName: siteConfig.givenName,
     familyName: siteConfig.familyName,
     alternateName: [siteConfig.handle, "Parth"],
-    url: siteConfig.url,
+    url: `${siteConfig.url}/`,
     mainEntityOfPage: { "@id": `${siteConfig.url}/#webpage` },
     image: {
       "@type": "ImageObject",
@@ -138,7 +139,7 @@ export function websiteNode() {
   return {
     "@type": "WebSite",
     "@id": websiteId,
-    url: siteConfig.url,
+    url: `${siteConfig.url}/`,
     name: siteConfig.name,
     alternateName: [siteConfig.handle, "Khansali", "parthkhansali.tech"],
     description:
@@ -155,6 +156,7 @@ type PageNodeInput = {
   name: string;
   description: string;
   type?: "WebPage" | "ProfilePage" | "CollectionPage" | "AboutPage";
+  dateModified?: string;
   /** Extra entities that belong on this page only. */
   about?: Record<string, unknown>[];
 };
@@ -164,18 +166,23 @@ export function pageNode({
   name,
   description,
   type = "WebPage",
+  dateModified,
   about,
 }: PageNodeInput) {
+  const canonical = canonicalPath(path);
+  const url = absoluteUrl(canonical);
+  const modified = dateModified ?? ROUTE_UPDATED[canonical] ?? CONTENT_UPDATED;
+
   return {
     "@type": type,
-    "@id": `${absoluteUrl(path)}#webpage`,
-    url: absoluteUrl(path),
+    "@id": `${url}#webpage`,
+    url,
     name,
     description,
     isPartOf: { "@id": websiteId },
     about: about ?? { "@id": personId },
     inLanguage: "en",
-    dateModified: CONTENT_UPDATED,
+    dateModified: modified,
     ...(type === "ProfilePage"
       ? { dateCreated: "2026-06-03", mainEntity: { "@id": personId } }
       : {}),
@@ -197,7 +204,8 @@ export function breadcrumbNode(trail: { name: string; path: string }[]) {
 
 /** Schema for one project, typed honestly for what the artefact actually is. */
 export function projectNode(project: Project) {
-  const url = `${siteConfig.url}/projects/${project.slug}`;
+  const url = absoluteUrl(`/projects/${project.slug}`);
+  const repoLink = project.links.find((l) => l.href.startsWith("https://github.com/"));
 
   const base = {
     "@type": project.schemaType,
@@ -208,6 +216,9 @@ export function projectNode(project: Project) {
     author: { "@id": personId },
     creator: { "@id": personId },
     programmingLanguage: project.stack,
+    ...(repoLink && project.schemaType === "SoftwareSourceCode"
+      ? { codeRepository: repoLink.href }
+      : {}),
     ...(project.links.length
       ? { sameAs: project.links.map((link) => link.href) }
       : {}),
@@ -223,6 +234,38 @@ export function projectNode(project: Project) {
   }
 
   return base;
+}
+
+export function articleNode({
+  path,
+  headline,
+  description,
+  datePublished,
+  dateModified,
+  about,
+}: {
+  path: string;
+  headline: string;
+  description: string;
+  datePublished: string;
+  dateModified: string;
+  about?: Record<string, unknown>[];
+}) {
+  const url = absoluteUrl(path);
+  return {
+    "@type": "TechArticle",
+    "@id": `${url}#article`,
+    headline,
+    description,
+    url,
+    mainEntityOfPage: { "@id": `${url}#webpage` },
+    author: { "@id": personId },
+    publisher: { "@id": personId },
+    datePublished,
+    dateModified,
+    inLanguage: "en",
+    ...(about ? { about } : {}),
+  };
 }
 
 /**

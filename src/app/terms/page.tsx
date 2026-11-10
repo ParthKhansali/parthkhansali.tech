@@ -31,25 +31,25 @@ export default function TermsPage() {
           <span>Terms of Use</span>
         </div>
 
-        <header className="page-head" style={{ marginBottom: "2.5rem" }}>
+        <header style={{ marginBottom: "2.5rem", marginTop: "1.25rem" }}>
           <p className="eyebrow">Legal</p>
           <h1 className="display display--hero" style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}>
             Terms of Use
           </h1>
-          <p className="lead" style={{ marginTop: "0.5rem", color: "var(--fg-dim)" }}>
+          <p className="lead" style={{ marginTop: "0.5rem", color: "var(--ink-2)" }}>
             Last updated: May 2026
           </p>
         </header>
 
-        <article className="prose-block" style={{ display: "flex", flexDirection: "column", gap: "2rem", lineHeight: "1.7", color: "var(--fg)" }}>
+        <article className="prose-block" style={{ display: "flex", flexDirection: "column", gap: "2rem", lineHeight: "1.7", color: "var(--ink-2)" }}>
           <section>
-            <p style={{ fontSize: "1.1rem" }}>
+            <p style={{ fontSize: "1.1rem", color: "var(--ink)" }}>
               By accessing and using parthkhansali.tech, you agree to the following terms and conditions. Please read them carefully.
             </p>
           </section>
 
           <section>
-            <h2 style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.75rem", color: "#fff" }}>
+            <h2 style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--ink)" }}>
               Acceptance of Terms
             </h2>
             <p>
@@ -58,7 +58,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.75rem", color: "#fff" }}>
+            <h2 style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--ink)" }}>
               Intellectual Property
             </h2>
             <p>
@@ -67,7 +67,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.75rem", color: "#fff" }}>
+            <h2 style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--ink)" }}>
               Restrictions on Use
             </h2>
             <p style={{ marginBottom: "0.75rem" }}>You agree not to:</p>
@@ -80,7 +80,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.75rem", color: "#fff" }}>
+            <h2 style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--ink)" }}>
               User Generated Content (The Wall)
             </h2>
             <p>
@@ -89,7 +89,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.75rem", color: "#fff" }}>
+            <h2 style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--ink)" }}>
               Disclaimer &amp; Limitation of Liability
             </h2>
             <p>
@@ -98,7 +98,7 @@ export default function TermsPage() {
           </section>
 
           <section>
-            <h2 style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.75rem", color: "#fff" }}>
+            <h2 style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "0.75rem", color: "var(--ink)" }}>
               Contact
             </h2>
             <p>

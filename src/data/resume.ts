@@ -41,7 +41,7 @@ export const leadership: CVEntry[] = [
     org: "Graphic Era MUN Club",
     period: "2024 to present",
     detail:
-      "Runs the university Model United Nations club: conference planning, delegate management, committee operations and the logistics that keep a two-day event on schedule.",
+      "Runs the university Model United Nations club: conference planning, delegate management, committee operations, and workshops across 15+ schools in Dehradun.",
   },
   {
     title: "Host and organizer",
@@ -51,28 +51,28 @@ export const leadership: CVEntry[] = [
       "Organized and hosted multiple university-level conferences, from committee operations to participant experience.",
   },
   {
-    title: "Outreach and public speaking",
-    org: "School outreach programme, Dehradun",
-    period: "2025",
+    title: "Delegate Recognition & Conferences",
+    org: "Lokvidhan MUN · IIT Roorkee MUN",
+    period: "2024 to 2026",
     detail:
-      "Ran MUN seminars, mock sessions and workshops across more than fifteen schools in Dehradun.",
-  },
-  {
-    title: "Delegate",
-    org: "UNGA DISEC, IOC and global committees",
-    period: "2024 to present",
-    detail:
-      "Represented Pakistan, Switzerland and Mexico across international committees.",
+      "Awarded High Commendation at Lokvidhan MUN and participated as a delegate at IIT Roorkee MUN representing international portfolios.",
   },
 ];
 
 export const hackathons: CVEntry[] = [
   {
-    title: "Hackaholic → iQOO Pune Hackathon",
-    org: "Three hackathon sprints",
+    title: "Best Pitch Award",
+    org: "TBI Tourism Hackathon",
     period: "2025 to 2026",
     detail:
-      "Scope a build, cut it down to what can actually ship, and get a working deployed demo out inside the time limit.",
+      "Won Best Pitch Award by scoping a focused product narrative and live prototype under strict hackathon time limits.",
+  },
+  {
+    title: "4th Place Finish",
+    org: "Hackaholic Hackathon",
+    period: "2025 to 2026",
+    detail:
+      "Placed 4th overall with a working full-stack demo; continued shipping rapid iterations through iQOO Pune and Smart India Hackathon cycles.",
   },
 ];
 

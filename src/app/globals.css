@@ -26,7 +26,7 @@
 
   --ink: #ededed;
   --ink-2: #b5b5b5;
-  --ink-3: #7e7e89;
+  --ink-3: #91919c;
 
   /* Tajmirul signature electric neon emerald hsl(140, 100%, 47%) */
   --accent: #00ef4e;
@@ -75,8 +75,8 @@ html:not(.dark) {
   --ink-2: #3a453f;
   --ink-3: #5d6b64;
 
-  --accent: #009934;
-  --accent-2: #007a29;
+  --accent: #007c2a;
+  --accent-2: #006622;
   --accent-3: #00ef4e;
   --on-accent: #ffffff;
 
@@ -379,7 +379,7 @@ select {
   margin-top: 1rem;
 }
 
-.prose a {
+.prose a:not(.btn) {
   color: var(--accent);
   border-bottom: 1px solid var(--line-2);
 }
@@ -7033,5 +7033,322 @@ html:not(.dark) .crt-cabinet {
 
   .showcase-gehu {
     padding: 2.5rem 0.95rem 0.85rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   18. Portfolio Depth: Hero CTA, Journey, Domain Skills, Workbench & Notes
+   -------------------------------------------------------------------------- */
+
+.hero__intro {
+  margin-top: 0.9rem;
+  max-width: 54ch;
+  font-size: clamp(0.9rem, 1.3vw, 1.02rem);
+  line-height: 1.6;
+  color: var(--ink-2);
+  text-align: center;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.65rem;
+  margin-top: 1.35rem;
+}
+
+.journey-block {
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.journey-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.journey-head__title {
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.journey-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.journey-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.journey-card__period {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.journey-card__title {
+  font-size: 1rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.journey-card__summary {
+  font-size: 0.84rem;
+  line-height: 1.58;
+  color: var(--ink-2);
+}
+
+.journey-card__link {
+  margin-top: auto;
+  padding-top: 0.4rem;
+  font-size: 0.8rem;
+}
+
+.skill-domains {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.skill-domain-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.skill-domain-card__title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.skill-domain-card__used {
+  margin-top: auto;
+  font-size: 0.78rem;
+  color: var(--ink-3);
+  line-height: 1.5;
+}
+
+.workbench-split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.75rem, 3.5vw, 3rem);
+}
+
+.workbench-heading {
+  font-size: clamp(1.3rem, 2.3vw, 1.7rem);
+  letter-spacing: -0.03em;
+  margin-bottom: 1rem;
+}
+
+.workbench-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.workbench-card,
+.bug-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.bug-card {
+  text-decoration: none;
+  color: inherit;
+}
+
+.bug-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.workbench-card__title,
+.bug-card__title {
+  font-size: 1.02rem;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+.workbench-card__detail,
+.bug-card__detail {
+  font-size: 0.84rem;
+  line-height: 1.58;
+  color: var(--ink-2);
+}
+
+.workbench-card__link {
+  margin-top: 0.35rem;
+  font-size: 0.8rem;
+}
+
+.offduty-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.offduty-chip-card {
+  padding: 1rem 1.05rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.offduty-chip-card__title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.offduty-chip-card__detail,
+.offduty-chip-card__extra {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.case-card h3 {
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.65rem;
+}
+
+.case-card p,
+.case-list {
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--ink-2);
+}
+
+.case-list {
+  padding-left: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.case-card--wide {
+  grid-column: 1 / -1;
+}
+
+.case-card__limit {
+  margin-top: 0.9rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.8rem;
+  color: var(--ink-3);
+}
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.15rem;
+}
+
+.note-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.note-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.note-card__title {
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+}
+
+.note-card__summary {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.note-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.note-section h2 {
+  font-size: clamp(1.2rem, 2.2vw, 1.5rem);
+  letter-spacing: -0.025em;
+  margin-bottom: 0.75rem;
+}
+
+.note-section p {
+  font-size: 0.95rem;
+  line-height: 1.72;
+  color: var(--ink-2);
+}
+
+.note-section p + p {
+  margin-top: 0.8rem;
+}
+
+.note-takeaway p:last-child {
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+@media (max-width: 1024px) {
+  .journey-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .offduty-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .skill-domains {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .journey-grid,
+  .skill-domains,
+  .workbench-split,
+  .case-grid,
+  .notes-grid,
+  .offduty-strip {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__cue-arrow,
+  .marquee__track,
+  .particle-dot {
+    animation: none !important;
   }
 }

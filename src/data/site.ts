@@ -47,10 +47,20 @@ export const siteConfig = {
   },
 } as const;
 
-/** Absolute URL for a site-relative path, or a pass-through for external URLs. */
+/** Normalize a page path to match Next.js `trailingSlash: true`, while keeping static file paths as-is. */
+export function canonicalPath(path: string): string {
+  if (!path || path === "/") return "/";
+  if (/^https?:\/\//i.test(path)) return path;
+  const clean = path.startsWith("/") ? path : `/${path}`;
+  if (/\.[a-z0-9]{1,10}$/i.test(clean)) return clean;
+  return clean.endsWith("/") ? clean : `${clean}/`;
+}
+
+/** Absolute canonical URL for a site-relative path, or a pass-through for external URLs. */
 export function absoluteUrl(path: string): string {
   if (/^https?:\/\//i.test(path)) return path;
-  return `${siteConfig.url}${path.startsWith("/") ? path : `/${path}`}`;
+  const normalized = canonicalPath(path);
+  return normalized === "/" ? `${siteConfig.url}/` : `${siteConfig.url}${normalized}`;
 }
 
 /** Every public profile, in the order they appear on the page. */
@@ -61,5 +71,23 @@ export const socialLinks = [
   { label: "Instagram", href: siteConfig.links.instagram },
 ] as const;
 
-/** Last content revision, used for sitemap `lastModified` and JSON-LD. */
+/** Truthful last substantive revision per route (update only the route whose content changed). */
+export const ROUTE_UPDATED: Record<string, string> = {
+  "/": "2026-11-10",
+  "/projects/": "2026-11-10",
+  "/projects/gehu-connect/": "2026-11-10",
+  "/projects/netwich/": "2026-11-10",
+  "/projects/aranya/": "2026-11-10",
+  "/projects/orvess-pat/": "2026-11-10",
+  "/projects/meghavyuha/": "2026-11-10",
+  "/resume/": "2026-11-10",
+  "/lounge/": "2026-11-10",
+  "/notes/": "2026-11-10",
+  "/notes/netwich-socket-pitfalls/": "2026-11-10",
+  "/notes/gehu-connect-r2-and-layered-cache/": "2026-11-10",
+  "/privacy/": "2026-05-01",
+  "/terms/": "2026-05-01",
+};
+
+/** Fallback revision date when a route entry does not specify its own timestamp. */
 export const CONTENT_UPDATED = "2026-11-10";

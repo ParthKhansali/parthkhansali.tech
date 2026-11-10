@@ -1,59 +1,35 @@
 import type { MetadataRoute } from "next";
-import { siteConfig, CONTENT_UPDATED } from "@/data/site";
 import { projects } from "@/data/projects";
+import { notes } from "@/data/notes";
+import { absoluteUrl, canonicalPath, CONTENT_UPDATED, ROUTE_UPDATED } from "@/data/site";
 
 export const dynamic = "force-static";
 
+function lastModFor(routePath: string): Date {
+  const key = canonicalPath(routePath);
+  const iso = ROUTE_UPDATED[key] ?? CONTENT_UPDATED;
+  return new Date(`${iso}T00:00:00.000Z`);
+}
+
 /**
- * Only canonical, indexable, public URLs. API routes, the 404 and the OG image
- * route are deliberately absent.
+ * Search-engine sitemap using exact canonical trailing-slash URLs (zero 308
+ * redirects) and per-route modification timestamps derived from actual edits.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date(`${CONTENT_UPDATED}T00:00:00.000Z`);
-  const base = siteConfig.url;
-
-  return [
-    {
-      url: `${base}/`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 1,
-    },
-    {
-      url: `${base}/projects`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.9,
-    },
-    ...projects.map((project) => ({
-      url: `${base}/projects/${project.slug}`,
-      lastModified,
-      changeFrequency: "monthly" as const,
-      priority: project.tier === "flagship" ? 0.9 : 0.7,
-    })),
-    {
-      url: `${base}/resume`,
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${base}/lounge`,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.85,
-    },
-    {
-      url: `${base}/privacy`,
-      lastModified,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
-    {
-      url: `${base}/terms`,
-      lastModified,
-      changeFrequency: "yearly",
-      priority: 0.3,
-    },
+  const routes = [
+    "/",
+    "/projects/",
+    ...projects.map((project) => `/projects/${project.slug}/`),
+    "/notes/",
+    ...notes.map((note) => `/notes/${note.slug}/`),
+    "/resume/",
+    "/lounge/",
+    "/privacy/",
+    "/terms/",
   ];
+
+  return routes.map((routePath) => ({
+    url: absoluteUrl(routePath),
+    lastModified: lastModFor(routePath),
+  }));
 }

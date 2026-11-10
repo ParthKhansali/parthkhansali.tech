@@ -52,10 +52,13 @@ export default function HeroAsciiReveal() {
     const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
-    let animFrameId: number;
+    let animFrameId = 0;
     let width = 0;
     let height = 0;
     let dpr = 1;
+    let isDark = document.documentElement.classList.contains("dark");
+    let isVisible = true;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     // Mouse tracking with smooth lerping
     const mouse = { x: -1000, y: -1000 };
@@ -220,7 +223,6 @@ export default function HeroAsciiReveal() {
           const alpha = (baseAmbientAlpha + spotBoost) * centerFalloff;
           if (alpha < 0.015) continue;
 
-          const isDark = document.documentElement.classList.contains("dark");
           const char = stream.chars[row % stream.chars.length] || "0";
 
           if (i === 0 && (inSpotlight || Math.random() < 0.2)) {
@@ -253,14 +255,61 @@ export default function HeroAsciiReveal() {
         }
       }
 
-      animFrameId = requestAnimationFrame(render);
+      if (!reducedMotion && isVisible && !document.hidden) {
+        animFrameId = requestAnimationFrame(render);
+      } else {
+        animFrameId = 0;
+      }
     };
 
-    animFrameId = requestAnimationFrame(render);
+    const startLoop = () => {
+      if (!animFrameId && !reducedMotion && isVisible && !document.hidden) {
+        animFrameId = requestAnimationFrame(render);
+      }
+    };
+
+    const stopLoop = () => {
+      if (animFrameId) {
+        cancelAnimationFrame(animFrameId);
+        animFrameId = 0;
+      }
+    };
+
+    const onThemeChange = () => {
+      isDark = document.documentElement.classList.contains("dark");
+      if (reducedMotion) render();
+    };
+
+    const onVisibilityChange = () => {
+      if (document.hidden) stopLoop();
+      else startLoop();
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        isVisible = Boolean(entries[0]?.isIntersecting);
+        if (isVisible) startLoop();
+        else stopLoop();
+      },
+      { threshold: 0.01 }
+    );
+    observer.observe(heroEl);
+
+    window.addEventListener("pk-theme-change", onThemeChange);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    if (reducedMotion) {
+      render();
+    } else {
+      startLoop();
+    }
 
     return () => {
-      cancelAnimationFrame(animFrameId);
+      stopLoop();
+      observer.disconnect();
       window.removeEventListener("resize", resize);
+      window.removeEventListener("pk-theme-change", onThemeChange);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       heroEl.removeEventListener("mousemove", onMouseMove);
       heroEl.removeEventListener("mouseleave", onMouseLeave);
     };

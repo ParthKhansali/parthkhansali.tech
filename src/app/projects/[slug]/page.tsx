@@ -3,8 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbNode, pageMetadata, pageNode, projectNode } from "@/lib/seo";
-import { getProject, projects } from "@/data/projects";
-import { siteConfig } from "@/data/site";
+import { getProject, projects, projectUrl } from "@/data/projects";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -19,7 +18,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!project) return {};
 
   return pageMetadata({
-    title: `${project.name}: ${project.kind}`,
+    title: project.seoTitle ?? `${project.name}: ${project.kind}`,
     description: project.summary,
     path: `/projects/${project.slug}`,
   });
@@ -44,11 +43,9 @@ export default async function ProjectPage({ params }: PageProps) {
           "@graph": [
             pageNode({
               path: `/projects/${project.slug}`,
-              name: `${project.name}: ${project.kind}`,
+              name: project.seoTitle ?? `${project.name}: ${project.kind}`,
               description: project.summary,
-              // Reference the project node rather than nesting a second copy of
-              // it: same @id, one entity.
-              about: [{ "@id": `${siteConfig.url}/projects/${project.slug}#project` }],
+              about: [{ "@id": `${projectUrl(project.slug)}#project` }],
             }),
             breadcrumbNode(trail),
             projectNode(project),
@@ -142,7 +139,7 @@ export default async function ProjectPage({ params }: PageProps) {
                 <p key={paragraph}>{paragraph}</p>
               ))}
 
-              {project.links.length ? (
+              {project.links.length || project.relatedNote ? (
                 <div
                   style={{
                     display: "flex",
@@ -162,12 +159,17 @@ export default async function ProjectPage({ params }: PageProps) {
                       {link.label} ↗
                     </a>
                   ))}
+                  {project.relatedNote ? (
+                    <Link className="btn btn--primary" href={project.relatedNote.href}>
+                      {project.relatedNote.label}
+                    </Link>
+                  ) : null}
                 </div>
               ) : null}
             </div>
 
             <div>
-              <p className="tag tag--dim">How it works</p>
+              <h2 className="tag tag--dim" style={{ fontSize: "0.75rem" }}>How it works</h2>
               <dl className="spec spec--dark" style={{ marginTop: "0.75rem" }}>
                 {project.details.map((detail) => (
                   <div className="spec__row" key={detail.label}>
@@ -180,6 +182,70 @@ export default async function ProjectPage({ params }: PageProps) {
           </div>
         </div>
       </section>
+
+      {project.caseStudy ? (
+        <section className="section band">
+          <div className="shell">
+            <div className="section-head">
+              <div>
+                <p className="tag tag--dim">Engineering Case Study</p>
+                <h2>Decisions, tradeoffs, and what broke.</h2>
+              </div>
+              <p className="section-note">
+                Verified from source code and shipped iterations, including current constraints.
+              </p>
+            </div>
+
+            <div className="case-grid">
+              <article className="card case-card">
+                <h3>Problem &amp; Role</h3>
+                <p>{project.caseStudy.problem}</p>
+                <p style={{ marginTop: "0.75rem", color: "var(--ink-2)" }}>{project.caseStudy.role}</p>
+              </article>
+
+              <article className="card case-card">
+                <h3>Architecture</h3>
+                <ul className="case-list">
+                  {project.caseStudy.architecture.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </article>
+
+              <article className="card case-card">
+                <h3>Technical Decisions</h3>
+                <ul className="case-list">
+                  {project.caseStudy.decisions.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </article>
+
+              <article className="card case-card">
+                <h3>What Broke</h3>
+                <ul className="case-list">
+                  {project.caseStudy.whatBroke.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </article>
+
+              <article className="card case-card case-card--wide">
+                <h3>Outcome &amp; What Next</h3>
+                <p>{project.caseStudy.results}</p>
+                <ul className="case-list" style={{ marginTop: "0.65rem" }}>
+                  {project.caseStudy.whatNext.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+                {project.caseStudy.honestLimits ? (
+                  <p className="case-card__limit">{project.caseStudy.honestLimits}</p>
+                ) : null}
+              </article>
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <section className="section band">
         <div className="shell">

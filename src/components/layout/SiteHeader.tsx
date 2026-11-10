@@ -6,14 +6,15 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { siteConfig, withBasePath } from "@/data/site";
 import { projects } from "@/data/projects";
+import { notes } from "@/data/notes";
 import ThemeToggle from "@/components/ui/ThemeToggle";
-import { IconClose, IconInstagram } from "@/components/ui/Icons";
+import { IconClose, IconFileText, IconInstagram } from "@/components/ui/Icons";
 
 const navigation = [
   { href: "/", label: "Home" },
-  { href: "/projects", label: "Work" },
-  { href: "/resume", label: "Resume" },
-  { href: "/lounge", label: "Lounge" },
+  { href: "/projects/", label: "Work" },
+  { href: "/resume/", label: "Resume" },
+  { href: "/lounge/", label: "Lounge" },
   { href: "/#contact", label: "Contact" },
 ];
 
@@ -93,17 +94,39 @@ export default function SiteHeader() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [modalOpen]);
 
-  // Filter projects by search
-  const filteredProjects = useMemo(() => {
+  // Filter projects and engineering notes by search
+  const filteredResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
     const q = searchQuery.toLowerCase().trim();
-    return projects.filter(
-      (p) =>
-        p.name.toLowerCase().includes(q) ||
-        p.kind.toLowerCase().includes(q) ||
-        p.summary.toLowerCase().includes(q) ||
-        p.stack.some((s) => s.toLowerCase().includes(q))
-    );
+    const matchedProjects = projects
+      .filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.kind.toLowerCase().includes(q) ||
+          p.summary.toLowerCase().includes(q) ||
+          p.stack.some((s) => s.toLowerCase().includes(q))
+      )
+      .map((p) => ({
+        key: `proj-${p.slug}`,
+        href: `/projects/${p.slug}/`,
+        name: p.name,
+        kind: p.kind,
+      }));
+    const matchedNotes = notes
+      .filter(
+        (n) =>
+          n.title.toLowerCase().includes(q) ||
+          n.projectName.toLowerCase().includes(q) ||
+          n.summary.toLowerCase().includes(q) ||
+          n.tags.some((t) => t.toLowerCase().includes(q))
+      )
+      .map((n) => ({
+        key: `note-${n.slug}`,
+        href: `/notes/${n.slug}/`,
+        name: n.title,
+        kind: `Note · ${n.projectName}`,
+      }));
+    return [...matchedProjects, ...matchedNotes];
   }, [searchQuery]);
 
   // Robust Say Hi / Reach Out action
@@ -320,26 +343,26 @@ export default function SiteHeader() {
               </button>
             </div>
 
-            {/* Instant Project Search Results Dropdown */}
+            {/* Instant Search Results Dropdown */}
             {searchQuery && (
               <div className="awrs-search-results">
-                {filteredProjects.length > 0 ? (
-                  filteredProjects.map((proj) => (
+                {filteredResults.length > 0 ? (
+                  filteredResults.map((item) => (
                     <Link
-                      key={proj.slug}
-                      href={`/projects/${proj.slug}`}
+                      key={item.key}
+                      href={item.href}
                       className="awrs-search-item"
                       onClick={closeModal}
                     >
                       <div className="awrs-search-item__info">
-                        <span className="awrs-search-item__name">{proj.name}</span>
-                        <span className="awrs-search-item__kind">{proj.kind}</span>
+                        <span className="awrs-search-item__name">{item.name}</span>
+                        <span className="awrs-search-item__kind">{item.kind}</span>
                       </div>
                       <span className="awrs-search-item__arrow" aria-hidden="true">↗</span>
                     </Link>
                   ))
                 ) : (
-                  <p className="awrs-search-empty">No projects matching &quot;{searchQuery}&quot;</p>
+                  <p className="awrs-search-empty">No projects or notes matching &quot;{searchQuery}&quot;</p>
                 )}
               </div>
             )}
@@ -361,7 +384,7 @@ export default function SiteHeader() {
                 </Link>
 
                 <Link
-                  href="/projects"
+                  href="/projects/"
                   className={`awrs-page-tile ${pathname.startsWith("/projects") ? "is-active" : ""}`}
                   onClick={closeModal}
                 >
@@ -372,8 +395,17 @@ export default function SiteHeader() {
                 </Link>
 
                 <Link
-                  href="/resume"
-                  className={`awrs-page-tile ${pathname === "/resume" ? "is-active" : ""}`}
+                  href="/notes/"
+                  className={`awrs-page-tile ${pathname.startsWith("/notes") ? "is-active" : ""}`}
+                  onClick={closeModal}
+                >
+                  <IconFileText size={17} />
+                  <span className="awrs-tile-label">Notes</span>
+                </Link>
+
+                <Link
+                  href="/resume/"
+                  className={`awrs-page-tile ${pathname.startsWith("/resume") ? "is-active" : ""}`}
                   onClick={closeModal}
                 >
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -386,8 +418,8 @@ export default function SiteHeader() {
                 </Link>
 
                 <Link
-                  href="/lounge"
-                  className={`awrs-page-tile ${pathname === "/lounge" ? "is-active" : ""}`}
+                  href="/lounge/"
+                  className={`awrs-page-tile ${pathname.startsWith("/lounge") ? "is-active" : ""}`}
                   onClick={closeModal}
                 >
                   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

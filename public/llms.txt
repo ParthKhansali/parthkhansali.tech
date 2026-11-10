@@ -1,6 +1,6 @@
 # Parth Khansali
 
-> Computer science student and software developer based in Dehradun, India. Developer of GEHU Connect, a campus networking app actively used by roughly a thousand students, and Netwich, a native macOS multi-interface network bonding utility.
+> Computer science student and software developer based in Dehradun, India. Developer of GEHU Connect, a campus networking app used by roughly a thousand students, and Netwich, a native macOS multi-interface network bonding utility.
 
 ## Identity
 - Name: Parth Khansali
@@ -12,20 +12,21 @@
 - Role: Director General, Graphic Era Model United Nations Club (2024 to present)
 
 ## Main Pages
-- [Home](https://www.parthkhansali.tech/): Portfolio overview, hero, experience timeline, and contact
-- [Work](https://www.parthkhansali.tech/projects): Index of shipped products, macOS utilities, and ongoing systems builds
-- [Resume](https://www.parthkhansali.tech/resume): Crawlable engineering resume and printable CV
-- [Lounge](https://www.parthkhansali.tech/lounge): Community pin board (Google Sign-in via Firebase) and retro CRT workstation
+- [Home](https://www.parthkhansali.tech/): Portfolio overview, projects, engineering workbench, leadership, and contact
+- [Projects](https://www.parthkhansali.tech/projects/): Index of GEHU Connect, Netwich, and in-progress prototypes
+- [Engineering Notes](https://www.parthkhansali.tech/notes/): Bug postmortems and systems notes from Netwich and GEHU Connect
+- [Resume](https://www.parthkhansali.tech/resume/): Crawlable engineering resume and printable CV
+- [Lounge](https://www.parthkhansali.tech/lounge/): Interactive visitor wall (Google Sign-in via Firebase) and retro CRT workstation
 
 ## Main Projects
-- [GEHU Connect](https://www.parthkhansali.tech/projects/gehu-connect): Campus community mobile app (React Native, Expo, Java Spring Boot, Cloudflare R2) used by roughly 1,000 students at GEHU.
-- [Netwich](https://www.parthkhansali.tech/projects/netwich): Native macOS 14+ link bonding app in Swift 6 and SwiftUI using a local SOCKS5 proxy and `IP_BOUND_IF` ([GitHub](https://github.com/ParthKhansali/Netwich)).
-- [ARANYA](https://www.parthkhansali.tech/projects/aranya): Geospatial wildlife conflict intelligence platform piloted along the Rajaji-Corbett corridor in Uttarakhand ([GitHub](https://github.com/ParthKhansali/Project-Aranya)).
-- [ORVESS-PAT](https://www.parthkhansali.tech/projects/orvess-pat): Optical tracking and free-space optical communication simulation suite in Python with sub-pixel centroiding and Monte Carlo sweeps.
-- [Meghavyuha](https://www.parthkhansali.tech/projects/meghavyuha): TypeScript meteorological forecast workspace deployed at [meghavyuha.vercel.app](https://meghavyuha.vercel.app).
+- [GEHU Connect](https://www.parthkhansali.tech/projects/gehu-connect/): Campus community mobile app (React Native, Expo, Java 21, Spring Boot, Redis, Cloudflare R2) used by roughly 1,000 students at GEHU.
+- [Netwich](https://www.parthkhansali.tech/projects/netwich/): Native macOS 14+ link aggregator in Swift 6 and SwiftUI using a local SOCKS5 proxy and `IP_BOUND_IF` ([GitHub](https://github.com/ParthKhansali/Netwich)).
+- [ARANYA](https://www.parthkhansali.tech/projects/aranya/): In-progress 3D CesiumJS geospatial wildlife conflict prototype piloted around Rajaji and Corbett in Uttarakhand ([GitHub](https://github.com/ParthKhansali/Project-Aranya)).
+- [ORVESS-PAT](https://www.parthkhansali.tech/projects/orvess-pat/): In-progress optical tracking and FSOC simulation workbench in Python/PySide6 with a 640x480 FPA model and Adaptive-R EKF.
+- [Meghavyuha](https://www.parthkhansali.tech/projects/meghavyuha/): In-progress SIH 2026 (SIH26080) probabilistic monsoon rainfall post-processing prototype built with Next.js and deck.gl ([meghavyuha.vercel.app](https://meghavyuha.vercel.app)).
 
 ## Links
-- Website: https://www.parthkhansali.tech
+- Website: https://www.parthkhansali.tech/
 - GitHub: https://github.com/ParthKhansali
 - Portfolio Repo: https://github.com/ParthKhansali/parthkhansali.tech
 - LinkedIn: https://www.linkedin.com/in/parth-khansali/

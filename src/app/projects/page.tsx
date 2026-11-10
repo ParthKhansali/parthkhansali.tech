@@ -5,10 +5,10 @@ import { breadcrumbNode, pageMetadata, pageNode, projectNode } from "@/lib/seo";
 import { flagship, otherProjects } from "@/data/projects";
 
 const description =
-  "Projects by Parth Khansali: GEHU Connect, a campus app used by roughly a thousand students, the macOS network bonding tool Netwich, and three builds in progress.";
+  "Engineering portfolio of Parth Khansali: GEHU Connect (~1,000 campus users), Netwich (macOS Swift 6 link aggregator), and three in-progress prototypes.";
 
 export const metadata: Metadata = pageMetadata({
-  title: "Work",
+  title: "Projects & Engineering Work",
   description,
   path: "/projects",
 });

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import {
   type LoungeUser,
   type WallMessage,
@@ -11,13 +12,23 @@ import {
   saveUserSession,
   subscribeToWall,
 } from "@/lib/lounge";
-import { SEEDED_PINS, type WallPin } from "@/data/wallPins";
+import { HOST_NOTES, type WallPin } from "@/data/wallPins";
 import WallGallery from "@/components/wall/WallGallery";
 import WallPinModal from "@/components/wall/WallPinModal";
-import RetroCrtStation from "@/components/lounge/RetroCrtStation";
 import JsonLd from "@/components/seo/JsonLd";
 import { breadcrumbNode, pageNode } from "@/lib/seo";
 import { IconPen } from "@/components/ui/Icons";
+
+const RetroCrtStation = dynamic(() => import("@/components/lounge/RetroCrtStation"), {
+  ssr: false,
+  loading: () => (
+    <div className="crt-station-wrapper" aria-busy="true">
+      <div className="crt-cabinet" style={{ minHeight: "620px", display: "grid", placeItems: "center" }}>
+        <p className="tag tag--dim">Booting CRT-94 Workstation...</p>
+      </div>
+    </div>
+  ),
+});
 
 function msgToWallPin(msg: WallMessage, index: number): WallPin {
   const cleanTag = msg.text.startsWith("#")
@@ -128,8 +139,8 @@ export default function LoungePage() {
     });
   };
 
-  // Combine seeded pins with live user contributions
-  const allPins = [...livePins, ...SEEDED_PINS];
+  // Combine live visitor submissions first with clearly labeled host notes/sketches
+  const allPins = [...livePins, ...HOST_NOTES];
 
   return (
     <>
@@ -139,9 +150,9 @@ export default function LoungePage() {
           "@graph": [
             pageNode({
               path: "/lounge",
-              name: "Lounge: Visitor Hub & Retro Terminal - Parth Khansali",
+              name: "The Lounge: Visitor Wall & Retro CRT Station - Parth Khansali",
               description:
-                "The Lounge: community visitor board for notes and sketches, plus a retro CRT station with arcade mini-games, live chat, and lofi beats.",
+                "The Lounge: community visitor board for Google-authenticated notes and sketches, plus a retro CRT station with arcade mini-games, chatroom, and lofi audio.",
             }),
             breadcrumbNode([
               { name: "Home", path: "/" },
@@ -169,7 +180,7 @@ export default function LoungePage() {
               </div>
               <h1 className="display display--page">The Lounge</h1>
               <p className="lede" style={{ marginTop: "0.85rem", maxWidth: "62ch" }}>
-                Leave notes, sketches, reviews, or project feedback. Below the board, power up the retro CRT station to launch arcade games, chat live, or jam to lofi beats.
+                Leave a note or whiteboard sketch below, or power up the retro CRT station for Snake, Pong, reflex tests, and lofi tracks.
               </p>
             </div>
 
@@ -183,7 +194,7 @@ export default function LoungePage() {
                 <IconPen size={16} className="wall-pin-cta-icon" />
                 <span>Pin Something</span>
               </button>
-              <p className="wall-cta-subnote">No password needed · Google Sign-in available</p>
+              <p className="wall-cta-subnote">Google Sign-in required to post on The Wall</p>
             </div>
           </div>
         </div>

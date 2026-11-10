@@ -8,7 +8,7 @@
 - Occupation: Computer Science Student and Software Developer
 - Location: Dehradun, Uttarakhand, India
 - University: Graphic Era Hill University (B.Tech Computer Science and Engineering, 2024 to 2028, CGPA 7.6)
-- Canonical Website: https://www.parthkhansali.tech
+- Canonical Website: https://www.parthkhansali.tech/
 - GitHub Profile: https://github.com/ParthKhansali
 - LinkedIn Profile: https://www.linkedin.com/in/parth-khansali/
 - YouTube Channel: https://www.youtube.com/@Its_Parth
@@ -16,50 +16,50 @@
 - Direct Email: parthkhansali@gmail.com
 
 ## Primary Site Routes
-- `/` (`https://www.parthkhansali.tech/`): Main developer profile page, project showcase, experience timeline, about bento, and contact section.
-- `/projects` (`https://www.parthkhansali.tech/projects`): Project index split by deployed flagship, completed builds, and active prototypes.
-- `/resume` (`https://www.parthkhansali.tech/resume`): Printable engineering CV and direct PDF download (`/parth_resume.pdf`).
-- `/lounge` (`https://www.parthkhansali.tech/lounge`): Interactive visitor board for Google-authenticated notes and whiteboard sketches, plus the CRT workstation (Arcade games, Live Chat, Lofi beats, Cinema room).
+- `/` (`https://www.parthkhansali.tech/`): Main portfolio overview, projects showcase, engineering journey, practical domain skills, workbench, bug museum, consolidated leadership & recognition, and contact.
+- `/projects/` (`https://www.parthkhansali.tech/projects/`): Project index split by deployed flagship, completed build, and in-progress prototypes.
+- `/notes/` (`https://www.parthkhansali.tech/notes/`): Grounded engineering postmortems covering Netwich socket bugs and GEHU Connect R2/cache internals.
+- `/resume/` (`https://www.parthkhansali.tech/resume/`): Printable engineering CV and PDF download (`/parth_resume.pdf`).
+- `/lounge/` (`https://www.parthkhansali.tech/lounge/`): Interactive visitor board (Google Auth via Firebase) and CRT workstation.
 
 ## Verifiable Project Portfolio
 
-### 1. GEHU Connect (Flagship Campus Application)
-- Detail Page: https://www.parthkhansali.tech/projects/gehu-connect
-- Type: Production Mobile Application (Android, iOS)
-- Status: Deployed and actively used by roughly 1,000 students at Graphic Era Hill University
+### 1. GEHU Connect (Sole Flagship Campus Application)
+- Detail Page: https://www.parthkhansali.tech/projects/gehu-connect/
+- Type: Deployed Mobile Application (Android, iOS)
+- Status: Deployed and used by roughly 1,000 students at Graphic Era Hill University
 - Architecture:
-  - Client: React Native with Expo single codebase pipeline
-  - Backend API: Spring Boot in Java exposing REST endpoints for auth, profiles, communities, and the campus feed
-  - Media Storage: Cloudflare R2 via the AWS SDK, keeping uploads off the application server
-  - Focus: Built around unreliable campus Wi-Fi, fast sign-up reliability, and consolidating scattered student notices
+  - Client: React Native with Expo Router, Redux Toolkit Query, SecureStore, FlashList, STOMP WebSockets
+  - Backend API: Java 21 / Spring Boot 3.5.9 REST API with JPA/PostgreSQL, JWT auth, and WebSocketAuthInterceptor
+  - Caching: L1 Caffeine (5 min TTL) + L2 Redis (30 min TTL) layered cache with ReentrantLock stampede protection
+  - Media Storage: Presigned Cloudflare R2 PUT uploads via AWS SDK S3Presigner (enforced limits: 25 MB image/doc, 50 MB video, 100 MB batch)
 
-### 2. Netwich (macOS Multi-Interface Link Bonding)
-- Detail Page: https://www.parthkhansali.tech/projects/netwich
+### 2. Netwich (Completed & Released Native macOS Utility)
+- Detail Page: https://www.parthkhansali.tech/projects/netwich/
 - Source Repository: https://github.com/ParthKhansali/Netwich
 - Type: Native Desktop Utility (macOS 14 or later)
-- Status: Completed and released
-- Stack: Swift 6, SwiftUI, SOCKS5, Apple `IP_BOUND_IF`
-- Highlights: Local SOCKS5 proxy at `127.0.0.1:1080` binding outgoing TCP sockets across Wi-Fi, Ethernet, and USB phone tethering using adaptive weighted least-connections placement, continuous RTT/throughput EWMA health scoring, and byte-range chunked downloads.
+- Status: Completed and released (v0.1.0 DMG)
+- Stack: Swift 6 toolchain, SwiftUI, Darwin SOCKS5 proxy, `IP_BOUND_IF`, Browser Bridge extension
+- Highlights: Local SOCKS5 relay (`127.0.0.1:1080`), weighted least-connections scheduler, EWMA RTT/throughput scoring, parallel byte-range download engine, proxy state snapshotting, and sanitized filename handling. Honest scope: single TCP stream speed does not exceed one interface; multi-link gains apply to multi-flow and chunked workloads.
 
-### 3. ARANYA (Geospatial Wildlife Conflict Intelligence)
-- Detail Page: https://www.parthkhansali.tech/projects/aranya
+### 3. ARANYA (In-Progress Prototype)
+- Detail Page: https://www.parthkhansali.tech/projects/aranya/
 - Source Repository: https://github.com/ParthKhansali/Project-Aranya
 - Prototype: https://project-aranya.vercel.app
-- Type: Geospatial Web Platform
-- Pilot: Rajaji-Corbett corridor, Uttarakhand, India
-- Focus: Reconciles sparse field observations and camera-trap records to map habitat change, movement patterns, and conflict hotspots.
+- Stack: CesiumJS 1.124, Vite, JavaScript, Mapbox Vector Tiles, NASA GIBS MODIS NDVI overlay
+- Pilot: Rajaji and Corbett National Park corridors in Uttarakhand, India
 
-### 4. ORVESS-PAT (Optical Tracking & Free-Space Optical Communication Simulation)
-- Detail Page: https://www.parthkhansali.tech/projects/orvess-pat
-- Type: Simulation Suite in Python (ISRO Smart India Hackathon exploration)
-- Focus: Focal-plane array sensor modeling, sub-pixel centroiding, observation quality scoring, adaptive filtering, and Monte Carlo noise sweeps.
+### 4. ORVESS-PAT (In-Progress Simulation Workbench)
+- Detail Page: https://www.parthkhansali.tech/projects/orvess-pat/
+- Focus: Python 3.10+ and PySide6 simulation workbench for SIH26169 FSOC coarse pointing, acquisition, and tracking (640x480 FPA optics model, sub-pixel centroiding, observation quality `q_t`, Adaptive-R EKF).
 
-### 5. Meghavyuha (Adaptive Weather Intelligence)
-- Detail Page: https://www.parthkhansali.tech/projects/meghavyuha
+### 5. Meghavyuha (In-Progress SIH 2026 Prototype)
+- Detail Page: https://www.parthkhansali.tech/projects/meghavyuha/
 - Deployment: https://meghavyuha.vercel.app
-- Type: TypeScript Web Application
+- Stack: Next.js 15, React 19, TypeScript, deck.gl, MapLibre GL, Recharts
+- Scope: Smart India Hackathon 2026 (PS SIH26080, Team Against The Odds 149284) probabilistic monsoon rainfall post-processing prototype with empirical Error Atlas evidence tracing. Research prototype, not a replacement for IMD/NCMRWF warnings.
 
-## Leadership & Activities
-- Director General, Graphic Era Model United Nations Club (2024 to present): Conference planning, delegate coordination, and two-day event logistics.
-- School Outreach Programme (2025): Conducted Model UN seminars and workshops across more than fifteen schools in Dehradun.
-- Hackathon Sprints (2025 to 2026): Hackaholic to iQOO Pune, shipping scoped prototypes under tight deadlines.
+## Leadership, MUN & Hackathon Recognition
+- Director General, Graphic Era Model United Nations Club (2024 to present): University conference planning and workshops across 15+ Dehradun schools.
+- Model United Nations: High Commendation at Lokvidhan MUN; attended IIT Roorkee MUN as a delegate.
+- Hackathons: Best Pitch Award at TBI Tourism Hackathon; 4th place at Hackaholic; iQOO Pune Hackathon and SIH sprints.
