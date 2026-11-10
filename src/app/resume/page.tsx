@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import JsonLd from "@/components/seo/JsonLd";
-import PrintButton from "@/components/ui/PrintButton";
+import ResumeModalTrigger from "@/components/ui/ResumeModalTrigger";
 import { breadcrumbNode, pageMetadata, pageNode } from "@/lib/seo";
 import { siteConfig } from "@/data/site";
 import { flagship, otherProjects } from "@/data/projects";
@@ -93,15 +93,7 @@ export default function ResumePage() {
               marginTop: "1.5rem",
             }}
           >
-            <a
-              className="btn btn--primary"
-              href={siteConfig.resumePath}
-              download="Parth Khansali Resume.pdf"
-              type="application/pdf"
-            >
-              Download PDF
-            </a>
-            <PrintButton />
+            <ResumeModalTrigger pdfUrl={siteConfig.resumePath} />
             <a className="btn" href={`mailto:${siteConfig.email}`}>
               {siteConfig.email}
             </a>

@@ -26,7 +26,7 @@ A technical portfolio and interactive visitor lounge built with Next.js App Rout
   - Connect section with magnetic reach-out actions.
 - `/projects` (`src/app/projects/page.tsx`): Index of all 5 builds.
 - `/projects/[slug]` (`src/app/projects/[slug]/page.tsx`): Dedicated deep-dive folio for each project (GEHU Connect, Netwich, ARANYA, ORVESS-PAT, Meghavyuha).
-- `/resume` (`src/app/resume/page.tsx`): Printable, crawlable engineering CV with education, hackathons, and leadership.
+- `/resume` (`src/app/resume/page.tsx`): Crawlable engineering CV with unified PDF preview, print, and download modal (`ResumeModalTrigger` + `/parth_resume.pdf`).
 - `/lounge` (`src/app/lounge/page.tsx`):
   - **The Visitor Board**: 3-column corkboard masonry gallery of visitor notes and whiteboard sketches, with scotch tape accents, organic tilts, and heart counters.
   - **Pin Modal**: Tabbed drawer for writing notes and drawing on an interactive canvas, integrated with Google Sign-in.
