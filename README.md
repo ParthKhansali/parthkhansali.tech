@@ -35,10 +35,10 @@ npx tsc --noEmit
 npm run build
 ```
 
-Subpath static build check (used for `/E-Portfolio` Pages compatibility):
+Subpath static build check (used for `/parthkhansali.tech` Pages compatibility):
 
 ```bash
-BASE_PATH=/E-Portfolio npm run build
+BASE_PATH=/parthkhansali.tech npm run build
 ```
 
 ## License

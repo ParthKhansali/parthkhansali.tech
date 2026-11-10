@@ -8,7 +8,7 @@ A technical portfolio and interactive visitor lounge built with Next.js App Rout
 - **Styling**: Vanilla CSS tokens in `src/app/globals.css`. Strict near-black cyber-palette with electric emerald (`#00ef4e`) and cyan (`#00cbf0`) accents.
 - **Typography**: Plus Jakarta Sans (`--font-display`, `--font-body`) and JetBrains Mono (`--font-mono`).
 - **Deployments**:
-  - **GitHub Pages**: `https://parthkhansali.github.io/E-Portfolio/` (automated via `.github/workflows/deploy.yml` with `BASE_PATH=/E-Portfolio` and `withBasePath` helper in `src/data/site.ts`).
+  - **GitHub Pages**: `https://parthkhansali.github.io/parthkhansali.tech/` (automated via `.github/workflows/deploy.yml` with `BASE_PATH=/parthkhansali.tech` and `withBasePath` helper in `src/data/site.ts`).
   - **Production Custom Domain**: `https://parthkhansali.tech` (Vercel deployment).
 - **Theme & UI**:
   - Full Light and Dark modes (`html.dark` / `html:not(.dark)`) with View Transitions feathered radial wave toggle (`src/components/ui/ThemeToggle.tsx`).

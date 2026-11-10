@@ -27,7 +27,7 @@
 ## Links
 - Website: https://www.parthkhansali.tech
 - GitHub: https://github.com/ParthKhansali
-- Portfolio Repo: https://github.com/ParthKhansali/E-Portfolio
+- Portfolio Repo: https://github.com/ParthKhansali/parthkhansali.tech
 - LinkedIn: https://www.linkedin.com/in/parth-khansali/
 - YouTube: https://www.youtube.com/@Its_Parth
 - Instagram: https://www.instagram.com/parth_khansali/
