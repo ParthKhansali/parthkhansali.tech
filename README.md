@@ -1,93 +1,46 @@
-# Parth Khansali: Developer Portfolio
+# Parth Khansali Portfolio
 
-Personal developer portfolio built with Next.js 16 (App Router), React 19, Tailwind CSS v4, Framer Motion, Lenis Smooth Scroll, Firebase Auth (Google Sign-In), and Cloud Firestore.
+Personal engineering portfolio and interactive visitor lounge built with Next.js App Router, React 19, TypeScript, Cloud Firestore, and static HTML export (`output: "export"`).
 
-Designed and engineered by Parth Khansali.
+**Live Site:** [parthkhansali.tech](https://www.parthkhansali.tech)
 
----
+## Routes
 
-## Highlights
+- **`/`** - Interactive hero with falling ASCII code reveal, About bento grid, Experience scroll timeline, selected project showcase cards, and contact section.
+- **`/projects`** & **`/projects/[slug]`** - Project archive and dedicated architecture write-ups for [GEHU Connect](https://www.parthkhansali.tech/projects/gehu-connect), [Netwich](https://www.parthkhansali.tech/projects/netwich), [ARANYA](https://www.parthkhansali.tech/projects/aranya), [ORVESS-PAT](https://www.parthkhansali.tech/projects/orvess-pat), and [Meghavyuha](https://www.parthkhansali.tech/projects/meghavyuha).
+- **`/resume`** - Crawlable resume view with print styles and direct PDF download (`/parth_resume.pdf`).
+- **`/lounge`** - Visitor pin board (notes and whiteboard sketches via Google Sign-In and Cloud Firestore) plus the CRT workstation (`arcade`, `chat`, `jam`, `cinema`).
+- **`/privacy`** & **`/terms`** - Privacy policy and terms of use.
 
-- **Floating Pill Navigation**: Centered floating pill on desktop with physics-based magnetic profile avatar and online status beacon, plus a fullscreen slide-over drawer on mobile devices.
-- **Projects Showcase**: Interactive engineering project cards featuring OmniMentor, GEHU Connect, ForgeFlow, ARANYA, and research builds, with live visualizers and only confirmed public links.
-- **Interactive About Section**: Alter-ego glitch video active by default on initial visit and reload, with a one-click toggle to the portrait photo.
-- **Late Night Lounge**: Interactive prototype with a shared Skribbl drawing canvas, retro arcade games (Runner, Snake, Pong, Reflex), visitor chat, and a study-room atmosphere.
-- **Quick Command Center (`Cmd+K`)**: Keyboard-driven command palette for navigating projects, skills, leadership records, and actions.
-- **Verified Community Guestbook**: Verified visitor entries backed by Firebase Google Authentication and Cloud Firestore.
-- **Developer Telemetry**: Live GitHub repository metrics, optional WakaTime coding telemetry, and a YouTube Music-aware music desk with honest setup states.
-- **CV / Resume Viewer**: In-browser PDF resume preview with direct one-click download.
-- **Workbench Storytelling**: A handmade-feeling visual system and “A note from the workbench” section that explains how Parth thinks and builds.
-- **Campfire Ritual**: A small opt-in animated campfire inside the workbench story; clicking it toggles the procedural rain-and-fire ambience, with an independent mute control.
-- **SEO Foundation**: Entity-focused metadata, Person/ProfilePage JSON-LD, deterministic sitemap dates, a web manifest, and a practical 90-day SEO plan in `SEO_PLAN.md`.
+## Technical Stack
 
----
+- **Framework**: Next.js 16 (App Router, static HTML export)
+- **UI**: React 19, TypeScript, custom CSS token system (`src/app/globals.css`) with View Transitions radial dark/light theme switching (`src/components/ui/ThemeToggle.tsx`)
+- **Backend Services**: Firebase Authentication (Google provider with popup + redirect fallback) and Cloud Firestore (`lounge_messages`, constrained by `firestore.rules`)
+- **SEO & Discovery**: Unified `@graph` JSON-LD (`ProfilePage`, `Person`, `WebSite`, `SoftwareApplication`, `BreadcrumbList`), dynamic 1200x630 OpenGraph image, XML sitemap, `robots.txt`, `manifest.webmanifest`, `/llms.txt`, and `/llms-full.txt`
 
-## Tech Stack
-
-- **Framework**: Next.js 16 (App Router)
-- **Language**: TypeScript
-- **UI Library**: React 19
-- **Styling**: Tailwind CSS v4 and vanilla CSS tokens
-- **Animations**: Framer Motion, Lenis Smooth Scroll
-- **Database & Auth**: Google Firebase (Authentication & Cloud Firestore)
-- **Icons**: Lucide React
-
----
-
-## Getting Started
-
-### 1. Clone & Install Dependencies
+## Local Development
 
 ```bash
-git clone https://github.com/ParthKhansali/E-Portfolio.git
-cd E-Portfolio
 npm install
-```
-
-### 2. Run the Development Server
-
-```bash
+cp .env.local.example .env.local
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-### 3. Production Build (Vercel / Node Server)
+Verify formatting and static export builds:
 
 ```bash
+npm run lint
+npx tsc --noEmit
 npm run build
-npm run start
 ```
 
-### 4. Static Export Build (GitHub Pages)
-
-The repository includes a dedicated build script that safely isolates dynamic server routes before running `next build` with static export:
+Subpath static build check (used for `/E-Portfolio` Pages compatibility):
 
 ```bash
-npm run build:pages
+BASE_PATH=/E-Portfolio npm run build
 ```
 
-The exported HTML and static assets are placed in the `./out` directory, ready for deployment via GitHub Actions.
+## License
 
----
-
-## Architecture & Project Structure
-
-- `src/app/`: Next.js App Router root layout, home page, and dynamic API endpoints (lounge room, guestbook, views telemetry).
-- `src/components/navigation/`: Floating pill navbar, mobile drawer, and Command Palette (`Cmd+K`).
-- `src/components/sections/`: Hero, Projects, Skills portal, About, Experience, Guestbook, Dev Dashboard, and Contact.
-- `src/components/effects/`: Retro Lounge modal, games (Runner, Snake, Pong, Reflex), and canvas visualizers.
-- `src/lib/`: Firebase client config, sound effects generator, base path resolver, and telemetry helpers.
-- `scripts/build_pages.mjs`: Production static export workflow for GitHub Pages.
-- `SEO_PLAN.md`: Search positioning, technical SEO checklist, content roadmap, measurement plan, and launch sequence.
-
----
-
-## Author
-
-**Parth Khansali**
-- Portfolio: [https://parthkhansali-dev.vercel.app](https://parthkhansali-dev.vercel.app)
-- GitHub: [@ParthKhansali](https://github.com/ParthKhansali)
-- LinkedIn: [parth-khansali](https://linkedin.com/in/parth-khansali)
-- Instagram: [@parth_khansali](https://instagram.com/parth_khansali)
-- Email: [parthkhansali@gmail.com](mailto:parthkhansali@gmail.com)
+Code in this repository is copyright Parth Khansali. Personal bio copy, project screenshots, and resume documents belong to the author.

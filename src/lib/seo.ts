@@ -10,6 +10,7 @@ type PageMeta = {
   path: string;
   /** Absolute or site-relative image path. */
   image?: string;
+  type?: "website" | "profile";
   noIndex?: boolean;
 };
 
@@ -23,6 +24,7 @@ export function pageMetadata({
   description,
   path,
   image = DEFAULT_OG_IMAGE,
+  type = "website",
   noIndex = false,
 }: PageMeta): Metadata {
   const url = absoluteUrl(path);
@@ -32,7 +34,14 @@ export function pageMetadata({
     description,
     alternates: { canonical: path },
     openGraph: {
-      type: "website",
+      type,
+      ...(type === "profile"
+        ? {
+            firstName: siteConfig.givenName,
+            lastName: siteConfig.familyName,
+            username: siteConfig.handle,
+          }
+        : {}),
       locale: "en_IN",
       url,
       siteName: siteConfig.name,
@@ -63,13 +72,37 @@ export function personNode() {
     "@type": "Person",
     "@id": personId,
     name: siteConfig.name,
-    alternateName: siteConfig.handle,
+    givenName: siteConfig.givenName,
+    familyName: siteConfig.familyName,
+    alternateName: [siteConfig.handle, "Parth"],
     url: siteConfig.url,
-    image: absoluteUrl("/profile.jpg"),
+    mainEntityOfPage: { "@id": `${siteConfig.url}/#webpage` },
+    image: {
+      "@type": "ImageObject",
+      url: absoluteUrl("/profile.jpg"),
+      caption: "Parth Khansali - Computer science student and software developer",
+    },
     jobTitle: "Software developer",
+    hasOccupation: {
+      "@type": "Occupation",
+      name: "Software Developer",
+      occupationLocation: {
+        "@type": "City",
+        name: siteConfig.location.city,
+      },
+    },
     description:
-      "Parth Khansali is a computer science student at Graphic Era Hill University in Dehradun, India, and the developer of GEHU Connect.",
+      "Parth Khansali is a computer science student at Graphic Era Hill University in Dehradun, India, and the developer of GEHU Connect and Netwich.",
     email: `mailto:${siteConfig.email}`,
+    nationality: {
+      "@type": "Country",
+      name: siteConfig.location.country,
+    },
+    knowsLanguage: ["English", "Hindi"],
+    homeLocation: {
+      "@type": "Place",
+      name: `${siteConfig.location.city}, ${siteConfig.location.region}, ${siteConfig.location.country}`,
+    },
     address: {
       "@type": "PostalAddress",
       addressLocality: siteConfig.location.city,
@@ -88,6 +121,7 @@ export function personNode() {
       "Java",
       "TypeScript",
       "Next.js",
+      "Swift",
       "Distributed systems",
       "Geospatial data",
     ],
@@ -106,10 +140,13 @@ export function websiteNode() {
     "@id": websiteId,
     url: siteConfig.url,
     name: siteConfig.name,
+    alternateName: [siteConfig.handle, "Khansali", "parthkhansali.tech"],
     description:
       "The work and build log of Parth Khansali, a computer science student and software developer in Dehradun, India.",
     inLanguage: "en",
+    author: { "@id": personId },
     publisher: { "@id": personId },
+    copyrightHolder: { "@id": personId },
   };
 }
 
@@ -139,7 +176,9 @@ export function pageNode({
     about: about ?? { "@id": personId },
     inLanguage: "en",
     dateModified: CONTENT_UPDATED,
-    ...(type === "ProfilePage" ? { mainEntity: { "@id": personId } } : {}),
+    ...(type === "ProfilePage"
+      ? { dateCreated: "2026-06-03", mainEntity: { "@id": personId } }
+      : {}),
   };
 }
 

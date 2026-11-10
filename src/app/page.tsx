@@ -22,6 +22,7 @@ export const metadata: Metadata = {
     title: "Parth Khansali: Computer Science Student & Software Developer",
     description,
     path: "/",
+    type: "profile",
   }),
   title: { absolute: "Parth Khansali: Computer Science Student & Software Developer" },
 };

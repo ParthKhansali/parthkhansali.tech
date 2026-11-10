@@ -19,6 +19,8 @@ export function withBasePath(path: string): string {
 
 export const siteConfig = {
   name: "Parth Khansali",
+  givenName: "Parth",
+  familyName: "Khansali",
   /** Used as `alternateName` so "ParthKhansali" resolves to the same entity. */
   handle: "ParthKhansali",
   url: CANONICAL_ORIGIN,
@@ -60,4 +62,4 @@ export const socialLinks = [
 ] as const;
 
 /** Last content revision, used for sitemap `lastModified` and JSON-LD. */
-export const CONTENT_UPDATED = "2026-11-09";
+export const CONTENT_UPDATED = "2026-11-10";

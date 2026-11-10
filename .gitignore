@@ -39,17 +39,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# scratch assets
-/portfolio/
-
-# local audit and design tooling, kept out of the repo
-/.agents/
-/.tools/
-/.hallmark/
-/.opencode/
-/.freebuff/
-/skills-lock.json
-
-# Local design review captures
-/design-shots/

@@ -61,6 +61,7 @@ export default function ResumePage() {
               path: "/resume",
               name: "Resume: Parth Khansali",
               description,
+              type: "AboutPage",
             }),
             breadcrumbNode(trail),
           ],

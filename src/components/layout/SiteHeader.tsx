@@ -426,7 +426,7 @@ export default function SiteHeader() {
                 <a
                   href={siteConfig.links.github}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="me noopener noreferrer"
                   className="awrs-connect-tile"
                   onClick={closeModal}
                 >
@@ -440,7 +440,7 @@ export default function SiteHeader() {
                 <a
                   href={siteConfig.links.linkedin}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="me noopener noreferrer"
                   className="awrs-connect-tile"
                   onClick={closeModal}
                 >
@@ -454,7 +454,7 @@ export default function SiteHeader() {
                 <a
                   href={siteConfig.links.instagram}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="me noopener noreferrer"
                   className="awrs-connect-tile"
                   onClick={closeModal}
                 >
