@@ -51,7 +51,16 @@ export default function NotesPage() {
             Engineering Notes<span style={{ color: "var(--accent)" }}>.</span>
           </h1>
           <p className="lede" style={{ marginTop: "0.9rem", maxWidth: "60ch" }}>
-            Short write-ups on real bugs, networking bottlenecks, and tradeoffs debugged while building GEHU Connect and Netwich.
+            Short write-ups on real bugs, networking bottlenecks, and tradeoffs debugged while building GEHU Connect and Netwich. Companion code lives across{" "}
+            <a
+              className="link"
+              href="https://github.com/ParthKhansali"
+              target="_blank"
+              rel="me noopener noreferrer"
+            >
+              Parth Khansali&apos;s GitHub repositories
+            </a>
+            .
           </p>
         </div>
       </div>

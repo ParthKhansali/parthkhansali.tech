@@ -161,7 +161,16 @@ export default function HomePage() {
                 {flagship.name} is the clearest example: a campus app built with React Native, Java Spring Boot, and Cloudflare R2 now used by roughly a thousand students. The interesting engineering never came from adding features: it came from flaky campus Wi-Fi, retry limits, and keeping API threads clear.
               </p>
               <p className="bio-card__text">
-                Outside software, leading the university Model UN club taught me how to run large rooms, mediate disagreement, and explain hard problems plainly.
+                Outside software, leading the university Model UN club taught me how to run large rooms, mediate disagreement, and explain hard problems plainly. Public utilities and hackathon prototypes are published on{" "}
+                <a
+                  className="link"
+                  href={siteConfig.links.github}
+                  target="_blank"
+                  rel="me noopener noreferrer"
+                >
+                  Parth Khansali on GitHub
+                </a>
+                .
               </p>
 
               <div className="chip-list">

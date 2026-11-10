@@ -7,10 +7,11 @@ Personal engineering portfolio and interactive visitor lounge built with Next.js
 ## Routes
 
 - **`/`** - Interactive hero with falling ASCII code reveal, About bento grid, Experience scroll timeline, selected project showcase cards, and contact section.
-- **`/projects`** & **`/projects/[slug]`** - Project archive and dedicated architecture write-ups for [GEHU Connect](https://www.parthkhansali.tech/projects/gehu-connect), [Netwich](https://www.parthkhansali.tech/projects/netwich), [ARANYA](https://www.parthkhansali.tech/projects/aranya), [ORVESS-PAT](https://www.parthkhansali.tech/projects/orvess-pat), and [Meghavyuha](https://www.parthkhansali.tech/projects/meghavyuha).
-- **`/resume`** - Crawlable resume view with print styles and direct PDF download (`/parth_resume.pdf`).
-- **`/lounge`** - Visitor pin board (notes and whiteboard sketches via Google Sign-In and Cloud Firestore) plus the CRT workstation (`arcade`, `chat`, `jam`, `cinema`).
-- **`/privacy`** & **`/terms`** - Privacy policy and terms of use.
+- **`/projects/`** & **`/projects/[slug]/`** - Project archive and dedicated architecture write-ups for [GEHU Connect](https://www.parthkhansali.tech/projects/gehu-connect/), [Netwich](https://www.parthkhansali.tech/projects/netwich/), [ARANYA](https://www.parthkhansali.tech/projects/aranya/), [ORVESS-PAT](https://www.parthkhansali.tech/projects/orvess-pat/), and [Meghavyuha](https://www.parthkhansali.tech/projects/meghavyuha/).
+- **`/notes/`** - Grounded engineering postmortems covering Netwich socket pitfalls and GEHU Connect R2/caching architecture.
+- **`/resume/`** - Crawlable resume view with print styles and direct PDF download (`/parth_resume.pdf`).
+- **`/lounge/`** - Visitor pin board (notes and whiteboard sketches via Google Sign-In and Cloud Firestore) plus the CRT workstation (`arcade`, `chat`, `jam`, `cinema`).
+- **`/privacy/`** & **`/terms/`** - Privacy policy and terms of use.
 
 ## Technical Stack
 

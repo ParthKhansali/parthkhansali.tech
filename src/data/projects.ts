@@ -202,7 +202,7 @@ export const projects: Project[] = [
         "Wildcard CORS in the local browser bridge and unsanitized remote Content-Disposition filenames created security holes, both fixed cleanly with extension-only origin checks and DownloadItem filename sanitization.",
       ],
       results:
-        "Completed and publicly released (v0.1.0 DMG on GitHub) with 15+ automated core scheduler/security tests and ~0.3% to 0.4% measured idle CPU.",
+        "Completed and publicly released (v0.1.0 DMG on GitHub) with 31 automated unit tests across engine, scheduler, and security suites and ~0.3% to 0.4% measured idle CPU.",
       whatNext: [
         "Broader hardware multi-link throughput benchmarking across physical Wi-Fi + USB tethering setups with Developer ID NEAppProxyProvider entitlement testing.",
       ],
@@ -421,7 +421,10 @@ export const projects: Project[] = [
         "Meghavyuha: forecast verification workspace showing Dehradun regional layers, candidate model weights, and alerts.",
     },
     stack: ["Next.js 15", "TypeScript", "deck.gl", "MapLibre GL", "Python"],
-    links: [{ label: "Live deployment", href: "https://meghavyuha.vercel.app" }],
+    links: [
+      { label: "Live deployment", href: "https://meghavyuha.vercel.app" },
+      { label: "Source on GitHub", href: "https://github.com/ParthKhansali/MeghaVyuha" },
+    ],
     schemaType: "SoftwareSourceCode",
   },
 ];
