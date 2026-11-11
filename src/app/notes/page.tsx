@@ -73,7 +73,7 @@ export default function NotesPage() {
                 <div className="note-card__meta">
                   <span className="tag">{note.projectName}</span>
                   <span className="measured" style={{ fontSize: "0.75rem" }}>
-                    {note.published} · {note.readingTime}
+                    <time dateTime={note.published}>{note.published.slice(0, 10)}</time> · {note.readingTime}
                   </span>
                 </div>
                 <h2 className="note-card__title">{note.title}</h2>

@@ -1,8 +1,24 @@
 import type { Metadata } from "next";
-import { absoluteUrl, canonicalPath, CONTENT_UPDATED, ROUTE_UPDATED, siteConfig } from "@/data/site";
+import {
+  absoluteUrl,
+  canonicalPath,
+  CONTENT_UPDATED,
+  PROFILE_CREATED,
+  ROUTE_UPDATED,
+  siteConfig,
+} from "@/data/site";
 import { projects, type Project } from "@/data/projects";
 
 const DEFAULT_OG_IMAGE = "/opengraph-image";
+const ISO_DATETIME_TZ_RE =
+  /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/;
+
+function validIsoDateTime(value?: string): string | undefined {
+  if (!value || !ISO_DATETIME_TZ_RE.test(value) || Number.isNaN(Date.parse(value))) {
+    return undefined;
+  }
+  return value;
+}
 
 type PageMeta = {
   title: string;
@@ -156,6 +172,7 @@ type PageNodeInput = {
   name: string;
   description: string;
   type?: "WebPage" | "ProfilePage" | "CollectionPage" | "AboutPage";
+  dateCreated?: string;
   dateModified?: string;
   /** Extra entities that belong on this page only. */
   about?: Record<string, unknown>[];
@@ -166,12 +183,14 @@ export function pageNode({
   name,
   description,
   type = "WebPage",
+  dateCreated,
   dateModified,
   about,
 }: PageNodeInput) {
   const canonical = canonicalPath(path);
   const url = absoluteUrl(canonical);
-  const modified = dateModified ?? ROUTE_UPDATED[canonical] ?? CONTENT_UPDATED;
+  const modified = validIsoDateTime(dateModified ?? ROUTE_UPDATED[canonical] ?? CONTENT_UPDATED);
+  const created = type === "ProfilePage" ? validIsoDateTime(dateCreated) : undefined;
 
   return {
     "@type": type,
@@ -182,9 +201,12 @@ export function pageNode({
     isPartOf: { "@id": websiteId },
     about: about ?? { "@id": personId },
     inLanguage: "en",
-    dateModified: modified,
+    ...(modified ? { dateModified: modified } : {}),
     ...(type === "ProfilePage"
-      ? { dateCreated: "2026-06-03", mainEntity: { "@id": personId } }
+      ? {
+          ...(created ? { dateCreated: created } : {}),
+          mainEntity: { "@id": personId },
+        }
       : {}),
   };
 }
@@ -252,6 +274,8 @@ export function articleNode({
   about?: Record<string, unknown>[];
 }) {
   const url = absoluteUrl(path);
+  const published = validIsoDateTime(datePublished);
+  const modified = validIsoDateTime(dateModified);
   return {
     "@type": "TechArticle",
     "@id": `${url}#article`,
@@ -261,8 +285,8 @@ export function articleNode({
     mainEntityOfPage: { "@id": `${url}#webpage` },
     author: { "@id": personId },
     publisher: { "@id": personId },
-    datePublished,
-    dateModified,
+    ...(published ? { datePublished: published } : {}),
+    ...(modified ? { dateModified: modified } : {}),
     inLanguage: "en",
     ...(about ? { about } : {}),
   };
@@ -291,6 +315,7 @@ export function homeGraph() {
         description:
           "The work of Parth Khansali: GEHU Connect, a campus app used by roughly a thousand students, plus Netwich and other builds.",
         type: "ProfilePage",
+        dateCreated: PROFILE_CREATED,
       }),
       ...projects.map((project) => projectNode(project)),
     ],

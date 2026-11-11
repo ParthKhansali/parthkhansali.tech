@@ -78,7 +78,8 @@ export default async function NoteDetailPage({ params }: PageProps) {
           </nav>
 
           <p className="tag tag--dim">
-            {note.projectName} · Published {note.published} · {note.readingTime}
+            {note.projectName} · Published{" "}
+            <time dateTime={note.published}>{note.published.slice(0, 10)}</time> · {note.readingTime}
           </p>
           <h1 className="display display--page" style={{ marginTop: "0.65rem" }}>
             {note.title}

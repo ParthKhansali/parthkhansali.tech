@@ -24,8 +24,8 @@ export const notes: EngineeringNote[] = [
     seoTitle: "Netwich Socket & Proxy Bugs",
     summary:
       "What broke while building Netwich (macOS SOCKS5 proxy + IP_BOUND_IF): 15s idle cuts, silent fallback, bridge CORS, and proxy restoration.",
-    published: "2026-11-08",
-    updated: "2026-11-10",
+    published: "2026-11-10T22:01:50+05:30",
+    updated: "2026-11-10T22:01:50+05:30",
     readingTime: "4 min read",
     projectSlug: "netwich",
     projectName: "Netwich",
@@ -71,8 +71,8 @@ export const notes: EngineeringNote[] = [
     seoTitle: "GEHU Connect Caching & R2 Uploads",
     summary:
       "Notes from shipping GEHU Connect to ~1,000 campus users: presigned Cloudflare R2 uploads, L1 Caffeine + L2 Redis locks, and STOMP WebSocket auth.",
-    published: "2026-11-05",
-    updated: "2026-11-10",
+    published: "2026-11-10T22:01:50+05:30",
+    updated: "2026-11-10T22:01:50+05:30",
     readingTime: "4 min read",
     projectSlug: "gehu-connect",
     projectName: "GEHU Connect",

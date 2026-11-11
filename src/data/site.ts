@@ -71,23 +71,26 @@ export const socialLinks = [
   { label: "Instagram", href: siteConfig.links.instagram },
 ] as const;
 
+/** Truthful creation timestamp of Parth's root profile from git history. */
+export const PROFILE_CREATED = "2026-06-03T12:40:56+05:30";
+
 /** Truthful last substantive revision per route (update only the route whose content changed). */
 export const ROUTE_UPDATED: Record<string, string> = {
-  "/": "2026-11-10",
-  "/projects/": "2026-11-10",
-  "/projects/gehu-connect/": "2026-11-10",
-  "/projects/netwich/": "2026-11-10",
-  "/projects/aranya/": "2026-11-10",
-  "/projects/orvess-pat/": "2026-11-10",
-  "/projects/meghavyuha/": "2026-11-10",
-  "/resume/": "2026-11-10",
-  "/lounge/": "2026-11-10",
-  "/notes/": "2026-11-10",
-  "/notes/netwich-socket-pitfalls/": "2026-11-10",
-  "/notes/gehu-connect-r2-and-layered-cache/": "2026-11-10",
-  "/privacy/": "2026-05-01",
-  "/terms/": "2026-05-01",
+  "/": "2026-11-10T23:47:01+05:30",
+  "/projects/": "2026-11-10T22:01:50+05:30",
+  "/projects/gehu-connect/": "2026-11-10T22:01:50+05:30",
+  "/projects/netwich/": "2026-11-10T23:47:01+05:30",
+  "/projects/aranya/": "2026-11-10T22:01:50+05:30",
+  "/projects/orvess-pat/": "2026-11-10T22:01:50+05:30",
+  "/projects/meghavyuha/": "2026-11-10T23:47:01+05:30",
+  "/resume/": "2026-11-10T22:01:50+05:30",
+  "/lounge/": "2026-11-10T22:01:50+05:30",
+  "/notes/": "2026-11-10T23:47:01+05:30",
+  "/notes/netwich-socket-pitfalls/": "2026-11-10T22:01:50+05:30",
+  "/notes/gehu-connect-r2-and-layered-cache/": "2026-11-10T22:01:50+05:30",
+  "/privacy/": "2026-11-10T01:09:48+05:30",
+  "/terms/": "2026-11-10T01:09:48+05:30",
 };
 
 /** Fallback revision date when a route entry does not specify its own timestamp. */
-export const CONTENT_UPDATED = "2026-11-10";
+export const CONTENT_UPDATED = "2026-11-10T23:47:01+05:30";

@@ -8,7 +8,7 @@ export const dynamic = "force-static";
 function lastModFor(routePath: string): Date {
   const key = canonicalPath(routePath);
   const iso = ROUTE_UPDATED[key] ?? CONTENT_UPDATED;
-  return new Date(`${iso}T00:00:00.000Z`);
+  return iso.includes("T") ? new Date(iso) : new Date(`${iso}T00:00:00.000Z`);
 }
 
 /**
